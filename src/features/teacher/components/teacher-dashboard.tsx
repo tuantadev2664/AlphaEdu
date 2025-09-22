@@ -50,8 +50,8 @@ export function TeacherDashboard({ stats, classes }: TeacherDashboardProps) {
               </h1>
             </div>
             <p className='max-w-2xl text-lg text-blue-100'>
-              Ready to inspire minds today? Here's your classroom overview and
-              what needs your attention.
+              Ready to inspire minds today? Here&apos;s your classroom overview
+              and what needs your attention.
             </p>
             <div className='flex items-center gap-4 pt-2'>
               <div className='flex items-center gap-2 text-blue-100'>

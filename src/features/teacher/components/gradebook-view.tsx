@@ -937,8 +937,8 @@ export function GradebookView({
                             1
                           </span>
                           <span>
-                            Click "Export Template" to download the Excel
-                            template
+                            Click &quot;Export Template&quot; to download the
+                            Excel template
                           </span>
                         </div>
                         <div className='flex items-center gap-2'>
@@ -960,7 +960,8 @@ export function GradebookView({
                             4
                           </span>
                           <span>
-                            Review the preview and click "Import Grades"
+                            Review the preview and click &quot;Import
+                            Grades&quot;
                           </span>
                         </div>
                       </div>

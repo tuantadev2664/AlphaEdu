@@ -332,7 +332,7 @@ export function BehaviorNotesDialog({
                 <FileText className='mx-auto mb-4 h-12 w-12 opacity-50' />
                 <p>No behavior notes recorded yet.</p>
                 <p className='text-sm'>
-                  Click "Add Note" to start tracking behavior.
+                  Click &quot;Add Note&quot; to start tracking behavior.
                 </p>
               </div>
             )}
