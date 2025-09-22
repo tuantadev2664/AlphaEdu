@@ -100,7 +100,7 @@ export function AnnouncementForm({
               control={form.control}
               name='expires_at'
               label='Expiration Date'
-              type='datetime-local'
+              // type='datetime-local'
               required
             />
 
