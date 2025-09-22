@@ -1,0 +1,226 @@
+//// DBML for dbdiagram.io — School Grading System
+
+////////////////////////////////////////////////////////
+// ENUMS
+////////////////////////////////////////////////////////
+Enum edu_level {
+  primary
+  lower_secondary
+  upper_secondary
+}
+
+Enum term_code {
+  S1
+  S2
+}
+
+Enum user_role {
+  student
+  parent
+  teacher
+  admin
+}
+
+Enum assessment_kind {
+  quiz
+  test
+  midterm
+  final
+  project
+  oral
+  attendance
+  other
+}
+
+////////////////////////////////////////////////////////
+// TABLES
+////////////////////////////////////////////////////////
+Table schools {
+  id uuid [pk]
+  name text
+  district text
+  city text
+  created_at timestamptz
+}
+
+Table academic_years {
+  id uuid [pk]
+  school_id uuid [ref: > schools.id]
+  name text
+  start_date date
+  end_date date
+
+  Indexes {
+    (school_id, name) [unique]
+  }
+}
+
+Table terms {
+  id uuid [pk]
+  academic_year_id uuid [ref: > academic_years.id]
+  code term_code
+  start_date date
+  end_date date
+
+  Indexes {
+    (academic_year_id, code) [unique]
+  }
+}
+
+Table grades {
+  id uuid [pk]
+  school_id uuid [ref: > schools.id]
+  level edu_level
+  grade_number int
+
+  Indexes {
+    (school_id, grade_number) [unique]
+  }
+}
+
+Table classes {
+  id uuid [pk]
+  grade_id uuid [ref: > grades.id]
+  name text
+  homeroom_teacher_id uuid [ref: > users.id]
+
+  Indexes {
+    (grade_id, name) [unique]
+  }
+
+  Note: 'Chủ nhiệm = users.id'
+}
+
+Table subjects {
+  id uuid [pk]
+  code text
+  name text
+  level edu_level
+  is_active boolean
+
+  Indexes {
+    (code, level) [unique]
+  }
+}
+
+Table users {
+  id uuid [pk]
+  role user_role
+  full_name text
+  email text [unique]
+  phone text
+  school_id uuid [ref: > schools.id]
+  created_at timestamptz
+}
+
+Table parent_students {
+  parent_id uuid [ref: > users.id]
+  student_id uuid [ref: > users.id]
+  relationship text
+
+  Indexes {
+    (parent_id, student_id) [pk]
+  }
+
+  Note: 'Liên kết Phụ huynh—Học sinh'
+}
+
+Table class_enrollments {
+  id uuid [pk]
+  class_id uuid [ref: > classes.id]
+  student_id uuid [ref: > users.id]
+  academic_year_id uuid [ref: > academic_years.id]
+
+  Indexes {
+    (class_id, student_id, academic_year_id) [unique]
+    student_id
+  }
+}
+
+Table teacher_assignments {
+  id uuid [pk]
+  teacher_id uuid [ref: > users.id]
+  class_id uuid [ref: > classes.id]
+  subject_id uuid [ref: > subjects.id]
+  academic_year_id uuid [ref: > academic_years.id]
+
+  Indexes {
+    (teacher_id, class_id, subject_id, academic_year_id) [unique]
+    teacher_id
+  }
+}
+
+Table grade_components {
+  id uuid [pk]
+  class_id uuid [ref: > classes.id]
+  subject_id uuid [ref: > subjects.id]
+  term_id uuid [ref: > terms.id]
+  name text
+  kind assessment_kind
+  weight numeric
+  max_score numeric
+  position int
+
+  Indexes {
+    (class_id, subject_id, term_id, name) [unique]
+    (class_id, subject_id, term_id)
+  }
+}
+
+Table assessments {
+  id uuid [pk]
+  grade_component_id uuid [ref: > grade_components.id]
+  title text
+  due_date date
+  description text
+}
+
+Table scores {
+  id uuid [pk]
+  assessment_id uuid [ref: > assessments.id]
+  student_id uuid [ref: > users.id]
+  score numeric
+  is_absent boolean
+  comment text
+  created_by uuid [ref: > users.id]
+  created_at timestamptz
+  updated_at timestamptz
+
+  Indexes {
+    (assessment_id, student_id) [unique]
+    assessment_id
+    student_id
+  }
+}
+
+Table behavior_notes {
+  id uuid [pk]
+  student_id uuid [ref: > users.id]
+  class_id uuid [ref: > classes.id]
+  term_id uuid [ref: > terms.id]
+  note text
+  level text
+  created_by uuid [ref: > users.id]
+  created_at timestamptz
+}
+
+Table messages {
+  id uuid [pk]
+  sender_id uuid [ref: > users.id]
+  receiver_id uuid [ref: > users.id]
+  content text
+  created_at timestamptz
+  is_read boolean
+}
+
+Table announcements {
+  id uuid [pk]
+  sender_id uuid [ref: > users.id] // giáo viên hoặc admin
+  class_id uuid [ref: > classes.id, null] // nếu gửi cho cả lớp
+  subject_id uuid [ref: > subjects.id, null] // nếu gắn với môn
+  title text
+  content text
+  created_at timestamptz
+  expires_at timestamptz
+  is_urgent boolean
+}
