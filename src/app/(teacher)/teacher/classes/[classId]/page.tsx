@@ -3,17 +3,18 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { notFound } from 'next/navigation';
 import { fakeClasses } from '@/constants/mock-api-teacher';
 import RosterTable from '@/features/teacher/components/roster-table';
-import GradebookTable from '@/features/teacher/components/gradebook-table';
-import BehaviorList from '@/features/teacher/components/behavior-list';
+// import GradebookTable from '@/features/teacher/components/gradebook-table';
+// import BehaviorView from '@/features/teacher/components/behavior-list';
 import AnnouncementList from '@/features/teacher/components/announcement-list';
+import { BehaviorView } from '@/features/teacher/components';
 
 export default async function ClassDetailPage({
   params
 }: {
-  params: { classId: string };
+  params: Promise<{ classId: string }>;
 }) {
   // Await params.classId for Next.js dynamic route compliance
-  const classId = await Promise.resolve(params.classId);
+  const { classId } = await params;
   const classData = fakeClasses.find((c) => c.id === classId);
   if (!classData) return notFound();
 
@@ -31,10 +32,10 @@ export default async function ClassDetailPage({
           <RosterTable classId={classData.id} />
         </TabsContent>
         <TabsContent value='gradebook'>
-          <GradebookTable classId={classData.id} />
+          {/* <GradebookTable classId={classData.id} /> */}
         </TabsContent>
         <TabsContent value='behavior'>
-          <BehaviorList classId={classData.id} />
+          {/* <BehaviorView classId={classData.id} /> */}
         </TabsContent>
         <TabsContent value='announcements'>
           <AnnouncementList classId={classData.id} />

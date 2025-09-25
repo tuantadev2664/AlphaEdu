@@ -3,16 +3,17 @@ import { AnnouncementsView } from '@/features/teacher/components/announcements-v
 import PageContainer from '@/components/layout/page-container';
 
 interface AnnouncementsPageProps {
-  params: { classId: string };
+  params: Promise<{ classId: string }>;
 }
 
 export default async function AnnouncementsPage({
   params
 }: AnnouncementsPageProps) {
+  const { classId } = await params;
   const announcementsData = await fakeTeacher.getTeacherAnnouncements(
     'teacher-1',
     {
-      class_id: params.classId
+      class_id: classId
     }
   );
 
@@ -24,7 +25,7 @@ export default async function AnnouncementsPage({
 
       <AnnouncementsView
         announcements={announcementsData.announcements}
-        classId={params.classId}
+        classId={classId}
       />
     </div>
   );

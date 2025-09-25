@@ -3,7 +3,7 @@ import { RosterTable } from '@/features/teacher/components/roster-table/index';
 import { columns } from '@/features/teacher/components/roster-table/columns';
 
 interface RosterPageProps {
-  params: { classId: string };
+  params: Promise<{ classId: string }>;
 }
 
 export default async function RosterPage({ params }: RosterPageProps) {

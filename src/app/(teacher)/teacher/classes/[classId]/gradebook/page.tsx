@@ -3,8 +3,8 @@ import { GradebookView } from '@/features/teacher/components/gradebook-view';
 import PageContainer from '@/components/layout/page-container';
 
 interface GradebookPageProps {
-  params: { classId: string };
-  searchParams: { subject?: string };
+  params: Promise<{ classId: string }>;
+  searchParams: Promise<{ subject?: string }>;
 }
 
 export default async function GradebookPage({
@@ -12,11 +12,11 @@ export default async function GradebookPage({
   searchParams
 }: GradebookPageProps) {
   const subjects = fakeTeacher.subjects;
-  const selectedSubject = searchParams.subject || subjects[0]?.id;
+  const selectedSubject = (await searchParams).subject || subjects[0]?.id;
 
   // Generate gradebook data for the selected subject
   const gradebookData = fakeTeacher.generateGradebookData(
-    params.classId,
+    (await params).classId,
     selectedSubject
   );
 
@@ -30,7 +30,7 @@ export default async function GradebookPage({
         data={gradebookData}
         subjects={subjects}
         selectedSubject={selectedSubject}
-        classId={params.classId}
+        classId={(await params).classId}
       />
     </div>
   );

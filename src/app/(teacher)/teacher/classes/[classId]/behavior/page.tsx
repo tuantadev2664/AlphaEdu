@@ -3,12 +3,13 @@ import { BehaviorView } from '@/features/teacher/components/behavior-view';
 import PageContainer from '@/components/layout/page-container';
 
 interface BehaviorPageProps {
-  params: { classId: string };
+  params: Promise<{ classId: string }>;
 }
 
 export default async function BehaviorPage({ params }: BehaviorPageProps) {
-  const notesData = await fakeTeacher.getBehaviorNotes(params.classId);
-  const studentsData = await fakeTeacher.getClassStudents(params.classId);
+  const { classId } = await params;
+  const notesData = await fakeTeacher.getBehaviorNotes(classId);
+  const studentsData = await fakeTeacher.getClassStudents(classId);
 
   return (
     <div className='space-y-6'>
@@ -19,7 +20,7 @@ export default async function BehaviorPage({ params }: BehaviorPageProps) {
       <BehaviorView
         notes={notesData.notes}
         students={studentsData.students}
-        classId={params.classId}
+        classId={classId}
       />
     </div>
   );
