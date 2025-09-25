@@ -13,7 +13,11 @@ import { UserAvatarProfile } from '@/components/user-avatar-profile';
 import { SignOutButton, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 export function UserNav() {
-  const { user } = useUser();
+  // const { user } = useUser();
+  const user = {
+    fullName: 'John Doe',
+    emailAddresses: [{ emailAddress: 'john.doe@example.com' }]
+  };
   const router = useRouter();
   if (user) {
     return (
