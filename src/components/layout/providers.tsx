@@ -15,6 +15,13 @@ export default function Providers({
   // we need the resolvedTheme value to set the baseTheme for clerk based on the dark or light theme
   const { resolvedTheme } = useTheme();
 
+  const hasClerk = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+  if (!hasClerk) {
+    // Don't use Clerk, render directly UI
+    return <>{children}</>;
+  }
+
   return (
     <>
       <ActiveThemeProvider initialTheme={activeThemeValue}>
