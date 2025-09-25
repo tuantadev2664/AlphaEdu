@@ -19,7 +19,9 @@ export default function Providers({
 
   if (!hasClerk) {
     // Don't use Clerk, render directly UI
-    return <>{children}</>;
+    return <>
+      <ActiveThemeProvider initialTheme={activeThemeValue}>{children}</ActiveThemeProvider>
+    </>;
   }
 
   return (
