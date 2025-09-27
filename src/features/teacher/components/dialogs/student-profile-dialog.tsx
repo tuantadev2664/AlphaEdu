@@ -64,16 +64,12 @@ export function StudentProfileDialog({
       <DialogContent className='max-h-[80vh] max-w-2xl overflow-y-auto'>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-3'>
-            <Avatar className='h-12 w-12'>
-              <AvatarFallback className='bg-gradient-to-br from-blue-500 to-indigo-600 text-lg font-bold text-white'>
-                {initials}
-              </AvatarFallback>
+            <Avatar className='h-10 w-10'>
+              <AvatarFallback className='text-sm'>{initials}</AvatarFallback>
             </Avatar>
             <div>
-              <div className='text-xl font-bold'>{student.full_name}</div>
-              <div className='text-muted-foreground text-sm font-normal'>
-                Student Profile
-              </div>
+              <div className='text-lg font-semibold'>{student.full_name}</div>
+              <DialogDescription>Student Profile</DialogDescription>
             </div>
           </DialogTitle>
         </DialogHeader>
@@ -88,11 +84,9 @@ export function StudentProfileDialog({
               </CardTitle>
             </CardHeader>
             <CardContent className='space-y-4'>
-              <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                <div className='flex items-center gap-3 rounded-lg bg-gray-50 p-3 dark:bg-gray-800'>
-                  <div className='rounded-full bg-blue-100 p-2 dark:bg-blue-900'>
-                    <Mail className='h-4 w-4 text-blue-600' />
-                  </div>
+              <div className='grid grid-cols-1 gap-4'>
+                <div className='flex items-center gap-3'>
+                  <Mail className='text-muted-foreground h-4 w-4' />
                   <div>
                     <div className='text-sm font-medium'>Email</div>
                     <div className='text-muted-foreground text-sm'>
@@ -100,10 +94,8 @@ export function StudentProfileDialog({
                     </div>
                   </div>
                 </div>
-                <div className='flex items-center gap-3 rounded-lg bg-gray-50 p-3 dark:bg-gray-800'>
-                  <div className='rounded-full bg-green-100 p-2 dark:bg-green-900'>
-                    <Phone className='h-4 w-4 text-green-600' />
-                  </div>
+                <div className='flex items-center gap-3'>
+                  <Phone className='text-muted-foreground h-4 w-4' />
                   <div>
                     <div className='text-sm font-medium'>Phone</div>
                     <div className='text-muted-foreground text-sm'>
@@ -124,32 +116,36 @@ export function StudentProfileDialog({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
-                <div className='text-center'>
-                  <div
-                    className={`inline-flex h-20 w-20 items-center justify-center rounded-full text-2xl font-bold ${getScoreColor(student.average_score || 0)}`}
-                  >
-                    {student.average_score || 'N/A'}
-                    {student.average_score && '%'}
+              <div className='grid grid-cols-1 gap-4'>
+                <div className='flex items-center gap-3'>
+                  <div className='bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg'>
+                    <span className='text-primary text-lg font-bold'>
+                      {student.average_score || 'N/A'}
+                      {student.average_score && '%'}
+                    </span>
                   </div>
-                  <div className='mt-2 text-sm font-medium'>Average Score</div>
-                  <div className='text-muted-foreground text-xs'>
-                    {student.average_score
-                      ? getScoreStatus(student.average_score)
-                      : 'No data'}
+                  <div>
+                    <div className='text-sm font-medium'>Average Score</div>
+                    <div className='text-muted-foreground text-xs'>
+                      {student.average_score
+                        ? getScoreStatus(student.average_score)
+                        : 'No data'}
+                    </div>
                   </div>
                 </div>
-                <div className='space-y-3'>
-                  <div className='flex items-center gap-2'>
-                    <TrendingUp className='h-4 w-4 text-blue-500' />
-                    <span className='text-sm'>Performance Trend</span>
+                <div className='flex items-center gap-3'>
+                  <TrendingUp className='text-muted-foreground h-4 w-4' />
+                  <div>
+                    <div className='text-sm font-medium'>Trend</div>
                     <Badge variant='outline' className='text-xs'>
                       Improving
                     </Badge>
                   </div>
-                  <div className='flex items-center gap-2'>
-                    <Award className='h-4 w-4 text-yellow-500' />
-                    <span className='text-sm'>Class Rank</span>
+                </div>
+                <div className='flex items-center gap-3'>
+                  <Award className='text-muted-foreground h-4 w-4' />
+                  <div>
+                    <div className='text-sm font-medium'>Class Rank</div>
                     <Badge variant='secondary' className='text-xs'>
                       Top 25%
                     </Badge>
@@ -168,35 +164,43 @@ export function StudentProfileDialog({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                <div className='rounded-lg border p-4'>
-                  <div className='mb-2 flex items-center justify-between'>
-                    <span className='text-sm font-medium'>Behavior Notes</span>
-                    <Badge
-                      variant={
-                        student.behavior_notes_count &&
-                        student.behavior_notes_count > 0
-                          ? 'destructive'
-                          : 'default'
-                      }
-                    >
-                      {student.behavior_notes_count || 0}
-                    </Badge>
-                  </div>
-                  <div className='text-muted-foreground text-xs'>
-                    {student.behavior_notes_count &&
-                    student.behavior_notes_count > 0
-                      ? 'Some behavioral concerns noted'
-                      : 'Good behavior record'}
+              <div className='grid grid-cols-1 gap-4'>
+                <div className='flex items-center gap-3'>
+                  <FileText className='text-muted-foreground h-4 w-4' />
+                  <div className='flex-1'>
+                    <div className='flex items-center justify-between'>
+                      <span className='text-sm font-medium'>
+                        Behavior Notes
+                      </span>
+                      <Badge
+                        variant={
+                          student.behavior_notes_count &&
+                          student.behavior_notes_count > 0
+                            ? 'destructive'
+                            : 'default'
+                        }
+                      >
+                        {student.behavior_notes_count || 0}
+                      </Badge>
+                    </div>
+                    <div className='text-muted-foreground text-xs'>
+                      {student.behavior_notes_count &&
+                      student.behavior_notes_count > 0
+                        ? 'Some behavioral concerns noted'
+                        : 'Good behavior record'}
+                    </div>
                   </div>
                 </div>
-                <div className='rounded-lg border p-4'>
-                  <div className='mb-2 flex items-center justify-between'>
-                    <span className='text-sm font-medium'>Attendance</span>
-                    <Badge variant='default'>95%</Badge>
-                  </div>
-                  <div className='text-muted-foreground text-xs'>
-                    Excellent attendance record
+                <div className='flex items-center gap-3'>
+                  <Clock className='text-muted-foreground h-4 w-4' />
+                  <div className='flex-1'>
+                    <div className='flex items-center justify-between'>
+                      <span className='text-sm font-medium'>Attendance</span>
+                      <Badge variant='default'>95%</Badge>
+                    </div>
+                    <div className='text-muted-foreground text-xs'>
+                      Excellent attendance record
+                    </div>
                   </div>
                 </div>
               </div>
@@ -212,10 +216,8 @@ export function StudentProfileDialog({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='flex items-center gap-3 rounded-lg bg-gray-50 p-3 dark:bg-gray-800'>
-                <div className='rounded-full bg-purple-100 p-2 dark:bg-purple-900'>
-                  <Calendar className='h-4 w-4 text-purple-600' />
-                </div>
+              <div className='flex items-center gap-3'>
+                <Calendar className='text-muted-foreground h-4 w-4' />
                 <div>
                   <div className='text-sm font-medium'>Enrolled Since</div>
                   <div className='text-muted-foreground text-sm'>

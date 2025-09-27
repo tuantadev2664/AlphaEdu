@@ -1,6 +1,7 @@
 import { fakeTeacher } from '@/constants/mock-api';
 import { AnnouncementsView } from '@/features/teacher/components/announcements-view';
 import PageContainer from '@/components/layout/page-container';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface AnnouncementsPageProps {
   params: Promise<{ classId: string }>;
@@ -18,15 +19,16 @@ export default async function AnnouncementsPage({
   );
 
   return (
-    <div className='space-y-6'>
-      <div className='flex items-center justify-between'>
-        <h2 className='text-lg font-semibold'>Class Announcements</h2>
+    <PageContainer scrollable>
+      <div className='space-y-6'>
+        <div className='flex items-center justify-between'>
+          <h2 className='text-lg font-semibold'>Class Announcements</h2>
+        </div>
+        <AnnouncementsView
+          announcements={announcementsData.announcements}
+          classId={classId}
+        />
       </div>
-
-      <AnnouncementsView
-        announcements={announcementsData.announcements}
-        classId={classId}
-      />
-    </div>
+    </PageContainer>
   );
 }

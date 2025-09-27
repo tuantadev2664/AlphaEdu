@@ -60,6 +60,73 @@ export const navItems: NavItem[] = [
   }
 ];
 
+// Teacher navigation items
+export const teacherNavItems: NavItem[] = [
+  {
+    title: 'Teacher Dashboard',
+    url: '/teacher',
+    icon: 'dashboard',
+    isActive: false,
+    shortcut: ['t', 'd'],
+    items: []
+  },
+  {
+    title: 'All Classes',
+    url: '/teacher/classes',
+    icon: 'graduationCap',
+    isActive: true,
+    shortcut: ['t', 'c'],
+    items: []
+  },
+  {
+    title: 'Inbox',
+    url: '/teacher/inbox',
+    icon: 'mail',
+    shortcut: ['t', 'i'],
+    isActive: false,
+    items: []
+  },
+  {
+    title: 'Assignments',
+    url: '/teacher/assignments',
+    icon: 'fileText',
+    shortcut: ['t', 'a'],
+    isActive: false,
+    items: []
+  },
+  {
+    title: 'Reports',
+    url: '#',
+    icon: 'barChart3',
+    isActive: false,
+    items: [
+      {
+        title: 'Grade Reports',
+        url: '/teacher/reports/grades',
+        icon: 'award'
+      },
+      {
+        title: 'Behavior Reports',
+        url: '/teacher/reports/behavior',
+        icon: 'star'
+      },
+      {
+        title: 'Attendance',
+        url: '/teacher/reports/attendance',
+        icon: 'calendar'
+      }
+    ]
+  },
+  {
+    title: 'Settings',
+    url: '/teacher/settings',
+    icon: 'settings',
+    shortcut: ['t', 's'],
+    isActive: false,
+    items: []
+  }
+];
+
 export interface SaleUser {
   id: number;
   name: string;

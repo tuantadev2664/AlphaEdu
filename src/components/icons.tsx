@@ -1,6 +1,9 @@
 import {
   IconAlertTriangle,
   IconArrowRight,
+  IconAward,
+  IconChartBar,
+  IconCalendar,
   IconCheck,
   IconChevronLeft,
   IconChevronRight,
@@ -8,7 +11,9 @@ import {
   IconCreditCard,
   IconFile,
   IconFileText,
+  IconSchool,
   IconHelpCircle,
+  IconMail,
   IconPhoto,
   IconDeviceLaptop,
   IconLayoutDashboard,
@@ -21,6 +26,7 @@ import {
   IconPizza,
   IconPlus,
   IconSettings,
+  IconStar,
   IconSun,
   IconTrash,
   IconBrandTwitter,
@@ -66,5 +72,13 @@ export const Icons = {
   laptop: IconDeviceLaptop,
   github: IconBrandGithub,
   twitter: IconBrandTwitter,
-  check: IconCheck
+  check: IconCheck,
+  // Teacher specific icons
+  graduationCap: IconSchool,
+  mail: IconMail,
+  fileText: IconFileText,
+  barChart3: IconChartBar,
+  award: IconAward,
+  star: IconStar,
+  calendar: IconCalendar
 };

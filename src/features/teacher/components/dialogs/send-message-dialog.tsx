@@ -102,10 +102,8 @@ export function SendMessageDialog({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className='max-w-2xl'>
         <DialogHeader>
-          <DialogTitle className='flex items-center gap-3'>
-            <div className='rounded-full bg-blue-100 p-2 dark:bg-blue-900'>
-              <MessageSquare className='h-5 w-5 text-blue-600' />
-            </div>
+          <DialogTitle className='flex items-center gap-2'>
+            <MessageSquare className='h-5 w-5' />
             Send Message
           </DialogTitle>
           <DialogDescription>
@@ -115,11 +113,9 @@ export function SendMessageDialog({
 
         <div className='space-y-6'>
           {/* Recipient Info */}
-          <div className='flex items-center gap-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-800'>
-            <Avatar className='h-12 w-12'>
-              <AvatarFallback className='bg-gradient-to-br from-blue-500 to-indigo-600 text-white'>
-                {initials}
-              </AvatarFallback>
+          <div className='flex items-center gap-3 rounded-lg border p-3'>
+            <Avatar className='h-10 w-10'>
+              <AvatarFallback className='text-sm'>{initials}</AvatarFallback>
             </Avatar>
             <div className='flex-1'>
               <div className='font-medium'>{student.full_name}</div>
@@ -137,19 +133,17 @@ export function SendMessageDialog({
             <Label htmlFor='priority'>Priority Level</Label>
             <div className='flex gap-2'>
               {(['normal', 'high', 'urgent'] as const).map((level) => (
-                <button
+                <Button
                   key={level}
                   type='button'
+                  variant={priority === level ? 'default' : 'outline'}
+                  size='sm'
                   onClick={() => setPriority(level)}
-                  className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
-                    priority === level
-                      ? getPriorityColor(level)
-                      : 'border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100'
-                  }`}
+                  className='flex items-center gap-2'
                 >
                   {getPriorityIcon(level)}
                   {level.charAt(0).toUpperCase() + level.slice(1)}
-                </button>
+                </Button>
               ))}
             </div>
           </div>

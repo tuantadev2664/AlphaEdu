@@ -1,6 +1,5 @@
 import { fakeTeacher } from '@/constants/mock-api';
-import { BehaviorView } from '@/features/teacher/components/behavior-view';
-import PageContainer from '@/components/layout/page-container';
+import { BehaviorTableWrapper } from '@/features/teacher/components/behavior-table/behavior-table-wrapper';
 
 interface BehaviorPageProps {
   params: Promise<{ classId: string }>;
@@ -17,11 +16,7 @@ export default async function BehaviorPage({ params }: BehaviorPageProps) {
         <h2 className='text-lg font-semibold'>Behavior Management</h2>
       </div>
 
-      <BehaviorView
-        notes={notesData.notes}
-        students={studentsData.students}
-        classId={classId}
-      />
+      <BehaviorTableWrapper notes={notesData.notes} classId={classId} />
     </div>
   );
 }

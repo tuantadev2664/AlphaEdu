@@ -168,36 +168,39 @@ export function GenerateReportDialog({
       duration: 3000
     });
   };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className='max-h-[80vh] max-w-2xl overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle className='flex items-center gap-3'>
-            <div className='rounded-full bg-purple-100 p-2 dark:bg-purple-900'>
-              <ClipboardList className='h-5 w-5 text-purple-600' />
-            </div>
+          <DialogTitle className='flex items-center gap-2'>
+            <ClipboardList className='h-5 w-5' />
             Generate Student Report
           </DialogTitle>
           <DialogDescription>
-            Create a comprehensive report for {student.full_name} including
-            selected sections.
+            Create a comprehensive report for {student.full_name}
           </DialogDescription>
         </DialogHeader>
 
         {isGenerating && (
           <Card className='border-blue-200 bg-blue-50 dark:bg-blue-900/20'>
             <CardContent className='pt-6'>
-              <div className='space-y-3'>
-                <div className='flex items-center gap-3'>
-                  <div className='h-8 w-8 animate-spin rounded-full border-2 border-blue-600 border-t-transparent'></div>
-                  <span className='font-medium'>Generating report...</span>
+              <div className='text-center'>
+                <div className='mb-4'>
+                  <div className='inline-flex h-16 w-16 items-center justify-center rounded-full bg-blue-100'>
+                    <ClipboardList className='h-8 w-8 text-blue-600' />
+                  </div>
                 </div>
-                <Progress value={progress} className='h-2' />
-                <div className='text-sm text-blue-600'>
+                <h3 className='mb-2 text-lg font-semibold'>
+                  Generating Report...
+                </h3>
+                <p className='text-muted-foreground mb-4 text-sm'>
+                  Please wait while we compile the student report.
+                </p>
+                <Progress value={progress} className='w-full' />
+                <p className='text-muted-foreground mt-2 text-xs'>
                   {progress}% complete
-                </div>
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -206,26 +209,17 @@ export function GenerateReportDialog({
         {!isGenerating && (
           <div className='space-y-6'>
             {/* Student Info */}
-            <Card>
-              <CardContent className='pt-6'>
-                <div className='flex items-center gap-4'>
-                  <Avatar className='h-12 w-12'>
-                    <AvatarFallback className='bg-gradient-to-br from-purple-500 to-pink-600 text-white'>
-                      {initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className='text-lg font-semibold'>
-                      {student.full_name}
-                    </div>
-                    <div className='text-muted-foreground text-sm'>
-                      Average Score: {student.average_score || 'N/A'}% •
-                      Behavior Notes: {student.behavior_notes_count || 0}
-                    </div>
-                  </div>
+            <div className='flex items-center gap-3 rounded-lg border p-3'>
+              <Avatar className='h-10 w-10'>
+                <AvatarFallback className='text-sm'>{initials}</AvatarFallback>
+              </Avatar>
+              <div className='flex-1'>
+                <div className='font-medium'>{student.full_name}</div>
+                <div className='text-muted-foreground text-sm'>
+                  Student ID: {student.id} • {student.email}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
             {/* Report Sections */}
             <Card>

@@ -134,25 +134,16 @@ export function ViewGradesDialog({ student, children }: ViewGradesDialogProps) {
     selectedSubject === 'all'
       ? mockGrades
       : mockGrades.filter((grade) => grade.subject === selectedSubject);
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className='max-h-[80vh] max-w-4xl overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle className='flex items-center gap-3'>
-            <Avatar className='h-12 w-12'>
-              <AvatarFallback className='bg-gradient-to-br from-green-500 to-emerald-600 text-white'>
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <div className='text-xl font-bold'>{student.full_name}</div>
-              <div className='text-muted-foreground text-sm font-normal'>
-                Academic Performance
-              </div>
-            </div>
+          <DialogTitle className='flex items-center gap-2'>
+            <GraduationCap className='h-5 w-5' />
+            {student.full_name} - Grades
           </DialogTitle>
+          <DialogDescription>Academic Performance Overview</DialogDescription>
         </DialogHeader>
 
         <div className='space-y-6'>

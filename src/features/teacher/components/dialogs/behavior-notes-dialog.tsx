@@ -162,14 +162,10 @@ export function BehaviorNotesDialog({
       <DialogContent className='max-h-[80vh] max-w-3xl overflow-y-auto'>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-3'>
-            <Avatar className='h-12 w-12'>
-              <AvatarFallback className='bg-gradient-to-br from-orange-500 to-red-600 text-white'>
-                {initials}
-              </AvatarFallback>
-            </Avatar>
+            <FileText className='h-5 w-5' />
             <div>
-              <div className='text-xl font-bold'>{student.full_name}</div>
-              <div className='text-muted-foreground text-sm font-normal'>
+              <div className='text-lg font-semibold'>{student.full_name}</div>
+              <div className='text-muted-foreground text-sm'>
                 Behavior Notes & Tracking
               </div>
             </div>
@@ -199,12 +195,10 @@ export function BehaviorNotesDialog({
                   const Icon = level.icon;
                   return (
                     <div key={level.value} className='text-center'>
-                      <div
-                        className={`inline-flex h-12 w-12 items-center justify-center rounded-full ${level.color} mb-2`}
-                      >
-                        <Icon className='h-5 w-5' />
+                      <div className='bg-primary/10 mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-lg'>
+                        <Icon className='text-primary h-4 w-4' />
                       </div>
-                      <div className='text-2xl font-bold'>{count}</div>
+                      <div className='text-xl font-bold'>{count}</div>
                       <div className='text-muted-foreground text-xs'>
                         {level.label}
                       </div>
@@ -228,19 +222,21 @@ export function BehaviorNotesDialog({
                     {behaviorLevels.map((level) => {
                       const Icon = level.icon;
                       return (
-                        <button
+                        <Button
                           key={level.value}
                           type='button'
-                          onClick={() => setSelectedLevel(level.value as any)}
-                          className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
+                          variant={
                             selectedLevel === level.value
-                              ? level.color
-                              : 'border-gray-200 bg-gray-50 text-gray-700 hover:bg-gray-100'
-                          }`}
+                              ? 'default'
+                              : 'outline'
+                          }
+                          size='sm'
+                          onClick={() => setSelectedLevel(level.value as any)}
+                          className='flex items-center gap-2'
                         >
                           <Icon className='h-3 w-3' />
                           {level.label}
-                        </button>
+                        </Button>
                       );
                     })}
                   </div>
@@ -293,12 +289,13 @@ export function BehaviorNotesDialog({
                     <div className='flex items-start justify-between gap-4'>
                       <div className='flex-1'>
                         <div className='mb-2 flex items-center gap-3'>
-                          <div
-                            className={`flex items-center gap-2 rounded-full border px-2 py-1 text-xs font-medium ${levelConfig.color}`}
+                          <Badge
+                            variant='outline'
+                            className='flex items-center gap-1'
                           >
                             <Icon className='h-3 w-3' />
                             {levelConfig.label}
-                          </div>
+                          </Badge>
                           <div className='text-muted-foreground flex items-center gap-1 text-sm'>
                             <Calendar className='h-3 w-3' />
                             {format(
