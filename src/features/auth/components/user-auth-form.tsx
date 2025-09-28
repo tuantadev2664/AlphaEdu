@@ -15,7 +15,7 @@ import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import GithubSignInButton from './github-auth-button';
+import GithubSignInButton from './google-auth-button';
 import { FormInput } from '@/components/forms/form-input';
 
 const formSchema = z.object({
