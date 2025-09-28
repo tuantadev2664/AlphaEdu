@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -32,6 +33,7 @@ import { UserAvatarProfile } from '@/components/user-avatar-profile';
 import { teacherNavItems } from '@/constants/data';
 import { fakeTeacher } from '@/constants/mock-api';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { useAuth } from '@/components/layout/auth-provider';
 import {
   IconBell,
   IconChevronRight,
@@ -45,7 +47,6 @@ import {
   IconStar,
   IconCalendar
 } from '@tabler/icons-react';
-import { SignOutButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
@@ -66,15 +67,8 @@ const tenants = [
 export default function TeacherSidebar() {
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
-  // Mock teacher user data
-  const user = {
-    fullName: 'Teacher Name',
-    emailAddresses: [{ emailAddress: 'teacher@school.edu' }]
-  };
+  const { user, signOut, loading } = useAuth();
   const router = useRouter();
-  const handleSwitchTenant = (_tenantId: string) => {
-    // Tenant switching functionality would be implemented here
-  };
 
   const activeTenant = tenants[0];
 
@@ -121,9 +115,50 @@ export default function TeacherSidebar() {
       ]
     : [];
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Sign out error:', error);
+      router.push('/auth/sign-in');
+    }
+  };
+
+  const handleSwitchTenant = (_tenantId: string) => {
+    // Tenant switching functionality would be implemented here
+    console.log('Switching to tenant:', _tenantId);
+  };
+
   React.useEffect(() => {
     // Side effects based on sidebar state changes
   }, [isOpen]);
+
+  // Don't render sidebar if no user or loading
+  if (loading || !user) {
+    return (
+      <Sidebar collapsible='icon'>
+        <SidebarContent className='flex items-center justify-center'>
+          <div className='border-primary h-8 w-8 animate-spin rounded-full border-b-2'></div>
+        </SidebarContent>
+      </Sidebar>
+    );
+  }
+
+  // Only allow teachers to use this sidebar
+  if (user.role !== 'teacher') {
+    return (
+      <Sidebar collapsible='icon'>
+        <SidebarContent className='flex items-center justify-center p-4'>
+          <div className='text-center'>
+            <p className='text-muted-foreground text-sm'>Access denied</p>
+            <p className='text-muted-foreground text-xs'>
+              Teacher role required
+            </p>
+          </div>
+        </SidebarContent>
+      </Sidebar>
+    );
+  }
 
   return (
     <Sidebar collapsible='icon'>
@@ -225,6 +260,7 @@ export default function TeacherSidebar() {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -234,16 +270,18 @@ export default function TeacherSidebar() {
                   size='lg'
                   className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
                 >
-                  {user && (
-                    <UserAvatarProfile
-                      className='h-8 w-8 rounded-lg'
-                      showInfo
-                      user={user}
-                    />
-                  )}
+                  <UserAvatarProfile
+                    className='h-8 w-8 rounded-lg'
+                    showInfo
+                    user={{
+                      fullName: user.full_name || user.email,
+                      emailAddresses: [{ emailAddress: user.email }]
+                    }}
+                  />
                   <IconChevronsDown className='ml-auto size-4' />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
+
               <DropdownMenuContent
                 className='w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg'
                 side='bottom'
@@ -252,13 +290,14 @@ export default function TeacherSidebar() {
               >
                 <DropdownMenuLabel className='p-0 font-normal'>
                   <div className='px-1 py-1.5'>
-                    {user && (
-                      <UserAvatarProfile
-                        className='h-8 w-8 rounded-lg'
-                        showInfo
-                        user={user}
-                      />
-                    )}
+                    <UserAvatarProfile
+                      className='h-8 w-8 rounded-lg'
+                      showInfo
+                      user={{
+                        fullName: user.full_name || user.email,
+                        emailAddresses: [{ emailAddress: user.email }]
+                      }}
+                    />
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -271,20 +310,27 @@ export default function TeacherSidebar() {
                     Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem
+                    onClick={() => router.push('/teacher/schedule')}
+                  >
+                    <IconCalendar className='mr-2 h-4 w-4' />
+                    Schedule
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
                     onClick={() => router.push('/teacher/settings')}
                   >
-                    <IconCreditCard className='mr-2 h-4 w-4' />
+                    <IconBell className='mr-2 h-4 w-4' />
                     Settings
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <IconBell className='mr-2 h-4 w-4' />
-                    Notifications
-                  </DropdownMenuItem>
                 </DropdownMenuGroup>
+
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onClick={handleSignOut}
+                  className='text-red-600 focus:text-red-600'
+                >
                   <IconLogout className='mr-2 h-4 w-4' />
-                  <SignOutButton redirectUrl='/auth/sign-in' />
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

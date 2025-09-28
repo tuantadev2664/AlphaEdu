@@ -2,6 +2,7 @@ import KBar from '@/components/kbar';
 import TeacherSidebar from '@/components/layout/teacher-sidebar';
 import Header from '@/components/layout/header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { TeacherOnlyGuard } from '@/features/auth/components/route-guard';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
@@ -21,16 +22,18 @@ export default async function TeacherLayout({
   const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
 
   return (
-    <KBar>
-      <SidebarProvider defaultOpen={defaultOpen}>
-        <TeacherSidebar />
-        <SidebarInset>
-          <Header />
-          {/* page main content */}
-          {children}
-          {/* page main content ends */}
-        </SidebarInset>
-      </SidebarProvider>
-    </KBar>
+    <TeacherOnlyGuard>
+      <KBar>
+        <SidebarProvider defaultOpen={defaultOpen}>
+          <TeacherSidebar />
+          <SidebarInset>
+            <Header />
+            {/* page main content */}
+            {children}
+            {/* page main content ends */}
+          </SidebarInset>
+        </SidebarProvider>
+      </KBar>
+    </TeacherOnlyGuard>
   );
 }
