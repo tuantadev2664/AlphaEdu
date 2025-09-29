@@ -148,16 +148,18 @@ export default function SignInViewPage({ stars }: { stars: number }) {
           <div className='absolute inset-0 bg-black/50' />
         </div>
 
-        <div className='relative z-20 flex items-center text-lg font-medium'>
-          <Image
-            src='/Logo.png'
-            alt='logo'
-            width={100}
-            height={100}
-            className='mr-5 rounded-full'
-          />
-          <span className='font-semibold text-white'>EduPortal</span>
-        </div>
+        <Link href='/landing'>
+          <div className='relative z-20 flex items-center text-lg font-medium'>
+            <Image
+              src='/Logo.png'
+              alt='logo'
+              width={100}
+              height={100}
+              className='mr-5 rounded-full'
+            />
+            <span className='font-semibold text-white'>EduPortal</span>
+          </div>
+        </Link>
 
         {/* Content overlay */}
         <div className='relative z-20 flex flex-1 items-center justify-center py-8'>
