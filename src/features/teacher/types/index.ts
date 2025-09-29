@@ -267,3 +267,24 @@ export type CreateAssessmentForm = {
   due_date: string;
   description: string;
 };
+
+// API Response types
+export type TeacherClass = {
+  id: string;
+  gradeId: string;
+  name: string;
+  homeroomTeacherId: string;
+  announcements: Announcement[];
+  behaviorNotes: BehaviorNote[];
+  classEnrollments: ClassEnrollment[];
+  grade: Grade | null;
+  gradeComponents: GradeComponent[];
+  homeroomTeacher: Teacher | null;
+  teacherAssignments: TeacherAssignment[];
+};
+
+export type GetTeacherClassesParams = {
+  academicYearId?: string;
+};
+
+export type GetTeacherClassesResponse = TeacherClass[];

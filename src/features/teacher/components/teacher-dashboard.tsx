@@ -25,15 +25,19 @@ import {
   Award
 } from 'lucide-react';
 import Link from 'next/link';
-import { Class, TeacherDashboardStats } from '@/features/teacher/types';
+import { TeacherDashboardStats } from '@/features/teacher/types';
 import { format } from 'date-fns';
+import { useTeacherClasses } from '../hooks/use-teacher.query';
 
 interface TeacherDashboardProps {
   stats: TeacherDashboardStats;
-  classes: Class[];
 }
 
-export function TeacherDashboard({ stats, classes }: TeacherDashboardProps) {
+export function TeacherDashboard({ stats }: TeacherDashboardProps) {
+  const { data: classes, isLoading } = useTeacherClasses({
+    academicYearId: '5a45bd68-561e-4bbf-b594-b7636684ee4b'
+  });
+
   return (
     <div className='flex flex-1 flex-col space-y-8'>
       {/* Welcome Section */}
@@ -174,7 +178,7 @@ export function TeacherDashboard({ stats, classes }: TeacherDashboardProps) {
           </CardHeader>
           <CardContent>
             <div className='space-y-4'>
-              {classes.map((classItem, index) => {
+              {classes?.map((classItem, index) => {
                 // Calculate some mock progress data for visual appeal
                 const attendanceRate = Math.floor(Math.random() * 20) + 80; // 80-100%
                 const avgGrade = Math.floor(Math.random() * 15) + 85; // 85-100%
@@ -205,12 +209,12 @@ export function TeacherDashboard({ stats, classes }: TeacherDashboardProps) {
                               </span>
                               <span className='flex items-center gap-1'>
                                 <Users className='h-3 w-3' />
-                                {classItem.student_count} students
+                                {classItem.classEnrollments.length} students
                               </span>
                             </div>
                           </div>
-                          <div className='space-y-1'>
-                            <div className='flex items-center justify-between text-xs'>
+                          <div className='space-y-2'>
+                            <div className='flex items-center justify-between space-x-2 text-xs'>
                               <span className='text-muted-foreground'>
                                 Class Performance
                               </span>
@@ -239,7 +243,7 @@ export function TeacherDashboard({ stats, classes }: TeacherDashboardProps) {
                   </div>
                 );
               })}
-              {classes.length === 0 && (
+              {classes?.length === 0 && (
                 <div className='py-12 text-center'>
                   <div className='bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'>
                     <BookOpen className='text-muted-foreground h-8 w-8' />
@@ -255,8 +259,8 @@ export function TeacherDashboard({ stats, classes }: TeacherDashboardProps) {
           <CardFooter>
             <div className='flex w-full items-center justify-between text-sm'>
               <div className='text-muted-foreground'>
-                {classes.length} active{' '}
-                {classes.length === 1 ? 'class' : 'classes'}
+                {classes?.length} active{' '}
+                {classes?.length === 1 ? 'class' : 'classes'}
               </div>
               <Button variant='outline' size='sm' asChild>
                 <Link href='/teacher/classes'>
