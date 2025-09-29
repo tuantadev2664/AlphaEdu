@@ -23,17 +23,19 @@ export default async function TeacherLayout({
 
   return (
     <TeacherOnlyGuard>
-      <KBar>
-        <SidebarProvider defaultOpen={defaultOpen}>
-          <TeacherSidebar />
-          <SidebarInset>
-            <Header />
-            {/* page main content */}
-            {children}
-            {/* page main content ends */}
-          </SidebarInset>
-        </SidebarProvider>
-      </KBar>
+      <div className='overflow-hidden overscroll-none'>
+        <KBar>
+          <SidebarProvider defaultOpen={defaultOpen}>
+            <TeacherSidebar />
+            <SidebarInset>
+              <Header />
+              {/* page main content */}
+              {children}
+              {/* page main content ends */}
+            </SidebarInset>
+          </SidebarProvider>
+        </KBar>
+      </div>
     </TeacherOnlyGuard>
   );
 }
