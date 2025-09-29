@@ -274,13 +274,14 @@ export type TeacherClass = {
   gradeId: string;
   name: string;
   homeroomTeacherId: string;
-  announcements: Announcement[];
-  behaviorNotes: BehaviorNote[];
-  classEnrollments: ClassEnrollment[];
-  grade: Grade | null;
-  gradeComponents: GradeComponent[];
-  homeroomTeacher: Teacher | null;
-  teacherAssignments: TeacherAssignment[];
+  announcements?: Announcement[];
+  behaviorNotes?: BehaviorNote[];
+  classEnrollments?: ClassEnrollment[];
+  grade?: Grade | null;
+  gradeComponents?: GradeComponent[];
+  homeroomTeacher?: Teacher | null;
+  teacherAssignments?: TeacherAssignment[];
+  studentCount?: number;
 };
 
 export type GetTeacherClassesParams = {

@@ -35,7 +35,7 @@ interface TeacherDashboardProps {
 
 export function TeacherDashboard({ stats }: TeacherDashboardProps) {
   const { data: classes, isLoading } = useTeacherClasses({
-    academicYearId: '5a45bd68-561e-4bbf-b594-b7636684ee4b'
+    academicYearId: '22222222-2222-2222-2222-222222222222'
   });
 
   return (
@@ -205,11 +205,13 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                             <div className='text-muted-foreground flex items-center gap-3 text-sm'>
                               <span className='flex items-center gap-1'>
                                 <GraduationCap className='h-3 w-3' />
-                                Grade {classItem.grade?.grade_number}
+                                Grade{' '}
+                                {classItem.grade?.grade_number ||
+                                  classItem.name.charAt(0).toUpperCase()}
                               </span>
                               <span className='flex items-center gap-1'>
                                 <Users className='h-3 w-3' />
-                                {classItem.classEnrollments.length} students
+                                {classItem.studentCount} students
                               </span>
                             </div>
                           </div>
