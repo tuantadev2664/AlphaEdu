@@ -72,3 +72,72 @@ export type RemoveStudentFromClassForm = {
   classId: string;
   academicYearId: string;
 };
+
+// Class Details API Types (new endpoint)
+export type EduLevel = 'primary' | 'lower_secondary' | 'upper_secondary';
+
+// Student info from class details
+export type ClassDetailsStudent = {
+  studentId: string;
+  fullName: string;
+};
+
+// Subject info from class details
+export type ClassSubject = {
+  subjectId: string;
+  subjectName: string;
+  teacherId: string;
+  teacherName: string;
+};
+
+// Class details response from API
+export type ClassDetails = {
+  classId: string;
+  className: string;
+  gradeName: EduLevel;
+  homeroomTeacherId: string;
+  homeroomTeacherName: string;
+  studentCount: number;
+  students: ClassDetailsStudent[];
+  subjects: ClassSubject[];
+};
+
+// API Parameters for class details
+export type GetClassDetailsParams = {
+  classId: string;
+  academicYearId: string;
+};
+
+// API Response for class details
+export type GetClassDetailsResponse = ClassDetails;
+
+// UI-specific types for class details
+export type ClassDetailsWithStats = ClassDetails & {
+  averageClassSize?: number;
+  totalSubjects?: number;
+  activeStudents?: number;
+};
+
+// For detailed class view
+export type ClassOverview = {
+  classInfo: ClassDetails;
+  stats: {
+    totalStudents: number;
+    totalSubjects: number;
+    homeroomTeacher: string;
+    gradeLevel: string;
+  };
+};
+
+// Form types for class details
+export type UpdateClassDetailsForm = {
+  className: string;
+  homeroomTeacherId: string;
+};
+
+export type AssignSubjectTeacherForm = {
+  subjectId: string;
+  teacherId: string;
+  classId: string;
+  academicYearId: string;
+};

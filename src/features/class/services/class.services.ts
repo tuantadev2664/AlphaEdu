@@ -1,7 +1,9 @@
 import { apiCall } from '@/features/auth/services/auth.service';
 import type {
   GetClassStudentsParams,
-  GetClassStudentsResponse
+  GetClassStudentsResponse,
+  GetClassDetailsParams,
+  GetClassDetailsResponse
 } from '../types';
 
 /**
@@ -81,5 +83,110 @@ export async function isStudentInClass(
   } catch (error: any) {
     console.error('❌ Error checking student enrollment:', error);
     return false;
+  }
+}
+
+/**
+ * Get detailed information about a specific class including students and subjects
+ * @param params - Object containing classId and academicYearId
+ */
+export async function getClassDetails(
+  params: GetClassDetailsParams
+): Promise<GetClassDetailsResponse> {
+  try {
+    const { classId, academicYearId } = params;
+
+    if (!classId || !academicYearId) {
+      throw new Error('Both classId and academicYearId are required');
+    }
+
+    const endpoint = `/Class/${classId}/year/${academicYearId}/details`;
+
+    console.log('🔄 Fetching class details:', endpoint);
+
+    const response = await apiCall(endpoint, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `Failed to fetch class details: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+    console.log('✅ Class details fetched successfully:', data.className);
+
+    return data;
+  } catch (error: any) {
+    console.error('❌ Error fetching class details:', error);
+    throw new Error(error.message || 'Failed to fetch class details');
+  }
+}
+
+/**
+ * Get class summary info (basic stats without full details)
+ * @param params - Object containing classId and academicYearId
+ */
+export async function getClassSummary(params: GetClassDetailsParams): Promise<{
+  classId: string;
+  className: string;
+  studentCount: number;
+  subjectCount: number;
+  homeroomTeacherName: string;
+}> {
+  try {
+    const classDetails = await getClassDetails(params);
+
+    return {
+      classId: classDetails.classId,
+      className: classDetails.className,
+      studentCount: classDetails.studentCount,
+      subjectCount: classDetails.subjects.length,
+      homeroomTeacherName: classDetails.homeroomTeacherName
+    };
+  } catch (error: any) {
+    console.error('❌ Error fetching class summary:', error);
+    throw new Error(error.message || 'Failed to fetch class summary');
+  }
+}
+
+/**
+ * Get only students list from class details
+ * @param params - Object containing classId and academicYearId
+ */
+export async function getClassDetailsStudents(
+  params: GetClassDetailsParams
+): Promise<Array<{ studentId: string; fullName: string }>> {
+  try {
+    const classDetails = await getClassDetails(params);
+    return classDetails.students;
+  } catch (error: any) {
+    console.error('❌ Error fetching class details students:', error);
+    return [];
+  }
+}
+
+/**
+ * Get only subjects list from class details
+ * @param params - Object containing classId and academicYearId
+ */
+export async function getClassSubjectsList(
+  params: GetClassDetailsParams
+): Promise<
+  Array<{
+    subjectId: string;
+    subjectName: string;
+    teacherId: string;
+    teacherName: string;
+  }>
+> {
+  try {
+    const classDetails = await getClassDetails(params);
+    return classDetails.subjects;
+  } catch (error: any) {
+    console.error('❌ Error fetching class subjects list:', error);
+    return [];
   }
 }
