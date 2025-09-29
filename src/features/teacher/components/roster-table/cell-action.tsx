@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { RosterStudent } from '@/features/teacher/types';
+import { ClassStudent } from '@/features/class/types';
 import {
   MoreHorizontal,
   User,
@@ -25,7 +26,7 @@ import { BehaviorNotesDialog } from '../dialogs/behavior-notes-dialog';
 import { GenerateReportDialog } from '../dialogs/generate-report-dialog';
 
 interface CellActionProps {
-  data: RosterStudent;
+  data: ClassStudent;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {

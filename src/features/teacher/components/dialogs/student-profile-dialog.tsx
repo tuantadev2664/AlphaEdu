@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RosterStudent } from '@/features/teacher/types';
+import { ClassStudent } from '@/features/class/types';
 import {
   User,
   Mail,
@@ -28,7 +28,7 @@ import {
 import { format } from 'date-fns';
 
 interface StudentProfileDialogProps {
-  student: RosterStudent;
+  student: ClassStudent;
   children: React.ReactNode;
 }
 
@@ -38,7 +38,7 @@ export function StudentProfileDialog({
 }: StudentProfileDialogProps) {
   const [open, setOpen] = useState(false);
 
-  const initials = student.full_name
+  const initials = student.fullName
     .split(' ')
     .map((name) => name[0])
     .join('')
@@ -68,7 +68,7 @@ export function StudentProfileDialog({
               <AvatarFallback className='text-sm'>{initials}</AvatarFallback>
             </Avatar>
             <div>
-              <div className='text-lg font-semibold'>{student.full_name}</div>
+              <div className='text-lg font-semibold'>{student.fullName}</div>
               <DialogDescription>Student Profile</DialogDescription>
             </div>
           </DialogTitle>
@@ -120,15 +120,29 @@ export function StudentProfileDialog({
                 <div className='flex items-center gap-3'>
                   <div className='bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg'>
                     <span className='text-primary text-lg font-bold'>
-                      {student.average_score || 'N/A'}
-                      {student.average_score && '%'}
+                      {student.scoreStudents.reduce(
+                        (sum, score) => sum + score.score,
+                        0
+                      ) / student.scoreStudents.length || 'N/A'}
+                      {student.scoreStudents.reduce(
+                        (sum, score) => sum + score.score,
+                        0
+                      ) / student.scoreStudents.length && '%'}
                     </span>
                   </div>
                   <div>
                     <div className='text-sm font-medium'>Average Score</div>
                     <div className='text-muted-foreground text-xs'>
-                      {student.average_score
-                        ? getScoreStatus(student.average_score)
+                      {student.scoreStudents.reduce(
+                        (sum, score) => sum + score.score,
+                        0
+                      ) / student.scoreStudents.length
+                        ? getScoreStatus(
+                            student.scoreStudents.reduce(
+                              (sum, score) => sum + score.score,
+                              0
+                            ) / student.scoreStudents.length
+                          )
                         : 'No data'}
                     </div>
                   </div>
@@ -174,18 +188,18 @@ export function StudentProfileDialog({
                       </span>
                       <Badge
                         variant={
-                          student.behavior_notes_count &&
-                          student.behavior_notes_count > 0
+                          student.behaviorNoteStudents &&
+                          student.behaviorNoteStudents.length > 0
                             ? 'destructive'
                             : 'default'
                         }
                       >
-                        {student.behavior_notes_count || 0}
+                        {student.behaviorNoteStudents.length || 0}
                       </Badge>
                     </div>
                     <div className='text-muted-foreground text-xs'>
-                      {student.behavior_notes_count &&
-                      student.behavior_notes_count > 0
+                      {student.behaviorNoteStudents &&
+                      student.behaviorNoteStudents.length > 0
                         ? 'Some behavioral concerns noted'
                         : 'Good behavior record'}
                     </div>
@@ -221,7 +235,7 @@ export function StudentProfileDialog({
                 <div>
                   <div className='text-sm font-medium'>Enrolled Since</div>
                   <div className='text-muted-foreground text-sm'>
-                    {format(new Date(student.created_at), 'MMMM dd, yyyy')}
+                    {format(new Date(student.createdAt), 'MMMM dd, yyyy')}
                   </div>
                 </div>
               </div>

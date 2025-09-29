@@ -16,7 +16,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { RosterStudent } from '@/features/teacher/types';
+import { ClassStudent } from '@/features/class/types';
 import {
   ClipboardList,
   Download,
@@ -31,7 +31,7 @@ import {
 import { toast } from 'sonner';
 
 interface GenerateReportDialogProps {
-  student: RosterStudent;
+  student: ClassStudent;
   children: React.ReactNode;
 }
 
@@ -112,7 +112,7 @@ export function GenerateReportDialog({
   const [isGenerating, setIsGenerating] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  const initials = student.full_name
+  const initials = student.fullName
     .split(' ')
     .map((name) => name[0])
     .join('')
@@ -164,7 +164,7 @@ export function GenerateReportDialog({
     setOpen(false);
 
     toast.success('Report Generated', {
-      description: `Student report for ${student.full_name} has been generated and downloaded.`,
+      description: `Student report for ${student.fullName} has been generated and downloaded.`,
       duration: 3000
     });
   };
@@ -178,7 +178,7 @@ export function GenerateReportDialog({
             Generate Student Report
           </DialogTitle>
           <DialogDescription>
-            Create a comprehensive report for {student.full_name}
+            Create a comprehensive report for {student.fullName}
           </DialogDescription>
         </DialogHeader>
 
@@ -214,7 +214,7 @@ export function GenerateReportDialog({
                 <AvatarFallback className='text-sm'>{initials}</AvatarFallback>
               </Avatar>
               <div className='flex-1'>
-                <div className='font-medium'>{student.full_name}</div>
+                <div className='font-medium'>{student.fullName}</div>
                 <div className='text-muted-foreground text-sm'>
                   Student ID: {student.id} • {student.email}
                 </div>
@@ -318,7 +318,7 @@ export function GenerateReportDialog({
                 </div>
                 <div className='text-muted-foreground text-sm'>
                   Generating {selectedSections.length} sections in{' '}
-                  {selectedFormat.toUpperCase()} format for {student.full_name}
+                  {selectedFormat.toUpperCase()} format for {student.fullName}
                 </div>
               </CardContent>
             </Card>
