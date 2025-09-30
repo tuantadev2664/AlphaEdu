@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { RosterStudent } from '@/features/teacher/types';
+import { ClassStudent } from '@/features/class/types';
 import {
   MessageSquare,
   Send,
@@ -27,7 +27,7 @@ import {
 import { toast } from 'sonner';
 
 interface SendMessageDialogProps {
-  student: RosterStudent;
+  student: ClassStudent;
   children: React.ReactNode;
 }
 
@@ -43,7 +43,7 @@ export function SendMessageDialog({
   );
   const [isLoading, setIsLoading] = useState(false);
 
-  const initials = student.full_name
+  const initials = student.fullName
     .split(' ')
     .map((name) => name[0])
     .join('')
@@ -70,7 +70,7 @@ export function SendMessageDialog({
     setPriority('normal');
 
     toast.success('Message Sent', {
-      description: `Your message has been sent to ${student.full_name}.`,
+      description: `Your message has been sent to ${student.fullName}.`,
       duration: 3000
     });
   };
@@ -118,7 +118,7 @@ export function SendMessageDialog({
               <AvatarFallback className='text-sm'>{initials}</AvatarFallback>
             </Avatar>
             <div className='flex-1'>
-              <div className='font-medium'>{student.full_name}</div>
+              <div className='font-medium'>{student.fullName}</div>
               <div className='text-muted-foreground text-sm'>
                 {student.email}
               </div>
@@ -185,7 +185,7 @@ export function SendMessageDialog({
                 onClick={() => {
                   setSubject('Academic Performance Update');
                   setMessage(
-                    `Dear ${student.full_name} and guardians,\n\nI wanted to share an update about ${student.full_name}'s academic performance in class. Please feel free to reach out if you have any questions or would like to schedule a meeting.\n\nBest regards,\nYour Teacher`
+                    `Dear ${student.fullName} and guardians,\n\nI wanted to share an update about ${student.fullName}'s academic performance in class. Please feel free to reach out if you have any questions or would like to schedule a meeting.\n\nBest regards,\nYour Teacher`
                   );
                 }}
                 className='justify-start text-xs'
@@ -198,7 +198,7 @@ export function SendMessageDialog({
                 onClick={() => {
                   setSubject('Behavior Notice');
                   setMessage(
-                    `Dear ${student.full_name} and guardians,\n\nI wanted to discuss ${student.full_name}'s behavior in class. Let's work together to support their success.\n\nBest regards,\nYour Teacher`
+                    `Dear ${student.fullName} and guardians,\n\nI wanted to discuss ${student.fullName}'s behavior in class. Let's work together to support their success.\n\nBest regards,\nYour Teacher`
                   );
                 }}
                 className='justify-start text-xs'
@@ -211,7 +211,7 @@ export function SendMessageDialog({
                 onClick={() => {
                   setSubject('Positive Recognition');
                   setMessage(
-                    `Dear ${student.full_name} and guardians,\n\nI'm pleased to share that ${student.full_name} has been doing excellent work in class. Keep up the great effort!\n\nBest regards,\nYour Teacher`
+                    `Dear ${student.fullName} and guardians,\n\nI'm pleased to share that ${student.fullName} has been doing excellent work in class. Keep up the great effort!\n\nBest regards,\nYour Teacher`
                   );
                 }}
                 className='justify-start text-xs'
@@ -224,7 +224,7 @@ export function SendMessageDialog({
                 onClick={() => {
                   setSubject('Meeting Request');
                   setMessage(
-                    `Dear ${student.full_name} and guardians,\n\nI would like to schedule a meeting to discuss ${student.full_name}'s progress. Please let me know your availability.\n\nBest regards,\nYour Teacher`
+                    `Dear ${student.fullName} and guardians,\n\nI would like to schedule a meeting to discuss ${student.fullName}'s progress. Please let me know your availability.\n\nBest regards,\nYour Teacher`
                   );
                 }}
                 className='justify-start text-xs'
