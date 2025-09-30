@@ -19,11 +19,11 @@ import {
   GraduationCap,
   ClipboardList
 } from 'lucide-react';
-import { StudentProfileDialog } from '../dialogs/student-profile-dialog';
-import { SendMessageDialog } from '../dialogs/send-message-dialog';
-import { ViewGradesDialog } from '../dialogs/view-grades-dialog';
-import { BehaviorNotesDialog } from '../dialogs/behavior-notes-dialog';
-import { GenerateReportDialog } from '../dialogs/generate-report-dialog';
+import { StudentProfileDialog } from './dialogs/student-profile-dialog';
+import { SendMessageDialog } from './dialogs/send-message-dialog';
+import { ViewGradesDialog } from './dialogs/view-grades-dialog';
+import { BehaviorNotesDialog } from './dialogs/behavior-notes-dialog';
+import { GenerateReportDialog } from './dialogs/generate-report-dialog';
 
 interface CellActionProps {
   data: ClassStudent;
