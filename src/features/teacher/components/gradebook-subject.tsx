@@ -2,14 +2,17 @@
 
 import { Button } from '@/components/ui/button';
 import { GradebookTable } from '@/features/teacher/components/gradebook-table/index';
-import { Upload, Download, Plus } from 'lucide-react';
+import { Edit, Plus } from 'lucide-react';
 import { useGradebook } from '@/features/score/hooks/use-score.query';
 import { useClassDetails } from '@/features/class/hooks/use-class.query';
 import { useMemo, useState } from 'react';
+import { toast } from 'sonner';
+import { useUpdateScore } from '@/features/score/hooks/use-score.query';
 import { createColumns } from './gradebook-table/columns';
 import {
   ViewScoreDetailsDialog,
-  EditScoreDetailsDialog
+  EditScoreDetailsDialog,
+  BulkUpdateScoresDialog
 } from './gradebook-table/dialogs';
 import { StudentScore } from '@/features/score/type';
 import { AddAssessmentDialog } from './gradebook-table/dialogs/add-assessment-dialog';
@@ -30,6 +33,8 @@ export default function GradebookSubject({
     null
   );
   const [addAssessmentOpen, setAddAssessmentOpen] = useState(false);
+  const [bulkUpdateOpen, setBulkUpdateOpen] = useState(false);
+  const updateScoreMutation = useUpdateScore();
 
   // Dialog handlers
   const handleViewDetails = (student: StudentScore) => {
@@ -166,13 +171,13 @@ export default function GradebookSubject({
         {/* Actions */}
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-2'>
-            <Button variant='outline' size='sm'>
-              <Upload className='mr-2 h-4 w-4' />
-              Import Grades
-            </Button>
-            <Button variant='outline' size='sm'>
-              <Download className='mr-2 h-4 w-4' />
-              Export Grades
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => setBulkUpdateOpen(true)}
+            >
+              <Edit className='mr-2 h-4 w-4' />
+              Bulk Update Scores
             </Button>
             <Button
               variant='outline'
@@ -222,6 +227,12 @@ export default function GradebookSubject({
             />
           </>
         )}
+
+        <BulkUpdateScoresDialog
+          open={bulkUpdateOpen}
+          onOpenChange={setBulkUpdateOpen}
+          data={gradebookData}
+        />
       </div>
       <AddAssessmentDialog
         open={addAssessmentOpen}
