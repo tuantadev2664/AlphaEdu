@@ -31,9 +31,9 @@ import {
 } from '@/components/ui/sidebar';
 import { UserAvatarProfile } from '@/components/user-avatar-profile';
 import { teacherNavItems } from '@/constants/data';
-import { fakeTeacher } from '@/constants/mock-api';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useAuth } from '@/components/layout/auth-provider';
+import { useClassDetails } from '@/features/class/hooks/use-class.query';
 import {
   IconBell,
   IconChevronRight,
@@ -75,9 +75,17 @@ export default function TeacherSidebar() {
   // Check if we're in a class detail page
   const classMatch = pathname.match(/\/teacher\/classes\/([^\/]+)/);
   const currentClassId = classMatch ? classMatch[1] : null;
-  const currentClass = currentClassId
-    ? fakeTeacher.classes.find((c) => c.id === currentClassId)
-    : null;
+
+  // Fetch class details using the hook
+  const { data: currentClass, isLoading: classLoading } = useClassDetails(
+    {
+      classId: currentClassId || '',
+      academicYearId: '22222222-2222-2222-2222-222222222222'
+    },
+    {
+      enabled: !!currentClassId
+    }
+  );
 
   // Class navigation tabs
   const classTabConfigs = currentClass
@@ -171,9 +179,15 @@ export default function TeacherSidebar() {
       </SidebarHeader>
       <SidebarContent className='overflow-x-hidden'>
         {/* Class Navigation - Show when in class detail */}
-        {currentClass && (
+        {currentClassId && (
           <SidebarGroup>
-            <SidebarGroupLabel>{currentClass.name}</SidebarGroupLabel>
+            <SidebarGroupLabel>
+              {classLoading ? (
+                <div className='bg-muted h-4 w-16 animate-pulse rounded' />
+              ) : (
+                currentClass?.className || 'Class'
+              )}
+            </SidebarGroupLabel>
             <SidebarMenu>
               {classTabConfigs.map((tab) => {
                 const Icon = tab.icon;

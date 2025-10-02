@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { RosterStudent } from '@/features/teacher/types';
+import { ClassStudent } from '@/features/class/types';
 import {
   MoreHorizontal,
   User,
@@ -18,14 +19,14 @@ import {
   GraduationCap,
   ClipboardList
 } from 'lucide-react';
-import { StudentProfileDialog } from '../dialogs/student-profile-dialog';
-import { SendMessageDialog } from '../dialogs/send-message-dialog';
-import { ViewGradesDialog } from '../dialogs/view-grades-dialog';
-import { BehaviorNotesDialog } from '../dialogs/behavior-notes-dialog';
-import { GenerateReportDialog } from '../dialogs/generate-report-dialog';
+import { StudentProfileDialog } from './dialogs/student-profile-dialog';
+import { SendMessageDialog } from './dialogs/send-message-dialog';
+import { ViewGradesDialog } from './dialogs/view-grades-dialog';
+import { BehaviorNotesDialog } from './dialogs/behavior-notes-dialog';
+import { GenerateReportDialog } from './dialogs/generate-report-dialog';
 
 interface CellActionProps {
-  data: RosterStudent;
+  data: ClassStudent;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {

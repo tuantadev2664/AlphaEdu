@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RosterStudent } from '@/features/teacher/types';
+import { ClassStudent } from '@/features/class/types';
 import {
   FileText,
   Plus,
@@ -30,7 +30,7 @@ import { format } from 'date-fns';
 import { toast } from 'sonner';
 
 interface BehaviorNotesDialogProps {
-  student: RosterStudent;
+  student: ClassStudent;
   children: React.ReactNode;
 }
 
@@ -111,7 +111,7 @@ export function BehaviorNotesDialog({
   >('good');
   const [isLoading, setIsLoading] = useState(false);
 
-  const initials = student.full_name
+  const initials = student.fullName
     .split(' ')
     .map((name) => name[0])
     .join('')
@@ -164,7 +164,7 @@ export function BehaviorNotesDialog({
           <DialogTitle className='flex items-center gap-3'>
             <FileText className='h-5 w-5' />
             <div>
-              <div className='text-lg font-semibold'>{student.full_name}</div>
+              <div className='text-lg font-semibold'>{student.fullName}</div>
               <div className='text-muted-foreground text-sm'>
                 Behavior Notes & Tracking
               </div>

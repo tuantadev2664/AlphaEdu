@@ -53,6 +53,14 @@ export function useRefreshUserQuery() {
   });
 }
 
+export function useUserByIdQuery(userId: string) {
+  return useQuery({
+    queryKey: [...authKeys.user(), 'userById', userId],
+    queryFn: () => authService.getUserById(userId),
+    enabled: !!userId
+  });
+}
+
 // Mutation để login (có thể dùng với React Query mutations)
 export function useLoginMutation() {
   // Sẽ implement trong bước tiếp theo nếu cần
