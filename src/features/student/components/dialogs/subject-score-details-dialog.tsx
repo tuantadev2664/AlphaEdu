@@ -104,7 +104,7 @@ export function SubjectScoreDetailsDialog({
   // Group scores by grade component
   const scoresByComponent = gradeComponents.map((component) => {
     const componentScores = scores.filter(
-      (score) => score.assessment?.grade_component_id === component.id
+      (score) => score.assessment?.grade_component?.id === component.id
     );
     const componentAverage =
       componentScores.length > 0
@@ -126,7 +126,7 @@ export function SubjectScoreDetailsDialog({
       ? scores
       : scores.filter((score) => {
           const component = gradeComponents.find(
-            (gc) => gc.id === score.assessment?.grade_component_id
+            (gc) => gc.id === score.assessment?.grade_component?.id
           );
           return component?.kind === selectedComponent;
         });
@@ -134,7 +134,7 @@ export function SubjectScoreDetailsDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className='max-h-[95vh] max-w-[1400px] overflow-y-auto px-2 py-4'>
+      <DialogContent className='top-[50%] left-[50%] z-50 max-h-[90vh] max-w-[95vw] translate-x-[-50%] translate-y-[-50%] overflow-y-auto px-2 sm:max-w-[1400px]'>
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <GraduationCap className='h-5 w-5' />
