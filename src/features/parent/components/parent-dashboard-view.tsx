@@ -102,6 +102,74 @@ export function ParentDashboardView({ data }: ParentDashboardViewProps) {
       child.overall_average < 5.0
   );
 
+  // Mock academic alerts data - would come from API
+  const academicAlerts = [
+    {
+      id: 'alert-1',
+      studentId: 'e6f4ed8e-a84e-48e2-9693-f0d1b36a04f7',
+      fullName: 'Trần Thị B',
+      average: 8.5,
+      belowCount: 0,
+      riskLevel: 'Thấp',
+      comment: 'Kết quả ổn định.',
+      subjects: {
+        Toán: {
+          average: 8.5,
+          assignmentsCount: 1,
+          belowThresholdCount: 0,
+          riskLevel: 'Thấp',
+          comment: 'Ổn định.',
+          components: [
+            {
+              gradeComponentId: 'cf47a46f-8db2-48bf-ad68-447eeccf003a',
+              gradeComponentName: 'KT 15 phút',
+              kind: 'quiz',
+              weight: 1,
+              maxScore: 10,
+              average: 8.5,
+              count: 1,
+              belowThresholdCount: 0,
+              riskLevel: 'Thấp',
+              comment: 'Ổn định.'
+            }
+          ]
+        }
+      },
+      summary:
+        'Học sinh Trần Thị B có trung bình 8.50 trong học kỳ này, 0 môn dưới chuẩn, mức rủi ro Thấp.'
+    }
+  ];
+
+  const getRiskLevelColor = (riskLevel: string) => {
+    switch (riskLevel) {
+      case 'Thấp':
+        return 'text-green-600 bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800 dark:text-green-300';
+      case 'Trung bình':
+        return 'text-yellow-600 bg-yellow-50 border-yellow-200 dark:bg-yellow-950/20 dark:border-yellow-800 dark:text-yellow-300';
+      case 'Cao':
+        return 'text-orange-600 bg-orange-50 border-orange-200 dark:bg-orange-950/20 dark:border-orange-800 dark:text-orange-300';
+      case 'Rất cao':
+        return 'text-red-600 bg-red-50 border-red-200 dark:bg-red-950/20 dark:border-red-800 dark:text-red-300';
+      default:
+        return 'text-gray-600 bg-gray-50 border-gray-200 dark:bg-gray-950/20 dark:border-gray-800 dark:text-gray-300';
+    }
+  };
+
+  const getRiskLevelIcon = (riskLevel: string) => {
+    switch (riskLevel) {
+      case 'Thấp':
+        return <CheckCircle className='h-4 w-4 text-green-600' />;
+      case 'Trung bình':
+        return <AlertTriangle className='h-4 w-4 text-yellow-600' />;
+      case 'Cao':
+        return <AlertCircle className='h-4 w-4 text-orange-600' />;
+      case 'Rất cao':
+        return <XCircle className='h-4 w-4 text-red-600' />;
+      default:
+        return <Minus className='h-4 w-4 text-gray-600' />;
+    }
+  };
+
   return (
     <div className='space-y-6'>
       {/* Family Overview Header */}
@@ -157,9 +225,15 @@ export function ParentDashboardView({ data }: ParentDashboardViewProps) {
           </CardHeader>
           <CardContent>
             <div className='text-2xl font-bold text-red-600'>
-              {urgentAlerts.length}
+              {urgentAlerts.length + academicAlerts.length}
             </div>
-            <p className='text-muted-foreground text-xs'>Cần chú ý ngay</p>
+            <p className='text-muted-foreground text-xs'>
+              {urgentAlerts.length > 0 && academicAlerts.length > 0
+                ? 'Hành vi + Học tập'
+                : urgentAlerts.length > 0
+                  ? 'Hành vi'
+                  : 'Học tập'}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -170,7 +244,7 @@ export function ParentDashboardView({ data }: ParentDashboardViewProps) {
           <CardHeader>
             <CardTitle className='flex items-center gap-2 text-red-800 dark:text-red-200'>
               <AlertCircle className='h-5 w-5' />
-              Cảnh báo khẩn cấp
+              Cảnh báo hành vi khẩn cấp
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -207,6 +281,157 @@ export function ParentDashboardView({ data }: ParentDashboardViewProps) {
                       Xem chi tiết
                     </Button>
                   </ChildDetailDialog>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Academic Alerts */}
+      {academicAlerts.length > 0 && (
+        <Card className='border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/20'>
+          <CardHeader>
+            <CardTitle className='flex items-center gap-2 text-blue-800 dark:text-blue-200'>
+              <TrendingUp className='h-5 w-5' />
+              Cảnh báo học tập
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className='space-y-4'>
+              {academicAlerts.map((alert) => (
+                <div
+                  key={alert.id}
+                  className={`rounded-lg border p-4 ${getRiskLevelColor(alert.riskLevel)}`}
+                >
+                  <div className='mb-3 flex items-start justify-between'>
+                    <div className='flex items-center gap-3'>
+                      <Avatar className='h-10 w-10'>
+                        <AvatarFallback className='bg-blue-100 text-blue-600'>
+                          {alert.fullName.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className='text-lg font-medium'>
+                          {alert.fullName}
+                        </div>
+                        <div className='text-sm opacity-80'>
+                          Điểm TB: {alert.average.toFixed(1)} •{' '}
+                          {alert.belowCount} môn dưới chuẩn
+                        </div>
+                      </div>
+                    </div>
+                    <div className='flex items-center gap-2'>
+                      {getRiskLevelIcon(alert.riskLevel)}
+                      <Badge
+                        variant='outline'
+                        className={`text-xs ${getRiskLevelColor(alert.riskLevel)}`}
+                      >
+                        {alert.riskLevel}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className='mb-3'>
+                    <p className='mb-2 text-sm font-medium'>Tóm tắt:</p>
+                    <p className='text-sm opacity-90'>
+                      &ldquo;{alert.summary}&rdquo;
+                    </p>
+                  </div>
+
+                  <div className='mb-3'>
+                    <p className='mb-2 text-sm font-medium'>Nhận xét chung:</p>
+                    <p className='text-sm opacity-90'>
+                      &ldquo;{alert.comment}&rdquo;
+                    </p>
+                  </div>
+
+                  {/* Subject Details */}
+                  <div className='space-y-2'>
+                    <p className='text-sm font-medium'>Chi tiết theo môn:</p>
+                    <div className='space-y-2'>
+                      {Object.entries(alert.subjects).map(
+                        ([subjectName, subjectData]) => (
+                          <div
+                            key={subjectName}
+                            className='rounded border bg-white/50 p-3 dark:bg-black/20'
+                          >
+                            <div className='mb-2 flex items-center justify-between'>
+                              <div className='flex items-center gap-2'>
+                                <BookOpen className='h-4 w-4' />
+                                <span className='font-medium'>
+                                  {subjectName}
+                                </span>
+                                <Badge variant='outline' className='text-xs'>
+                                  {subjectData.average.toFixed(1)}
+                                </Badge>
+                              </div>
+                              <div className='flex items-center gap-1'>
+                                {getRiskLevelIcon(subjectData.riskLevel)}
+                                <span className='text-xs opacity-70'>
+                                  {subjectData.riskLevel}
+                                </span>
+                              </div>
+                            </div>
+                            <p className='mb-2 text-xs opacity-80'>
+                              &ldquo;{subjectData.comment}&rdquo;
+                            </p>
+
+                            {/* Grade Components */}
+                            <div className='space-y-1'>
+                              {subjectData.components.map(
+                                (component, index) => (
+                                  <div
+                                    key={index}
+                                    className='bg-muted/30 flex items-center justify-between rounded p-2 text-xs'
+                                  >
+                                    <div className='flex items-center gap-2'>
+                                      <span>
+                                        {component.gradeComponentName}
+                                      </span>
+                                      <Badge
+                                        variant='outline'
+                                        className='text-xs'
+                                      >
+                                        Hệ số {component.weight}
+                                      </Badge>
+                                    </div>
+                                    <div className='flex items-center gap-2'>
+                                      <span className='font-medium'>
+                                        {component.average.toFixed(1)}
+                                      </span>
+                                      <div className='flex items-center gap-1'>
+                                        {getRiskLevelIcon(component.riskLevel)}
+                                        <span className='text-xs opacity-70'>
+                                          {component.riskLevel}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+
+                  <div className='flex items-center justify-between border-t border-current/20 pt-3'>
+                    <div className='flex items-center gap-2 text-xs opacity-70'>
+                      <Clock className='h-3 w-3' />
+                      <span>
+                        Cập nhật lần cuối:{' '}
+                        {format(new Date(), 'dd/MM/yyyy HH:mm')}
+                      </span>
+                    </div>
+                    <ChildDetailDialog childId={alert.studentId}>
+                      <Button variant='outline' size='sm' className='text-xs'>
+                        <Eye className='mr-1 h-3 w-3' />
+                        Xem chi tiết
+                      </Button>
+                    </ChildDetailDialog>
+                  </div>
                 </div>
               ))}
             </div>
