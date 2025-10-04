@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/components/layout/auth-provider';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface RouteGuardProps {
   children: React.ReactNode;
@@ -23,13 +23,18 @@ export function RouteGuard({
 }: RouteGuardProps) {
   const { user, loading, isAuthenticated, hasRole } = useAuth();
   const router = useRouter();
+  const hasRedirected = useRef(false);
 
   useEffect(() => {
     if (loading) return;
 
+    // Tránh multiple redirects
+    if (hasRedirected.current) return;
+
     // Check authentication requirement
     if (requireAuth && !isAuthenticated) {
       console.log('🚫 Authentication required, redirecting to:', fallbackPath);
+      hasRedirected.current = true;
       router.push(fallbackPath);
       return;
     }
@@ -44,6 +49,7 @@ export function RouteGuard({
           'Required:',
           allowedRoles
         );
+        hasRedirected.current = true;
         router.push('/auth/unauthorized');
         return;
       }
@@ -60,6 +66,13 @@ export function RouteGuard({
     fallbackPath,
     hasRole
   ]);
+
+  // Reset redirect flag khi component unmount
+  useEffect(() => {
+    return () => {
+      hasRedirected.current = false;
+    };
+  }, []);
 
   // Show loading state
   if (loading) {

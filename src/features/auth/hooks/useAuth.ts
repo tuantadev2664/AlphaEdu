@@ -9,6 +9,8 @@ import {
 import { useCurrentUserQuery } from '@/features/auth/hooks/use-auth.query';
 import * as authService from '@/features/auth/services/auth.service';
 
+let redirectTimeout: NodeJS.Timeout | null = null;
+
 export function useAuth() {
   const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -114,16 +116,31 @@ export function useAuth() {
       console.log('👋 Signing out...');
       setUser(null);
       await authService.signOut();
-      // signOut() function đã handle redirect
+
+      // Debounce redirect
+      if (redirectTimeout) {
+        clearTimeout(redirectTimeout);
+      }
+
+      redirectTimeout = setTimeout(() => {
+        window.location.href = '/auth/sign-in';
+      }, 100);
     } catch (error) {
       console.error('❌ Sign out error:', error);
       // Force redirect even if API call fails
       authService.clearAuthToken();
       authService.clearUserData();
       setUser(null);
-      router.push('/auth/sign-in');
+
+      if (redirectTimeout) {
+        clearTimeout(redirectTimeout);
+      }
+
+      redirectTimeout = setTimeout(() => {
+        window.location.href = '/auth/sign-in';
+      }, 100);
     }
-  }, [router]);
+  }, []);
 
   // Check if user has specific role(s)
   const hasRole = useCallback(

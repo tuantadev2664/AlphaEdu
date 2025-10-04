@@ -43,12 +43,15 @@ export function useCurrentUserQuery() {
       ) {
         return false;
       }
-      return failureCount < 1; // Giảm số lần retry
+      return failureCount < 1; // Chỉ retry 1 lần
     },
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false, // Tắt refetch khi focus (tránh redirect liên tục)
     refetchOnMount: true,
-    // Thêm option để không cache khi có lỗi
-    throwOnError: false
+    throwOnError: false,
+    // Thêm timeout cho production
+    meta: {
+      timeout: 10000 // 10 seconds timeout
+    }
   });
 }
 

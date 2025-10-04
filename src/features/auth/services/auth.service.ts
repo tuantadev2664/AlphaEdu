@@ -21,6 +21,9 @@ export interface AuthResponse {
   token?: string; // Thêm JWT token
 }
 
+// Thêm flag để tránh multiple redirects
+let isRedirecting = false;
+
 // Sign in with email and password - API trả về JWT
 export async function signInWithEmail(
   email: string,
@@ -188,8 +191,9 @@ export async function validateToken(token?: string): Promise<AuthUser | null> {
       clearAuthToken();
       clearUserData();
 
-      // Nếu là client-side, redirect ngay lập tức
-      if (typeof window !== 'undefined') {
+      // Chỉ redirect một lần
+      if (typeof window !== 'undefined' && !isRedirecting) {
+        isRedirecting = true;
         console.log('🔄 Redirecting to sign-in due to invalid token');
         window.location.href = '/auth/sign-in';
       }
@@ -211,13 +215,19 @@ export async function validateToken(token?: string): Promise<AuthUser | null> {
     clearAuthToken();
     clearUserData();
 
-    // Redirect nếu là client-side
-    if (typeof window !== 'undefined') {
+    // Chỉ redirect một lần
+    if (typeof window !== 'undefined' && !isRedirecting) {
+      isRedirecting = true;
       window.location.href = '/auth/sign-in';
     }
 
     return null;
   }
+}
+
+// Reset redirect flag
+export function resetRedirectFlag() {
+  isRedirecting = false;
 }
 
 // Refresh user data from API
