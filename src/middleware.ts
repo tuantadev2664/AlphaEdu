@@ -1,5 +1,5 @@
 // import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-// import { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // const isProtectedRoute = createRouteMatcher(['/dashboard(.*)']);
 
@@ -15,7 +15,25 @@
 //   ]
 // };
 
-export default function middleware() {}
+export function middleware(request: Request) {
+  const url = new URL(request.url);
+  const path = url.pathname;
+
+  // ✅ Nếu Zalo mở root, index, hoặc path lạ -> luôn rewrite về /landing
+  if (
+    path === '/' ||
+    path === '/index' ||
+    path.startsWith('/__index') ||
+    url.searchParams.has('zplatform') ||
+    url.searchParams.has('zclient') ||
+    url.searchParams.has('zsource')
+  ) {
+    return NextResponse.rewrite(new URL('/landing', request.url));
+  }
+
+  return NextResponse.next();
+}
+
 export const config = {
   matcher: []
 };
