@@ -10,14 +10,12 @@ interface RosterTableParams<TData, TValue> {
   data: TData[];
   totalItems: number;
   columns: ColumnDef<TData, TValue>[];
-  classId: string;
 }
 
 export function RosterTable<TData, TValue>({
   data,
   totalItems,
-  columns,
-  classId
+  columns
 }: RosterTableParams<TData, TValue>) {
   const [pageSize] = useQueryState('perPage', parseAsInteger.withDefault(10));
   const pageCount = Math.ceil(totalItems / pageSize);

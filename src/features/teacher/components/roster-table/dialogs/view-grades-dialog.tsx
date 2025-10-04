@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { RosterStudent } from '@/features/teacher/types';
+import { ClassStudent } from '@/features/class/types';
 import {
   GraduationCap,
   TrendingUp,
@@ -28,7 +28,7 @@ import {
 import { format } from 'date-fns';
 
 interface ViewGradesDialogProps {
-  student: RosterStudent;
+  student: ClassStudent;
   children: React.ReactNode;
 }
 
@@ -102,7 +102,7 @@ export function ViewGradesDialog({ student, children }: ViewGradesDialogProps) {
   const [open, setOpen] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<string>('all');
 
-  const initials = student.full_name
+  const initials = student.fullName
     .split(' ')
     .map((name) => name[0])
     .join('')
@@ -141,7 +141,7 @@ export function ViewGradesDialog({ student, children }: ViewGradesDialogProps) {
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <GraduationCap className='h-5 w-5' />
-            {student.full_name} - Grades
+            {student.fullName} - Grades
           </DialogTitle>
           <DialogDescription>Academic Performance Overview</DialogDescription>
         </DialogHeader>
@@ -159,7 +159,11 @@ export function ViewGradesDialog({ student, children }: ViewGradesDialogProps) {
               <div className='grid grid-cols-1 gap-4 md:grid-cols-4'>
                 <div className='text-center'>
                   <div className='text-3xl font-bold text-blue-600'>
-                    {student.average_score || 87}%
+                    {student.scoreStudents.reduce(
+                      (sum, score) => sum + score.score,
+                      0
+                    ) / student.scoreStudents.length || 87}
+                    %
                   </div>
                   <div className='text-muted-foreground text-sm'>
                     Overall Average

@@ -147,6 +147,22 @@ export function clearUserData(): void {
   }
 }
 
+export async function getUserById(userId: string): Promise<AuthUser | null> {
+  try {
+    const userData = await fetch(`${API_BASE_URL}/User/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await userData.json();
+    return data;
+  } catch (error) {
+    console.error('❌ Failed to get user data:', error);
+    return null;
+  }
+}
+
 // Validate JWT token with API
 export async function validateToken(token?: string): Promise<AuthUser | null> {
   try {

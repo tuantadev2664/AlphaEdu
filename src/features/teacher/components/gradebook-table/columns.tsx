@@ -3,29 +3,28 @@
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
-import type { GradebookEntry } from '@/features/teacher/types';
+import type { StudentScore } from '@/features/score/type';
 import { Column, ColumnDef } from '@tanstack/react-table';
 import { User, Calculator, BookOpen } from 'lucide-react';
 import { CellAction } from './cell-action';
 
-// Mock assessments for display
-const assessments = [
-  { name: 'Quiz 1', type: 'quiz' },
-  { name: 'Test 1', type: 'test' },
-  { name: 'Quiz 2', type: 'quiz' },
-  { name: 'Midterm', type: 'test' },
-  { name: 'Project', type: 'project' }
-];
+interface CreateColumnsOptions {
+  studentScores: StudentScore[];
+  onViewDetails?: (student: StudentScore) => void;
+  onEditDetails?: (student: StudentScore) => void;
+}
 
-export const columns: ColumnDef<GradebookEntry>[] = [
+export const createColumns = (
+  options: CreateColumnsOptions
+): ColumnDef<StudentScore>[] => [
   {
     accessorKey: 'student',
-    header: ({ column }: { column: Column<GradebookEntry, unknown> }) => (
+    header: ({ column }: { column: Column<StudentScore, unknown> }) => (
       <DataTableColumnHeader column={column} title='Student' />
     ),
     cell: ({ row }) => {
-      const student = row.original.student;
-      const initials = student.full_name
+      const student = row.original;
+      const initials = student.fullName
         .split(' ')
         .map((name) => name[0])
         .join('')
@@ -37,10 +36,10 @@ export const columns: ColumnDef<GradebookEntry>[] = [
             <AvatarFallback className='text-xs'>{initials}</AvatarFallback>
           </Avatar>
           <div>
-            <div className='font-medium'>{student.full_name}</div>
+            <div className='font-medium'>{student.fullName}</div>
             <div className='text-muted-foreground flex items-center gap-1 text-sm'>
               <User className='h-3 w-3' />
-              ID: {student.id}
+              ID: {student.fullName}
             </div>
           </div>
         </div>
@@ -56,28 +55,36 @@ export const columns: ColumnDef<GradebookEntry>[] = [
     enableSorting: true,
     enableHiding: false
   },
-  ...assessments.map((assessment, index) => ({
-    id: `assessment_${index}`,
-    header: assessment.name,
+  // Generate assessment columns from the first student's scores
+  ...(options.studentScores[0]?.scores || []).map((_, assessmentIndex) => ({
+    id: `assessment_${assessmentIndex}`,
+    header:
+      options.studentScores[0]?.scores[assessmentIndex]?.gradeComponentName ||
+      `Assessment ${assessmentIndex + 1}`,
     cell: ({ row }: { row: any }) => {
-      const entry = row.original as GradebookEntry;
-      const score = entry.scores[index];
+      const entry = row.original as StudentScore;
+      const score = entry.scores[assessmentIndex];
 
       if (!score) {
         return <span className='text-muted-foreground'>-</span>;
       }
 
+      // Calculate percentage score
+      const percentage = (score.score / score.maxScore) * 100;
+
       let variant: 'default' | 'secondary' | 'destructive' | 'outline' =
         'default';
-      if (score.score >= 90) variant = 'default';
-      else if (score.score >= 80) variant = 'secondary';
-      else if (score.score >= 70) variant = 'outline';
+      if (percentage >= 90) variant = 'default';
+      else if (percentage >= 80) variant = 'secondary';
+      else if (percentage >= 70) variant = 'outline';
       else variant = 'destructive';
 
       return (
         <div className='flex items-center gap-2'>
-          <Badge variant={variant}>{score.score}</Badge>
-          {score.is_absent && (
+          <Badge variant={variant}>
+            {score.score}/{score.maxScore}
+          </Badge>
+          {score.isAbsent && (
             <Badge variant='destructive' className='text-xs'>
               Absent
             </Badge>
@@ -89,23 +96,27 @@ export const columns: ColumnDef<GradebookEntry>[] = [
   })),
   {
     accessorKey: 'average_score',
-    header: ({ column }: { column: Column<GradebookEntry, unknown> }) => (
+    header: ({ column }: { column: Column<StudentScore, unknown> }) => (
       <DataTableColumnHeader column={column} title='Average Score' />
     ),
     cell: ({ row }) => {
-      const average = row.original.average_score || 0;
+      const average =
+        row.original.scores.reduce(
+          (sum, score) => sum + score.score * score.weight,
+          0
+        ) / row.original.scores.reduce((sum, score) => sum + score.weight, 0);
       if (!average) return <span className='text-muted-foreground'>N/A</span>;
 
       let variant: 'default' | 'secondary' | 'destructive' | 'outline' =
         'default';
-      if (average >= 90) variant = 'default';
-      else if (average >= 80) variant = 'secondary';
-      else if (average >= 70) variant = 'outline';
+      if (average >= 9) variant = 'default';
+      else if (average >= 8) variant = 'secondary';
+      else if (average >= 7) variant = 'outline';
       else variant = 'destructive';
 
       return (
         <div className='flex items-center gap-2'>
-          <Badge variant={variant}>{average}%</Badge>
+          <Badge variant={variant}>{average.toFixed(2)}%</Badge>
           <Calculator className='text-muted-foreground h-3 w-3' />
         </div>
       );
@@ -114,6 +125,12 @@ export const columns: ColumnDef<GradebookEntry>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />
+    cell: ({ row }) => (
+      <CellAction
+        data={row.original}
+        onViewDetails={options.onViewDetails}
+        onEditDetails={options.onEditDetails}
+      />
+    )
   }
 ];

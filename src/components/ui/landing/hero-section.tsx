@@ -80,7 +80,7 @@ export function HeroSection() {
             <div className='flex flex-col justify-center gap-4 sm:flex-row lg:justify-start'>
               <Button
                 size='lg'
-                className='bg-yellow-500 px-8 py-3 text-lg font-semibold text-black hover:bg-yellow-600'
+                className='bg-yellow-500 px-8 py-3 text-lg font-semibold text-white hover:bg-yellow-600'
                 asChild
               >
                 <Link href='/auth/sign-up'>🚀 Dùng thử miễn phí</Link>
@@ -89,7 +89,7 @@ export function HeroSection() {
               <Button
                 size='lg'
                 variant='outline'
-                className='border-white px-8 py-3 text-lg font-semibold text-white hover:bg-white hover:text-purple-700'
+                className='border-white px-8 py-3 text-lg font-semibold text-purple-500 hover:bg-white hover:text-purple-700'
                 onClick={scrollToFeatures}
               >
                 📖 Tìm hiểu thêm
