@@ -27,6 +27,8 @@ export function useCurrentUserQuery() {
         console.log('✅ User validated:', user.email);
       } else {
         console.log('❌ Token validation failed, user will be cleared');
+        authService.clearAuthToken();
+        authService.clearUserData();
       }
 
       return user;
