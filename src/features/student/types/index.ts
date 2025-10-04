@@ -13,11 +13,11 @@ export type AssessmentKind =
   | 'attendance'
   | 'other';
 export type BehaviorLevel =
-  | 'excellent'
-  | 'good'
-  | 'fair'
-  | 'needs_improvement'
-  | 'poor';
+  | 'Excellent'
+  | 'Good'
+  | 'Fair'
+  | 'Needs improvement'
+  | 'Poor';
 
 // Core entities
 export interface School {
@@ -241,3 +241,30 @@ export interface StudentProfileForm {
   email: string;
   phone: string;
 }
+
+// API Response types for /api/Subject/student/{studentId}
+export interface StudentSubjectAssessment {
+  assessmentId: string;
+  title: string;
+  dueDate: string;
+  score: number;
+  isAbsent: boolean;
+  comment: string;
+}
+
+export interface StudentSubjectComponent {
+  gradeComponentId: string;
+  componentName: string;
+  kind: AssessmentKind;
+  weight: number;
+  maxScore: number;
+  assessments: StudentSubjectAssessment[];
+}
+
+export interface StudentSubjectData {
+  subjectId: string;
+  subjectName: string;
+  components: StudentSubjectComponent[];
+}
+
+export type StudentSubjectsResponse = StudentSubjectData[];

@@ -102,3 +102,69 @@ export type CreateAssessmentResponse = {
     assessmentId: string;
   };
 };
+
+// Ranking API Types
+export type ClassRankingItem = {
+  studentId: string;
+  fullName: string;
+  average: number;
+  rank: number;
+};
+
+export type ClassRankingResponse = ClassRankingItem[];
+
+export type GetClassRankingParams = {
+  classId: string;
+  termId: string;
+};
+
+// Student Transcript API Types
+export type StudentTranscriptResponse = Record<string, number | null>;
+
+export type GetStudentTranscriptParams = {
+  studentId: string;
+  termId: string;
+};
+
+// Student Analysis API Types
+export interface StudentAnalysisComponent {
+  gradeComponentId: string;
+  gradeComponentName: string;
+  kind: string;
+  weight: number;
+  maxScore: number;
+  average: number;
+  count: number;
+  belowThresholdCount: number;
+  riskLevel: string;
+  comment: string;
+  scores: number[];
+}
+
+export interface StudentAnalysisSubject {
+  subjectId: string;
+  subjectName: string;
+  average: number;
+  assignmentsCount: number;
+  belowThresholdCount: number;
+  riskLevel: string;
+  comment: string;
+  components: StudentAnalysisComponent[];
+}
+
+export interface StudentAnalysisResponse {
+  studentId: string;
+  termId: string;
+  fullName: string;
+  average: number;
+  belowCount: number;
+  riskLevel: string;
+  comment: string;
+  subjects: StudentAnalysisSubject[];
+  summary: string;
+}
+
+export type GetStudentAnalysisParams = {
+  studentId: string;
+  termId: string;
+};

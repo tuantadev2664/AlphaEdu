@@ -44,7 +44,7 @@ const mockBehaviorNotes: BehaviorNote[] = [
     class_id: 'class-1',
     term_id: 'term-s1-2024',
     note: 'Học sinh tích cực tham gia hoạt động nhóm và giúp đỡ bạn bè',
-    level: 'excellent',
+    level: 'Excellent',
     created_by: 'teacher-1',
     created_at: '2024-09-15T10:30:00Z',
     created_by_user: {
@@ -63,7 +63,7 @@ const mockBehaviorNotes: BehaviorNote[] = [
     class_id: 'class-1',
     term_id: 'term-s1-2024',
     note: 'Hoàn thành bài tập đúng hạn và có thái độ học tập tốt',
-    level: 'good',
+    level: 'Good',
     created_by: 'teacher-1',
     created_at: '2024-09-20T14:15:00Z',
     created_by_user: {
@@ -82,7 +82,7 @@ const mockBehaviorNotes: BehaviorNote[] = [
     class_id: 'class-1',
     term_id: 'term-s1-2024',
     note: 'Cần cải thiện việc tập trung trong giờ học',
-    level: 'needs_improvement',
+    level: 'Needs improvement',
     created_by: 'teacher-2',
     created_at: '2024-09-25T09:45:00Z',
     created_by_user: {
@@ -101,7 +101,7 @@ const mockBehaviorNotes: BehaviorNote[] = [
     class_id: 'class-1',
     term_id: 'term-s1-2024',
     note: 'Thể hiện tinh thần tr책nhiệm cao trong công việc lớp',
-    level: 'excellent',
+    level: 'Excellent',
     created_by: 'teacher-1',
     created_at: '2024-10-01T11:20:00Z',
     created_by_user: {
@@ -120,7 +120,7 @@ const mockBehaviorNotes: BehaviorNote[] = [
     class_id: 'class-1',
     term_id: 'term-s1-2024',
     note: 'Thái độ học tập bình thường, cần động viên thêm',
-    level: 'fair',
+    level: 'Fair',
     created_by: 'teacher-3',
     created_at: '2024-10-05T16:00:00Z',
     created_by_user: {
@@ -137,15 +137,15 @@ const mockBehaviorNotes: BehaviorNote[] = [
 
 const getBehaviorIcon = (level: string) => {
   switch (level) {
-    case 'excellent':
+    case 'Excellent':
       return <Star className='h-4 w-4 text-yellow-500' />;
-    case 'good':
+    case 'Good':
       return <CheckCircle className='h-4 w-4 text-green-600' />;
-    case 'fair':
+    case 'Fair':
       return <Minus className='h-4 w-4 text-blue-600' />;
-    case 'needs_improvement':
+    case 'Needs improvement':
       return <AlertTriangle className='h-4 w-4 text-orange-600' />;
-    case 'poor':
+    case 'Poor':
       return <XCircle className='h-4 w-4 text-red-600' />;
     default:
       return <Minus className='h-4 w-4 text-gray-600' />;
@@ -154,15 +154,15 @@ const getBehaviorIcon = (level: string) => {
 
 const getBehaviorColor = (level: string) => {
   switch (level) {
-    case 'excellent':
+    case 'Excellent':
       return 'bg-yellow-50 text-yellow-800 border-yellow-200';
-    case 'good':
+    case 'Good':
       return 'bg-green-50 text-green-800 border-green-200';
     case 'fair':
       return 'bg-blue-50 text-blue-800 border-blue-200';
-    case 'needs_improvement':
+    case 'Needs improvement':
       return 'bg-orange-50 text-orange-800 border-orange-200';
-    case 'poor':
+    case 'Poor':
       return 'bg-red-50 text-red-800 border-red-200';
     default:
       return 'bg-gray-50 text-gray-800 border-gray-200';
@@ -171,15 +171,15 @@ const getBehaviorColor = (level: string) => {
 
 const getBehaviorLabel = (level: string) => {
   switch (level) {
-    case 'excellent':
+    case 'Excellent':
       return 'Xuất sắc';
-    case 'good':
+    case 'Good':
       return 'Tốt';
-    case 'fair':
+    case 'Fair':
       return 'Khá';
-    case 'needs_improvement':
+    case 'Needs improvement':
       return 'Cần cải thiện';
-    case 'poor':
+    case 'Poor':
       return 'Yếu';
     default:
       return 'Không xác định';
@@ -256,7 +256,7 @@ export function BehaviorNotesDetailsDialog({
             >
               Tất cả ({mockBehaviorNotes.length})
             </button>
-            {['excellent', 'good', 'fair', 'needs_improvement', 'poor'].map(
+            {['Excellent', 'Good', 'Fair', 'Needs improvement', 'Poor'].map(
               (level) => {
                 const count = mockBehaviorNotes.filter(
                   (note) => note.level === level
@@ -368,7 +368,7 @@ export function BehaviorNotesDetailsDialog({
                     <span className='font-medium text-green-600'>
                       {
                         mockBehaviorNotes.filter((n) =>
-                          ['excellent', 'good'].includes(n.level)
+                          ['Excellent', 'Good'].includes(n.level)
                         ).length
                       }
                     </span>
@@ -378,7 +378,7 @@ export function BehaviorNotesDetailsDialog({
                     <span className='font-medium text-orange-600'>
                       {
                         mockBehaviorNotes.filter((n) =>
-                          ['needs_improvement', 'poor'].includes(n.level)
+                          ['Needs improvement', 'Poor'].includes(n.level)
                         ).length
                       }
                     </span>

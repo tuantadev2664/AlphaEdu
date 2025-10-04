@@ -857,7 +857,7 @@ export const fakeStudent = {
       recent_announcements: recentAnnouncements,
       behavior_summary: behaviorSummary,
       upcoming_assessments: upcomingAssessments,
-      latest_behavior_note: latestSignificantBehavior || null
+      latest_behavior_note: latestSignificantBehavior as any
     };
   },
 

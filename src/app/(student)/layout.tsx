@@ -1,9 +1,10 @@
 import KBar from '@/components/kbar';
 import Header from '@/components/layout/header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { AuthProvider } from '@/components/layout/auth-provider';
+// import { AuthProvider } from '@/components/layout/auth-provider';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
+import { StudentOnlyGuard } from '@/features/auth/components/route-guard';
 
 export const metadata: Metadata = {
   title: 'Student Portal - School Management System',
@@ -21,7 +22,7 @@ export default async function StudentLayout({
   const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
 
   return (
-    <AuthProvider>
+    <StudentOnlyGuard>
       <div className='overflow-hidden overscroll-none'>
         <KBar>
           <SidebarProvider defaultOpen={defaultOpen}>
@@ -35,6 +36,6 @@ export default async function StudentLayout({
           </SidebarProvider>
         </KBar>
       </div>
-    </AuthProvider>
+    </StudentOnlyGuard>
   );
 }

@@ -1,10 +1,10 @@
 import KBar from '@/components/kbar';
-import ParentSidebar from '@/components/layout/parent-sidebar';
+// import ParentSidebar from '@/components/layout/parent-sidebar';
 import Header from '@/components/layout/header';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
-import { AuthProvider } from '@/components/layout/auth-provider';
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
+import { ParentOnlyGuard } from '@/features/auth/components/route-guard';
 
 export const metadata: Metadata = {
   title: 'Parent Portal - School Management System',
@@ -22,7 +22,7 @@ export default async function ParentLayout({
   const defaultOpen = cookieStore.get('sidebar_state')?.value === 'true';
 
   return (
-    <AuthProvider>
+    <ParentOnlyGuard>
       <div className='overflow-hidden overscroll-none'>
         <KBar>
           <SidebarProvider defaultOpen={defaultOpen}>
@@ -36,6 +36,6 @@ export default async function ParentLayout({
           </SidebarProvider>
         </KBar>
       </div>
-    </AuthProvider>
+    </ParentOnlyGuard>
   );
 }
