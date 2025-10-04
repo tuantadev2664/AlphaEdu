@@ -125,3 +125,119 @@ export interface MessageForm {
   student_id?: string; // Context for which child
   subject_id?: string; // Context for which subject
 }
+
+// API: /api/Score/parent/children/full-info/{termId}
+export interface ParentChildFullInfoScoreItem {
+  id: string;
+  studentId: string;
+  assessmentId: string;
+  score1: number;
+  isAbsent: boolean;
+  comment: string;
+  assessmentName: string;
+  gradeComponentName: string;
+  weight: number;
+}
+
+export interface ParentChildFullInfoTranscriptSubjectItem {
+  subjectName: string;
+  averageScore: number;
+}
+
+export interface ParentChildFullInfoTranscript {
+  termId: string;
+  termName: string;
+  subjects: ParentChildFullInfoTranscriptSubjectItem[];
+}
+
+export interface ParentChildFullInfoBehaviorNoteItem {
+  id: string;
+  note: string;
+  level: string;
+  createdAt: string;
+  teacherId: string;
+  teacherName: string;
+}
+
+export interface ParentChildFullInfoAnnouncementItem {
+  id: string;
+  title: string;
+  content: string;
+  isUrgent: boolean;
+  createdAt: string;
+  expiresAt: string | null;
+  senderId: string;
+  classId: string;
+  subjectId: string;
+}
+
+export interface ParentChildFullInfoSubjectAssessmentItem {
+  assessmentId: string;
+  title: string;
+  dueDate: string;
+  score: number;
+  isAbsent: boolean;
+  comment: string;
+}
+
+export interface ParentChildFullInfoSubjectComponentItem {
+  gradeComponentId: string;
+  componentName: string;
+  kind: string;
+  weight: number;
+  maxScore: number;
+  assessments: ParentChildFullInfoSubjectAssessmentItem[];
+}
+
+export interface ParentChildFullInfoSubjectItem {
+  subjectId: string;
+  subjectName: string;
+  teacherId: string;
+  teacherName: string;
+  components: ParentChildFullInfoSubjectComponentItem[];
+}
+
+export interface ParentChildFullInfoItem {
+  studentId: string;
+  studentName: string;
+  classId: string;
+  className: string;
+  homeroomTeacherId: string;
+  homeroomTeacherName: string;
+  scores: ParentChildFullInfoScoreItem[];
+  transcript: ParentChildFullInfoTranscript;
+  behaviorNotes: ParentChildFullInfoBehaviorNoteItem[];
+  announcements: ParentChildFullInfoAnnouncementItem[];
+  subjects: ParentChildFullInfoSubjectItem[];
+  overallAverage?: number;
+}
+
+export type ParentChildrenFullInfoResponse = ParentChildFullInfoItem[];
+
+export interface ParentServiceError {
+  message: string;
+  status?: number;
+}
+
+// Mock data for communication
+export interface ParentCommunicationItem {
+  id: string;
+  teacherId: string;
+  teacherName: string;
+  subjectName: string;
+  lastMessage: string;
+  lastMessageTime: string;
+  unreadCount: number;
+  status: 'active' | 'archived';
+}
+
+export interface ParentCommunicationMessage {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  senderName: string;
+  content: string;
+  timestamp: string;
+  isRead: boolean;
+  messageType: 'text' | 'image' | 'file';
+}

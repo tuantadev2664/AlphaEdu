@@ -13,11 +13,11 @@ export type AssessmentKind =
   | 'attendance'
   | 'other';
 export type BehaviorLevel =
-  | 'excellent'
-  | 'good'
-  | 'fair'
-  | 'needs_improvement'
-  | 'poor';
+  | 'Excellent'
+  | 'Good'
+  | 'Fair'
+  | 'Needs improvement'
+  | 'Poor';
 
 // Core entities
 export interface School {

@@ -478,7 +478,7 @@ export function StudentDashboardView() {
                           className={`text-base font-semibold ${
                             latest_behavior_note.level === 'excellent'
                               ? 'text-green-800 dark:text-green-200'
-                              : latest_behavior_note.level === 'poor'
+                              : latest_behavior_note.level === 'Poor'
                                 ? 'text-red-800 dark:text-red-200'
                                 : 'text-orange-800 dark:text-orange-200'
                           }`}
@@ -547,9 +547,9 @@ export function StudentDashboardView() {
                         <User className='text-muted-foreground h-3 w-3' />
                         <span
                           className={`text-xs font-medium ${
-                            latest_behavior_note.level === 'excellent'
+                            latest_behavior_note.level === 'Excellent'
                               ? 'text-green-600 dark:text-green-400'
-                              : latest_behavior_note.level === 'poor'
+                              : latest_behavior_note.level === 'Poor'
                                 ? 'text-red-600 dark:text-red-400'
                                 : 'text-orange-600 dark:text-orange-400'
                           }`}
@@ -571,7 +571,7 @@ export function StudentDashboardView() {
                 </div>
 
                 {/* Action suggestions for poor behavior */}
-                {latest_behavior_note.level === 'poor' && (
+                {latest_behavior_note.level === 'Poor' && (
                   <div className='mt-4 rounded-lg border border-red-200/50 bg-red-100/50 p-3 dark:bg-red-900/20'>
                     <div className='mb-2 flex items-center gap-2'>
                       <AlertCircle className='h-4 w-4 text-red-600' />
@@ -588,7 +588,7 @@ export function StudentDashboardView() {
                 )}
 
                 {/* Encouragement for excellent behavior */}
-                {latest_behavior_note.level === 'excellent' && (
+                {latest_behavior_note.level === 'Excellent' && (
                   <div className='mt-4 rounded-lg border border-green-200/50 bg-green-100/50 p-3 dark:bg-green-900/20'>
                     <div className='flex items-center gap-2'>
                       <Star className='h-4 w-4 text-green-600' />

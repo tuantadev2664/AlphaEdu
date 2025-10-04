@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import type { ChildDetailView } from '@/features/parent/types';
+import { useStudentRank } from '@/features/score/hooks/use-score.query';
 import {
   Award,
   BookOpen,
@@ -35,8 +36,17 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 
+import type {
+  ParentChildFullInfoItem,
+  ParentCommunicationItem,
+  ParentCommunicationMessage
+} from '@/features/parent/types';
+
 interface ChildDetailDialogProps {
   childId: string;
+  classId?: string;
+  termId?: string;
+  childData?: ParentChildFullInfoItem;
   children: React.ReactNode;
 }
 
@@ -142,15 +152,15 @@ const mockChildDetail: ChildDetailView = {
 
 const getBehaviorIcon = (level: string) => {
   switch (level) {
-    case 'excellent':
+    case 'Excellent':
       return <CheckCircle className='h-4 w-4 text-green-600' />;
-    case 'good':
+    case 'Good':
       return <CheckCircle className='h-4 w-4 text-blue-600' />;
-    case 'fair':
+    case 'Fair':
       return <Minus className='h-4 w-4 text-yellow-600' />;
-    case 'needs_improvement':
+    case 'Needs improvement':
       return <AlertTriangle className='h-4 w-4 text-orange-600' />;
-    case 'poor':
+    case 'Poor':
       return <XCircle className='h-4 w-4 text-red-600' />;
     default:
       return <Minus className='h-4 w-4 text-gray-600' />;
@@ -172,14 +182,148 @@ const getPerformanceIcon = (average: number) => {
   return <AlertCircle className='h-4 w-4 text-red-600' />;
 };
 
+const getLetterGrade = (score: number) => {
+  if (score >= 9.0) return 'A+';
+  if (score >= 8.5) return 'A';
+  if (score >= 8.0) return 'B+';
+  if (score >= 7.0) return 'B';
+  if (score >= 6.5) return 'C+';
+  if (score >= 6.0) return 'C';
+  if (score >= 5.0) return 'D+';
+  if (score >= 4.0) return 'D';
+  return 'F';
+};
+
+// Mock data for communication
+const generateMockCommunication = (
+  teacherId: string,
+  teacherName: string,
+  subjectName: string
+): ParentCommunicationItem => {
+  const conversations = [
+    {
+      lastMessage:
+        'Cảm ơn phụ huynh đã quan tâm. Em học rất tốt trong tuần này!',
+      unreadCount: 0,
+      status: 'active' as const
+    },
+    {
+      lastMessage:
+        'Em cần chú ý hơn trong giờ học Toán. Mong phụ huynh hỗ trợ thêm.',
+      unreadCount: 1,
+      status: 'active' as const
+    },
+    {
+      lastMessage: 'Em đã cải thiện rất nhiều. Tiếp tục phát huy nhé!',
+      unreadCount: 0,
+      status: 'active' as const
+    },
+    {
+      lastMessage: 'Có bài tập về nhà cần em hoàn thành trước thứ 2.',
+      unreadCount: 2,
+      status: 'active' as const
+    },
+    {
+      lastMessage: 'Em tham gia tích cực trong hoạt động nhóm. Rất đáng khen!',
+      unreadCount: 0,
+      status: 'active' as const
+    }
+  ];
+
+  const randomConversation =
+    conversations[Math.floor(Math.random() * conversations.length)];
+
+  return {
+    id: `conv-${teacherId}-${Date.now()}`,
+    teacherId,
+    teacherName,
+    subjectName,
+    lastMessage: randomConversation.lastMessage,
+    lastMessageTime: new Date(
+      Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000
+    ).toISOString(),
+    unreadCount: randomConversation.unreadCount,
+    status: randomConversation.status
+  };
+};
+
 export function ChildDetailDialog({
   childId,
+  classId,
+  termId,
+  childData,
   children
 }: ChildDetailDialogProps) {
   const [open, setOpen] = useState(false);
 
-  // In real app, fetch child detail based on childId
-  const childData = mockChildDetail;
+  // Default values for classId and termId if not provided
+  const defaultClassId = classId || '33333333-3333-3333-3333-333333333333';
+  const defaultTermId = termId || '33333333-3333-3333-3333-333333333333';
+
+  // Fetch student rank data from API
+  const { data: studentRank, isLoading: studentRankLoading } = useStudentRank(
+    childId,
+    {
+      classId: defaultClassId,
+      termId: defaultTermId
+    },
+    {
+      enabled: open && !!childId && !!defaultClassId && !!defaultTermId
+    }
+  );
+
+  // Process childData from API
+  const displayData = childData
+    ? {
+        studentId: childData.studentId,
+        studentName: childData.studentName,
+        className: childData.className,
+        classId: childData.classId,
+        overallAverage:
+          childData.transcript?.subjects?.length > 0
+            ? childData.transcript.subjects.reduce(
+                (sum, s) => sum + (s.averageScore || 0),
+                0
+              ) / childData.transcript.subjects.length
+            : 0,
+        recentScores: (childData.scores || []).slice(-6).map((s) => ({
+          title: s.assessmentName || 'Bài kiểm tra',
+          score: s.score1 || 0,
+          isAbsent: s.isAbsent
+        })),
+        latestBehaviorNote:
+          childData.behaviorNotes?.length > 0
+            ? {
+                level: childData.behaviorNotes[0].level,
+                note: childData.behaviorNotes[0].note,
+                createdAt: childData.behaviorNotes[0].createdAt,
+                teacherName: childData.behaviorNotes[0].teacherName
+              }
+            : null,
+        upcomingAssessments: (childData.subjects || [])
+          .flatMap(
+            (subject) =>
+              subject.components?.flatMap(
+                (component) =>
+                  component.assessments?.map((assessment) => ({
+                    id: assessment.assessmentId,
+                    title: assessment.title,
+                    dueDate: assessment.dueDate
+                  })) || []
+              ) || []
+          )
+          .slice(0, 5)
+      }
+    : {
+        studentId: childId,
+        studentName: 'Học sinh',
+        className: 'Lớp',
+        classId: defaultClassId,
+        overallAverage: 0,
+        recentScores: [],
+        latestBehaviorNote: null,
+        upcomingAssessments: []
+      };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -188,7 +332,7 @@ export function ChildDetailDialog({
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <User className='h-5 w-5' />
-            Chi tiết học tập - {childData.child.full_name}
+            Chi tiết học tập - {displayData.studentName}
           </DialogTitle>
           <DialogDescription>
             Thông tin chi tiết về kết quả học tập và hạnh kiểm của con
@@ -208,10 +352,10 @@ export function ChildDetailDialog({
               <div className='grid gap-4 md:grid-cols-4'>
                 <div className='rounded-lg border p-4 text-center'>
                   <div className='mb-2 flex items-center justify-center'>
-                    {getPerformanceIcon(childData.overall_average)}
+                    {getPerformanceIcon(childData?.overallAverage || 0)}
                   </div>
                   <div className='text-2xl font-bold'>
-                    {childData.overall_average.toFixed(1)}
+                    {childData?.overallAverage?.toFixed(1) || 0}
                   </div>
                   <div className='text-muted-foreground text-sm'>
                     Điểm trung bình
@@ -219,10 +363,26 @@ export function ChildDetailDialog({
                 </div>
                 <div className='rounded-lg border p-4 text-center'>
                   <div className='mb-2 flex items-center justify-center'>
-                    <Target className='h-5 w-5 text-blue-600' />
+                    {studentRankLoading ? (
+                      <div className='h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600'></div>
+                    ) : studentRank ? (
+                      studentRank.rank <= 3 ? (
+                        <Award className='h-5 w-5 text-amber-600' />
+                      ) : (
+                        <Target className='h-5 w-5 text-blue-600' />
+                      )
+                    ) : (
+                      <Target className='h-5 w-5 text-blue-600' />
+                    )}
                   </div>
                   <div className='text-2xl font-bold'>
-                    #{childData.class_rank}
+                    {studentRankLoading ? (
+                      <div className='mx-auto h-8 w-12 animate-pulse rounded bg-gray-200'></div>
+                    ) : studentRank ? (
+                      `#${studentRank.rank}`
+                    ) : (
+                      `#N/A`
+                    )}
                   </div>
                   <div className='text-muted-foreground text-sm'>
                     Xếp hạng lớp
@@ -233,7 +393,7 @@ export function ChildDetailDialog({
                     <BookOpen className='h-5 w-5 text-purple-600' />
                   </div>
                   <div className='text-2xl font-bold'>
-                    {childData.subjects.length}
+                    {childData?.subjects?.length || 0}
                   </div>
                   <div className='text-muted-foreground text-sm'>Môn học</div>
                 </div>
@@ -242,9 +402,11 @@ export function ChildDetailDialog({
                     <CheckCircle className='h-5 w-5 text-green-600' />
                   </div>
                   <div className='text-2xl font-bold'>
-                    {childData.behavior_summary.excellent_count}
+                    {childData?.behaviorNotes?.length || 0}
                   </div>
-                  <div className='text-muted-foreground text-sm'>Khen ngợi</div>
+                  <div className='text-muted-foreground text-sm'>
+                    Ghi chú hạnh kiểm
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -267,9 +429,9 @@ export function ChildDetailDialog({
                 </CardHeader>
                 <CardContent>
                   <div className='space-y-4'>
-                    {childData.subjects.map((subjectData) => (
+                    {childData?.subjects?.map((subjectData) => (
                       <Card
-                        key={subjectData.subject.id}
+                        key={subjectData.subjectId}
                         className='hover:bg-muted/50 transition-colors'
                       >
                         <CardContent className='p-4'>
@@ -280,23 +442,42 @@ export function ChildDetailDialog({
                               </div>
                               <div>
                                 <div className='font-medium'>
-                                  {subjectData.subject.name}
+                                  {subjectData.subjectName}
                                 </div>
                                 <div className='text-muted-foreground text-sm'>
-                                  Giáo viên: {subjectData.teacher.full_name}
+                                  Giáo viên: {subjectData.teacherName}
                                 </div>
                               </div>
                             </div>
                             <div className='flex items-center gap-4'>
                               <div className='text-right'>
-                                <div
-                                  className={`inline-flex items-center justify-center rounded-full border px-3 py-1 text-sm font-medium ${getGradeColor(subjectData.average_score)}`}
-                                >
-                                  {subjectData.average_score.toFixed(1)}
-                                </div>
-                                <div className='text-muted-foreground mt-1 text-xs'>
-                                  Xếp loại: {subjectData.letter_grade}
-                                </div>
+                                {(() => {
+                                  const transcriptSubject =
+                                    childData?.transcript?.subjects?.find(
+                                      (s) =>
+                                        s.subjectName ===
+                                        subjectData.subjectName
+                                    );
+                                  const averageScore =
+                                    transcriptSubject?.averageScore || 0;
+                                  return (
+                                    <>
+                                      <div
+                                        className={`inline-flex items-center justify-center rounded-full border px-3 py-1 text-sm font-medium ${getGradeColor(averageScore)}`}
+                                      >
+                                        {averageScore > 0
+                                          ? averageScore.toFixed(1)
+                                          : 'N/A'}
+                                      </div>
+                                      <div className='text-muted-foreground mt-1 text-xs'>
+                                        Xếp loại:{' '}
+                                        {averageScore > 0
+                                          ? getLetterGrade(averageScore)
+                                          : 'N/A'}
+                                      </div>
+                                    </>
+                                  );
+                                })()}
                               </div>
                               <Button variant='outline' size='sm'>
                                 <MessageSquare className='mr-2 h-4 w-4' />
@@ -311,77 +492,89 @@ export function ChildDetailDialog({
                               Chi tiết điểm số:
                             </div>
                             <div className='grid gap-2'>
-                              {/* Mock detailed scores for this subject */}
-                              {[
-                                {
-                                  name: 'Kiểm tra miệng',
-                                  weight: 1.0,
-                                  score: 8.5,
-                                  date: '2024-09-15',
-                                  comment: 'Trả lời tốt'
-                                },
-                                {
-                                  name: 'Kiểm tra 15 phút',
-                                  weight: 1.0,
-                                  score: 7.8,
-                                  date: '2024-09-22',
-                                  comment: 'Cần cải thiện phần cuối'
-                                },
-                                {
-                                  name: 'Kiểm tra 1 tiết',
-                                  weight: 2.0,
-                                  score: 8.2,
-                                  date: '2024-09-30',
-                                  comment:
-                                    'Làm bài tốt, chữ viết cần rõ ràng hơn'
-                                },
-                                {
-                                  name: 'Bài tập về nhà',
-                                  weight: 1.0,
-                                  score: 9.0,
-                                  date: '2024-10-01',
-                                  comment: 'Hoàn thành đầy đủ, chính xác'
+                              {(() => {
+                                const allAssessments =
+                                  subjectData.components?.flatMap(
+                                    (component) => component.assessments || []
+                                  ) || [];
+
+                                if (allAssessments.length === 0) {
+                                  return (
+                                    <div className='text-muted-foreground py-8 text-center'>
+                                      <BookOpen className='mx-auto mb-4 h-12 w-12 opacity-50' />
+                                      <p>Chưa có bài kiểm tra nào</p>
+                                    </div>
+                                  );
                                 }
-                              ].map((scoreDetail, index) => (
-                                <div
-                                  key={index}
-                                  className='bg-muted/30 flex items-center justify-between rounded p-2'
-                                >
-                                  <div className='flex-1'>
-                                    <div className='flex items-center gap-2'>
-                                      <span className='text-sm font-medium'>
-                                        {scoreDetail.name}
-                                      </span>
-                                      <Badge
-                                        variant='outline'
-                                        className='text-xs'
+
+                                return allAssessments.map((assessment) => {
+                                  const component =
+                                    subjectData.components?.find((comp) =>
+                                      comp.assessments?.some(
+                                        (ass) =>
+                                          ass.assessmentId ===
+                                          assessment.assessmentId
+                                      )
+                                    );
+
+                                  return (
+                                    <div
+                                      key={assessment.assessmentId}
+                                      className='bg-muted/30 flex items-center justify-between rounded p-2'
+                                    >
+                                      <div className='flex-1'>
+                                        <div className='flex items-center gap-2'>
+                                          <span className='text-sm font-medium'>
+                                            {assessment.title}
+                                          </span>
+                                          <Badge
+                                            variant='outline'
+                                            className='text-xs'
+                                          >
+                                            Hệ số {component?.weight || 1}
+                                          </Badge>
+                                        </div>
+                                        <div className='text-muted-foreground mt-1 text-xs'>
+                                          {component?.componentName ||
+                                            'Bài kiểm tra'}
+                                          {assessment.comment &&
+                                            ` • ${assessment.comment}`}
+                                        </div>
+                                      </div>
+                                      <div
+                                        className={`inline-flex items-center justify-center rounded-full border px-2 py-1 text-xs font-medium ${
+                                          assessment.isAbsent
+                                            ? 'border-red-200 bg-red-100 text-red-800'
+                                            : getGradeColor(assessment.score)
+                                        }`}
                                       >
-                                        Hệ số {scoreDetail.weight.toFixed(1)}
-                                      </Badge>
+                                        {assessment.isAbsent
+                                          ? 'Vắng'
+                                          : assessment.score.toFixed(1)}
+                                      </div>
                                     </div>
-                                    <div className='text-muted-foreground mt-1 text-xs'>
-                                      {scoreDetail.date} • {scoreDetail.comment}
-                                    </div>
-                                  </div>
-                                  <div
-                                    className={`inline-flex items-center justify-center rounded-full border px-2 py-1 text-xs font-medium ${getGradeColor(scoreDetail.score)}`}
-                                  >
-                                    {scoreDetail.score.toFixed(1)}
+                                  );
+                                });
+                              })()}
+                            </div>
+                            {subjectData.components &&
+                              subjectData.components.length > 0 && (
+                                <div className='border-t pt-2'>
+                                  <div className='text-muted-foreground text-xs'>
+                                    <strong>Tổng điểm số:</strong>{' '}
+                                    {subjectData.components.reduce(
+                                      (sum, comp) =>
+                                        sum + (comp.assessments?.length || 0),
+                                      0
+                                    )}{' '}
+                                    bài
                                   </div>
                                 </div>
-                              ))}
-                            </div>
-                            <div className='border-t pt-2'>
-                              <div className='text-muted-foreground text-xs'>
-                                <strong>Cách tính:</strong> (8.5×1 + 7.8×1 +
-                                8.2×2 + 9.0×1) ÷ 5 ={' '}
-                                {subjectData.average_score.toFixed(1)}
-                              </div>
-                            </div>
+                              )}
                           </div>
                         </CardContent>
                       </Card>
-                    ))}
+                    )) || []}
                   </div>
                 </CardContent>
               </Card>
@@ -396,37 +589,52 @@ export function ChildDetailDialog({
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className='grid gap-4 md:grid-cols-5'>
-                    {Object.entries(childData.behavior_summary).map(
-                      ([level, count]) => {
-                        const levelName = level
-                          .replace('_count', '')
-                          .replace('_', ' ');
-                        const displayName =
-                          levelName === 'excellent'
-                            ? 'Xuất sắc'
-                            : levelName === 'good'
-                              ? 'Tốt'
-                              : levelName === 'fair'
-                                ? 'Khá'
-                                : levelName === 'needs improvement'
-                                  ? 'Cần cải thiện'
-                                  : 'Yếu';
-                        return (
-                          <div
-                            key={level}
-                            className='rounded-lg border p-3 text-center'
-                          >
-                            <div className='mb-2 flex items-center justify-center'>
-                              {getBehaviorIcon(level.replace('_count', ''))}
+                  <div className='space-y-4'>
+                    {childData?.behaviorNotes &&
+                    childData.behaviorNotes.length > 0 ? (
+                      <div className='grid gap-4 md:grid-cols-5'>
+                        {[
+                          'Excellent',
+                          'Good',
+                          'Fair',
+                          'Needs improvement',
+                          'Poor'
+                        ].map((level) => {
+                          const count =
+                            childData.behaviorNotes?.filter(
+                              (note) => note.level === level
+                            ).length || 0;
+                          const displayName =
+                            level === 'Excellent'
+                              ? 'Xuất sắc'
+                              : level === 'Good'
+                                ? 'Tốt'
+                                : level === 'Fair'
+                                  ? 'Khá'
+                                  : level === 'Needs improvement'
+                                    ? 'Cần cải thiện'
+                                    : 'Yếu';
+                          return (
+                            <div
+                              key={level}
+                              className='rounded-lg border p-3 text-center'
+                            >
+                              <div className='mb-2 flex items-center justify-center'>
+                                {getBehaviorIcon(level)}
+                              </div>
+                              <div className='text-2xl font-bold'>{count}</div>
+                              <div className='text-muted-foreground text-xs'>
+                                {displayName}
+                              </div>
                             </div>
-                            <div className='text-2xl font-bold'>{count}</div>
-                            <div className='text-muted-foreground text-xs'>
-                              {displayName}
-                            </div>
-                          </div>
-                        );
-                      }
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className='text-muted-foreground py-8 text-center'>
+                        <Award className='mx-auto mb-4 h-12 w-12 opacity-50' />
+                        <p>Chưa có ghi chú hạnh kiểm</p>
+                      </div>
                     )}
                   </div>
                 </CardContent>
@@ -442,122 +650,90 @@ export function ChildDetailDialog({
                 </CardHeader>
                 <CardContent>
                   <div className='max-h-96 space-y-4 overflow-y-auto'>
-                    {/* Mock behavior notes with detailed content */}
-                    {[
-                      {
-                        id: 'note-1',
-                        level: 'excellent',
-                        note: 'Em Khang tích cực tham gia hoạt động nhóm trong dự án khoa học về môi trường. Em có khả năng lãnh đạo tốt và luôn động viên các bạn trong nhóm hoàn thành nhiệm vụ.',
-                        teacher: 'Cô Nguyễn Thị Lan',
-                        subject: 'Khoa học tự nhiên',
-                        date: '2024-10-01',
-                        time: '14:30'
-                      },
-                      {
-                        id: 'note-2',
-                        level: 'good',
-                        note: 'Học sinh có thái độ học tập nghiêm túc, luôn hoàn thành bài tập đúng hạn. Tuy nhiên cần tích cực hơn trong việc phát biểu ý kiến trong giờ học.',
-                        teacher: 'Thầy Trần Văn Nam',
-                        subject: 'Ngữ văn',
-                        date: '2024-09-28',
-                        time: '10:15'
-                      },
-                      {
-                        id: 'note-3',
-                        level: 'needs_improvement',
-                        note: 'Em cần chú ý tập trung hơn trong giờ học Toán. Đã có hiện tượng nói chuyện riêng với bạn bè trong lúc giáo viên giảng bài. Cần khuyến khích em tự giác hơn.',
-                        teacher: 'Cô Lê Thị Hoa',
-                        subject: 'Toán học',
-                        date: '2024-09-25',
-                        time: '08:45'
-                      },
-                      {
-                        id: 'note-4',
-                        level: 'excellent',
-                        note: 'Em Khang đã giúp đỡ bạn mới chuyển lớp hòa nhập với tập thể. Thể hiện tinh thần đoàn kết, yêu thương bạn bè rất đáng khen ngợi.',
-                        teacher: 'Cô Phạm Thị Mai',
-                        subject: 'Chủ nhiệm',
-                        date: '2024-09-20',
-                        time: '16:00'
-                      },
-                      {
-                        id: 'note-5',
-                        level: 'good',
-                        note: 'Tham gia tích cực vào hoạt động thể thao của lớp. Em có tinh thần thể thao tốt và luôn cổ vũ các bạn.',
-                        teacher: 'Thầy Nguyễn Văn Đức',
-                        subject: 'Thể dục',
-                        date: '2024-09-18',
-                        time: '15:30'
-                      }
-                    ].map((behaviorNote) => (
-                      <div
-                        key={behaviorNote.id}
-                        className={`rounded-lg border p-4 ${
-                          behaviorNote.level === 'excellent'
-                            ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20'
-                            : behaviorNote.level === 'good'
-                              ? 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/20'
-                              : behaviorNote.level === 'needs_improvement'
-                                ? 'border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950/20'
-                                : 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20'
-                        }`}
-                      >
-                        <div className='mb-3 flex items-start justify-between'>
-                          <div className='flex items-center gap-2'>
-                            {getBehaviorIcon(behaviorNote.level)}
-                            <span
-                              className={`text-sm font-medium capitalize ${
-                                behaviorNote.level === 'excellent'
-                                  ? 'text-green-700 dark:text-green-300'
-                                  : behaviorNote.level === 'good'
-                                    ? 'text-blue-700 dark:text-blue-300'
-                                    : behaviorNote.level === 'needs_improvement'
-                                      ? 'text-orange-700 dark:text-orange-300'
-                                      : 'text-red-700 dark:text-red-300'
+                    {childData?.behaviorNotes &&
+                    childData.behaviorNotes.length > 0 ? (
+                      childData.behaviorNotes
+                        .sort(
+                          (a, b) =>
+                            new Date(b.createdAt).getTime() -
+                            new Date(a.createdAt).getTime()
+                        )
+                        .map((behaviorNote) => (
+                          <div
+                            key={behaviorNote.id}
+                            className={`rounded-lg border p-4 ${
+                              behaviorNote.level === 'Excellent'
+                                ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20'
+                                : behaviorNote.level === 'Good'
+                                  ? 'border-blue-200 bg-blue-50 dark:border-blue-800 dark:bg-blue-950/20'
+                                  : behaviorNote.level === 'Needs improvement'
+                                    ? 'border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950/20'
+                                    : 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20'
+                            }`}
+                          >
+                            <div className='mb-3 flex items-start justify-between'>
+                              <div className='flex items-center gap-2'>
+                                {getBehaviorIcon(behaviorNote.level)}
+                                <span
+                                  className={`text-sm font-medium capitalize ${
+                                    behaviorNote.level === 'Excellent'
+                                      ? 'text-green-700 dark:text-green-300'
+                                      : behaviorNote.level === 'Good'
+                                        ? 'text-blue-700 dark:text-blue-300'
+                                        : behaviorNote.level ===
+                                            'Needs improvement'
+                                          ? 'text-orange-700 dark:text-orange-300'
+                                          : 'text-red-700 dark:text-red-300'
+                                  }`}
+                                >
+                                  {behaviorNote.level === 'Excellent'
+                                    ? 'Xuất sắc'
+                                    : behaviorNote.level === 'Good'
+                                      ? 'Tốt'
+                                      : behaviorNote.level ===
+                                          'Needs improvement'
+                                        ? 'Cần cải thiện'
+                                        : 'Yếu'}
+                                </span>
+                              </div>
+                              <Badge variant='outline' className='text-xs'>
+                                {format(
+                                  new Date(behaviorNote.createdAt),
+                                  'dd/MM/yyyy HH:mm'
+                                )}
+                              </Badge>
+                            </div>
+
+                            <p
+                              className={`mb-3 text-sm leading-relaxed ${
+                                behaviorNote.level === 'Excellent'
+                                  ? 'text-green-800 dark:text-green-200'
+                                  : behaviorNote.level === 'Good'
+                                    ? 'text-blue-800 dark:text-blue-200'
+                                    : behaviorNote.level === 'Needs improvement'
+                                      ? 'text-orange-800 dark:text-orange-200'
+                                      : 'text-red-800 dark:text-red-200'
                               }`}
                             >
-                              {behaviorNote.level === 'excellent'
-                                ? 'Xuất sắc'
-                                : behaviorNote.level === 'good'
-                                  ? 'Tốt'
-                                  : behaviorNote.level === 'needs_improvement'
-                                    ? 'Cần cải thiện'
-                                    : 'Yếu'}
-                            </span>
-                          </div>
-                          <Badge variant='outline' className='text-xs'>
-                            {behaviorNote.date} {behaviorNote.time}
-                          </Badge>
-                        </div>
+                              &rdquo;{behaviorNote.note}&rdquo;
+                            </p>
 
-                        <p
-                          className={`mb-3 text-sm leading-relaxed ${
-                            behaviorNote.level === 'excellent'
-                              ? 'text-green-800 dark:text-green-200'
-                              : behaviorNote.level === 'good'
-                                ? 'text-blue-800 dark:text-blue-200'
-                                : behaviorNote.level === 'needs_improvement'
-                                  ? 'text-orange-800 dark:text-orange-200'
-                                  : 'text-red-800 dark:text-red-200'
-                          }`}
-                        >
-                          &rdquo;{behaviorNote.note}&rdquo;
-                        </p>
-
-                        <div className='text-muted-foreground flex items-center justify-between text-xs'>
-                          <div className='flex items-center gap-4'>
-                            <div className='flex items-center gap-1'>
-                              <User className='h-3 w-3' />
-                              <span>{behaviorNote.teacher}</span>
-                            </div>
-                            <div className='flex items-center gap-1'>
-                              <BookOpen className='h-3 w-3' />
-                              <span>{behaviorNote.subject}</span>
+                            <div className='text-muted-foreground flex items-center justify-between text-xs'>
+                              <div className='flex items-center gap-4'>
+                                <div className='flex items-center gap-1'>
+                                  <User className='h-3 w-3' />
+                                  <span>{behaviorNote.teacherName}</span>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        ))
+                    ) : (
+                      <div className='text-muted-foreground py-8 text-center'>
+                        <Bell className='mx-auto mb-4 h-12 w-12 opacity-50' />
+                        <p>Chưa có ghi chú hạnh kiểm gần đây</p>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -573,34 +749,61 @@ export function ChildDetailDialog({
                 </CardHeader>
                 <CardContent>
                   <div className='space-y-4'>
-                    {childData.subjects.map((subjectData) => (
-                      <div
-                        key={subjectData.subject.id}
-                        className='flex items-center justify-between rounded-lg border p-4'
-                      >
-                        <div className='flex items-center gap-4'>
-                          <Avatar className='h-10 w-10'>
-                            <AvatarFallback className='bg-blue-100 text-blue-600'>
-                              {subjectData.teacher.full_name.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className='font-medium'>
-                              {subjectData.teacher.full_name}
-                            </div>
-                            <div className='text-muted-foreground text-sm'>
-                              Giáo viên {subjectData.subject.name}
+                    {childData?.subjects?.map((subjectData) => {
+                      const communication = generateMockCommunication(
+                        subjectData.teacherId,
+                        subjectData.teacherName,
+                        subjectData.subjectName
+                      );
+
+                      return (
+                        <div
+                          key={subjectData.subjectId}
+                          className='hover:bg-muted/50 flex items-center justify-between rounded-lg border p-4 transition-colors'
+                        >
+                          <div className='flex items-center gap-4'>
+                            <Avatar className='h-10 w-10'>
+                              <AvatarFallback className='bg-blue-100 text-blue-600'>
+                                {subjectData.teacherName.charAt(0)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className='flex-1'>
+                              <div className='flex items-center gap-2'>
+                                <div className='font-medium'>
+                                  {subjectData.teacherName}
+                                </div>
+                                {communication.unreadCount > 0 && (
+                                  <Badge
+                                    variant='destructive'
+                                    className='text-xs'
+                                  >
+                                    {communication.unreadCount}
+                                  </Badge>
+                                )}
+                              </div>
+                              <div className='text-muted-foreground text-sm'>
+                                Giáo viên {subjectData.subjectName}
+                              </div>
+                              <div className='text-muted-foreground mt-1 line-clamp-1 text-xs'>
+                                {communication.lastMessage}
+                              </div>
+                              <div className='text-muted-foreground text-xs'>
+                                {format(
+                                  new Date(communication.lastMessageTime),
+                                  'dd/MM/yyyy HH:mm'
+                                )}
+                              </div>
                             </div>
                           </div>
+                          <div className='flex items-center gap-2'>
+                            <Button variant='outline' size='sm'>
+                              <MessageSquare className='mr-2 h-4 w-4' />
+                              Nhắn tin
+                            </Button>
+                          </div>
                         </div>
-                        <div className='flex items-center gap-2'>
-                          <Button variant='outline' size='sm'>
-                            <MessageSquare className='mr-2 h-4 w-4' />
-                            Nhắn tin
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </CardContent>
               </Card>

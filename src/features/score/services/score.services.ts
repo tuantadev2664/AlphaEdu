@@ -8,7 +8,13 @@ import type {
   UpdateScoreRequest,
   UpdateScoreResponse,
   CreateAssessmentRequest,
-  CreateAssessmentResponse
+  CreateAssessmentResponse,
+  GetClassRankingParams,
+  ClassRankingResponse,
+  StudentTranscriptResponse,
+  GetStudentTranscriptParams,
+  StudentAnalysisResponse,
+  GetStudentAnalysisParams
 } from '../type';
 
 const API_BASE_URL =
@@ -299,5 +305,96 @@ export async function createAssessment(
       success: false,
       message: error.message || 'Failed to create assessment'
     };
+  }
+}
+
+/**
+ * Get class ranking for a specific class and term
+ * @param params - Object containing classId and termId
+ * @returns Promise<ClassRankingResponse>
+ */
+export async function getClassRanking(
+  params: GetClassRankingParams
+): Promise<ClassRankingResponse> {
+  try {
+    const { classId, termId } = params;
+
+    if (!classId || !termId) {
+      throw new Error('classId and termId are required');
+    }
+
+    const endpoint = `/Score/class/${classId}/term/${termId}/ranking`;
+
+    const response = await apiCall(endpoint, { method: 'GET' });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `Failed to fetch class ranking: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    throw new Error(error.message || 'Failed to fetch class ranking');
+  }
+}
+
+export async function getStudentTranscript(
+  params: GetStudentTranscriptParams
+): Promise<StudentTranscriptResponse> {
+  try {
+    const { studentId, termId } = params;
+
+    if (!studentId || !termId) {
+      throw new Error('studentId and termId are required');
+    }
+
+    const endpoint = `/Score/student/${studentId}/term/${termId}/transcript`;
+
+    const response = await apiCall(endpoint, { method: 'GET' });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message ||
+          `Failed to fetch student transcript: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    throw new Error(error.message || 'Failed to fetch student transcript');
+  }
+}
+
+export async function getStudentAnalysis(
+  params: GetStudentAnalysisParams
+): Promise<StudentAnalysisResponse> {
+  try {
+    const { studentId, termId } = params;
+
+    if (!studentId || !termId) {
+      throw new Error('studentId and termId are required');
+    }
+
+    const endpoint = `/Score/student/${studentId}/term/${termId}/analysis`;
+
+    const response = await apiCall(endpoint, { method: 'GET' });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message ||
+          `Failed to fetch student analysis: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error: any) {
+    throw new Error(error.message || 'Failed to fetch student analysis');
   }
 }
