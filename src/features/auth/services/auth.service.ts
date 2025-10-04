@@ -184,9 +184,16 @@ export async function validateToken(token?: string): Promise<AuthUser | null> {
 
     if (!res.ok) {
       console.log('❌ Token validation failed:', res.status);
-      // Clear invalid token
+      // Clear invalid token ngay lập tức
       clearAuthToken();
       clearUserData();
+
+      // Nếu là client-side, redirect ngay lập tức
+      if (typeof window !== 'undefined') {
+        console.log('🔄 Redirecting to sign-in due to invalid token');
+        window.location.href = '/auth/sign-in';
+      }
+
       return null;
     }
 
@@ -199,6 +206,16 @@ export async function validateToken(token?: string): Promise<AuthUser | null> {
     return userData;
   } catch (error) {
     console.error('❌ Token validation error:', error);
+
+    // Clear auth data khi có lỗi
+    clearAuthToken();
+    clearUserData();
+
+    // Redirect nếu là client-side
+    if (typeof window !== 'undefined') {
+      window.location.href = '/auth/sign-in';
+    }
+
     return null;
   }
 }
