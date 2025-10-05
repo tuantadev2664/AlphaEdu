@@ -82,18 +82,18 @@ export const createColumns = (
       if (averageScore === null || averageScore === undefined)
         return <span className='text-muted-foreground'>N/A</span>;
 
-      const roundedScore = Math.round(averageScore);
+      // const roundedScore = Math.round(averageScore);
 
       let variant: 'default' | 'secondary' | 'destructive' | 'outline' =
         'default';
-      if (roundedScore >= 8) variant = 'default';
-      else if (roundedScore >= 7) variant = 'secondary';
-      else if (roundedScore >= 6) variant = 'outline';
+      if (averageScore >= 8) variant = 'default';
+      else if (averageScore >= 7) variant = 'secondary';
+      else if (averageScore >= 6) variant = 'outline';
       else variant = 'destructive';
 
       return (
         <div className='flex items-center gap-2'>
-          <Badge variant={variant}>{roundedScore.toFixed(1)}</Badge>
+          <Badge variant={variant}>{averageScore.toFixed(1)}</Badge>
         </div>
       );
     }

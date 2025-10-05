@@ -68,7 +68,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuLabel>Student Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <StudentProfileDialog student={studentData}>
+        <StudentProfileDialog
+          student={studentData}
+          ranking={data.ranking}
+          averageScore={data.averageScore}
+        >
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <User className='mr-2 h-4 w-4' />
             View Profile

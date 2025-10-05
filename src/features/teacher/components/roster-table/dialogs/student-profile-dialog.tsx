@@ -31,11 +31,15 @@ import { format } from 'date-fns';
 interface StudentProfileDialogProps {
   student: ClassStudent;
   children: React.ReactNode;
+  ranking: number;
+  averageScore: number;
 }
 
 export function StudentProfileDialog({
   student,
-  children
+  children,
+  ranking,
+  averageScore
 }: StudentProfileDialogProps) {
   const [open, setOpen] = useState(false);
 
@@ -67,25 +71,6 @@ export function StudentProfileDialog({
     if (score >= 6) return 'Average';
     return 'Needs Improvement';
   };
-
-  // Calculate average score from API data
-  const calculateAverageScore = () => {
-    if (!studentDetail?.scores || studentDetail.scores.length === 0)
-      return null;
-
-    const totalWeightedScore = studentDetail.scores.reduce(
-      (sum, score) => sum + score.score * score.weight,
-      0
-    );
-    const totalWeight = studentDetail.scores.reduce(
-      (sum, score) => sum + score.weight,
-      0
-    );
-
-    return totalWeight > 0 ? totalWeightedScore / totalWeight : 0;
-  };
-
-  const averageScore = calculateAverageScore();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -187,9 +172,9 @@ export function StudentProfileDialog({
                     <div className='flex items-center gap-3'>
                       <TrendingUp className='text-muted-foreground h-4 w-4' />
                       <div>
-                        <div className='text-sm font-medium'>Total Scores</div>
+                        <div className='text-sm font-medium'>Ranking</div>
                         <Badge variant='outline' className='text-xs'>
-                          {studentDetail?.scores?.length || 0} assessments
+                          #{ranking}
                         </Badge>
                       </div>
                     </div>
