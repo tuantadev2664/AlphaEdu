@@ -25,6 +25,8 @@ export function useCurrentUserQuery() {
       const user = await authService.validateToken(token);
       if (user) {
         console.log('✅ User validated:', user.email);
+      } else {
+        console.log('❌ Token validation failed, user will be cleared');
       }
 
       return user;
@@ -32,14 +34,21 @@ export function useCurrentUserQuery() {
     staleTime: 5 * 60 * 1000, // 5 minutes fresh
     gcTime: 10 * 60 * 1000, // 10 minutes cache
     retry: (failureCount, error) => {
-      // Không retry nếu là lỗi authentication
-      if (error instanceof Error && error.message.includes('Authentication')) {
+      // Không retry nếu là lỗi authentication hoặc token hết hạn
+      if (
+        error instanceof Error &&
+        (error.message.includes('Authentication') ||
+          error.message.includes('expired') ||
+          error.message.includes('401'))
+      ) {
         return false;
       }
-      return failureCount < 2;
+      return failureCount < 1; // Giảm số lần retry
     },
-    refetchOnWindowFocus: true, // Revalidate khi user quay lại tab
-    refetchOnMount: true
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
+    // Thêm option để không cache khi có lỗi
+    throwOnError: false
   });
 }
 

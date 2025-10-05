@@ -28,25 +28,29 @@ export function useAuth() {
       try {
         console.log('🔄 Initializing auth state...');
 
-        // Kiểm tra stored user data trước
-        const storedUser = authService.getUserData();
         const token = authService.getAuthToken();
 
-        if (storedUser && token) {
-          console.log('📦 Found stored user:', storedUser.email);
-          setUser(storedUser);
-          setInitializing(false);
-
-          // Background validation với React Query
-          return;
-        }
-
-        // Nếu không có stored data, đợi React Query validate
         if (!token) {
           console.log('❌ No token found');
           setUser(null);
           setInitializing(false);
+          return;
         }
+
+        // Luôn validate token trước khi set user
+        // Không dựa vào stored user data để tránh race condition
+        console.log('🔄 Validating token before setting user...');
+        const validatedUser = await authService.validateToken(token);
+
+        if (validatedUser) {
+          console.log('✅ Token valid, setting user:', validatedUser.email);
+          setUser(validatedUser);
+        } else {
+          console.log('❌ Token invalid, clearing auth data');
+          setUser(null);
+        }
+
+        setInitializing(false);
       } catch (error) {
         console.error('❌ Auth initialization error:', error);
         setUser(null);
