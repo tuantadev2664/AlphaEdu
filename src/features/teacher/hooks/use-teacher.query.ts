@@ -1,5 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { getTeacherClasses } from '../services/teacher.service';
+import {
+  getTeacherClasses,
+  getStudentDetail
+} from '../services/teacher.service';
 import type { GetTeacherClassesParams } from '../types';
 
 /**
@@ -44,4 +47,27 @@ export function useTeacherClassesByYear(
       ...options
     }
   );
+}
+
+/**
+ * Hook to fetch detailed information about a specific student
+ * @param studentId - The student ID
+ * @param options - React Query options
+ */
+export function useStudentDetail(
+  studentId: string,
+  options?: {
+    enabled?: boolean;
+    staleTime?: number;
+    refetchOnWindowFocus?: boolean;
+  }
+) {
+  return useQuery({
+    queryKey: ['student-detail', studentId],
+    queryFn: () => getStudentDetail(studentId),
+    enabled: !!studentId && options?.enabled !== false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+    ...options
+  });
 }

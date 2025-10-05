@@ -5,25 +5,27 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 import { RosterStudent } from '@/features/teacher/types';
 import { Column, ColumnDef } from '@tanstack/react-table';
-import { Mail, Phone, User, TrendingUp } from 'lucide-react';
+import { User, TrendingUp } from 'lucide-react';
 import { CellAction } from './cell-action';
-import { ClassStudent } from '@/features/class/types';
+import { ClassStudentWithStats } from '@/features/class/types';
 
 interface CreateColumnsOptions {
-  students: ClassStudent[];
+  students: ClassStudentWithStats[];
 }
 
 export const createColumns = (
   options: CreateColumnsOptions
-): ColumnDef<ClassStudent>[] => [
+): ColumnDef<ClassStudentWithStats>[] => [
   {
-    accessorKey: 'fullName',
-    header: ({ column }: { column: Column<ClassStudent, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Student' />
-    ),
+    accessorKey: 'studentName',
+    header: ({
+      column
+    }: {
+      column: Column<ClassStudentWithStats, unknown>;
+    }) => <DataTableColumnHeader column={column} title='Student' />,
     cell: ({ row }) => {
       const student = row.original;
-      const initials = student.fullName
+      const initials = student.studentName
         .split(' ')
         .map((name) => name[0])
         .join('')
@@ -35,10 +37,9 @@ export const createColumns = (
             <AvatarFallback className='text-xs'>{initials}</AvatarFallback>
           </Avatar>
           <div>
-            <div className='font-medium'>{student.fullName}</div>
-            <div className='text-muted-foreground flex items-center gap-1 text-sm'>
-              <Mail className='h-3 w-3' />
-              {student.email}
+            <div className='font-medium'>{student.studentName}</div>
+            <div className='text-muted-foreground text-sm'>
+              ID: {student.studentId}
             </div>
           </div>
         </div>
@@ -53,69 +54,60 @@ export const createColumns = (
     enableColumnFilter: true
   },
   {
-    accessorKey: 'phone',
-    header: 'Contact',
+    accessorKey: 'ranking',
+    header: ({
+      column
+    }: {
+      column: Column<ClassStudentWithStats, unknown>;
+    }) => <DataTableColumnHeader column={column} title='Ranking' />,
     cell: ({ row }) => {
-      const student = row.original;
+      const ranking = row.original.ranking;
       return (
         <div className='flex items-center gap-1 text-sm'>
-          <Phone className='h-3 w-3' />
-          {student.phone}
+          <TrendingUp className='h-3 w-3' />#{ranking}
         </div>
       );
     }
   },
   {
-    id: 'averageScore',
-    header: ({ column }: { column: Column<ClassStudent, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Average Score' />
-    ),
+    accessorKey: 'averageScore',
+    header: ({
+      column
+    }: {
+      column: Column<ClassStudentWithStats, unknown>;
+    }) => <DataTableColumnHeader column={column} title='Average Score' />,
     cell: ({ row }) => {
-      // Calculate average from scoreStudents array
-      const scores = row.original.scoreStudents || [];
-      if (scores.length === 0)
+      const averageScore = row.original.averageScore;
+
+      if (averageScore === null || averageScore === undefined)
         return <span className='text-muted-foreground'>N/A</span>;
 
-      const average =
-        scores.reduce((sum, score) => sum + (score.score || 0), 0) /
-        scores.length;
-      const roundedScore = Math.round(average);
+      const roundedScore = Math.round(averageScore);
 
       let variant: 'default' | 'secondary' | 'destructive' | 'outline' =
         'default';
-      if (roundedScore >= 90) variant = 'default';
-      else if (roundedScore >= 80) variant = 'secondary';
-      else if (roundedScore >= 70) variant = 'outline';
+      if (roundedScore >= 8) variant = 'default';
+      else if (roundedScore >= 7) variant = 'secondary';
+      else if (roundedScore >= 6) variant = 'outline';
       else variant = 'destructive';
 
       return (
         <div className='flex items-center gap-2'>
-          <Badge variant={variant}>{roundedScore}%</Badge>
-          <TrendingUp className='text-muted-foreground h-3 w-3' />
+          <Badge variant={variant}>{roundedScore.toFixed(1)}</Badge>
         </div>
       );
     }
   },
   {
-    id: 'behaviorNotes',
+    accessorKey: 'behaviorNotes',
     header: 'Behavior Notes',
     cell: ({ row }) => {
-      const count = row.original.behaviorNoteStudents?.length || 0;
+      const count = row.original.behaviorNotes?.length || 0;
       return (
         <Badge variant={count > 0 ? 'outline' : 'secondary'}>
           {count} {count === 1 ? 'note' : 'notes'}
         </Badge>
       );
-    }
-  },
-  {
-    accessorKey: 'createdAt',
-    header: ({ column }: { column: Column<ClassStudent, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Enrolled' />
-    ),
-    cell: ({ row }) => {
-      const date = new Date(row.original.createdAt);
-      return <div className='text-sm'>{date.toLocaleDateString()}</div>;
     }
   },
   {

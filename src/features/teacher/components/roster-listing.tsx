@@ -15,13 +15,12 @@ export default function RosterListing({ classId }: RosterListingProps) {
     error
   } = useClassStudents({
     classId,
-    academicYearId: '22222222-2222-2222-2222-222222222222'
+    academicYearId: '22222222-2222-2222-2222-222222222222',
+    termId: '33333333-3333-3333-3333-333333333333'
   });
 
-  console.log('studentsData', studentsData);
-
   // API returns array directly
-  const students = studentsData || [];
+  const students = studentsData?.data || [];
   const columns = createColumns({ students });
 
   if (isLoading) {

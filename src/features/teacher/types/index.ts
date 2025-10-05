@@ -289,3 +289,34 @@ export type GetTeacherClassesParams = {
 };
 
 export type GetTeacherClassesResponse = TeacherClass[];
+
+// Student Detail API Response types
+export type StudentDetailClass = {
+  classId: string;
+  className: string;
+  gradeName: string;
+  academicYearName: string;
+};
+
+export type StudentDetailParent = {
+  fullName: string;
+  phone: string;
+};
+
+export type StudentDetailScore = {
+  subject: string;
+  component: string;
+  score: number;
+  weight: number;
+};
+
+export type StudentDetailResponse = {
+  id: string;
+  fullName: string;
+  email: string;
+  schoolName: string;
+  classes: StudentDetailClass[];
+  parents: StudentDetailParent[];
+  behaviorNotes: string[];
+  scores: StudentDetailScore[];
+};

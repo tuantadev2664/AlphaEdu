@@ -1,7 +1,8 @@
 import { apiCall } from '@/features/auth/services/auth.service';
 import type {
   GetTeacherClassesParams,
-  GetTeacherClassesResponse
+  GetTeacherClassesResponse,
+  StudentDetailResponse
 } from '../types';
 
 // API Base URL
@@ -50,5 +51,39 @@ export async function getTeacherClasses(
   } catch (error: any) {
     console.error('❌ Error fetching teacher classes:', error);
     throw new Error(error.message || 'Failed to fetch teacher classes');
+  }
+}
+
+/**
+ * Get detailed information about a specific student
+ * @param studentId - The student ID
+ */
+export async function getStudentDetail(
+  studentId: string
+): Promise<StudentDetailResponse> {
+  try {
+    const endpoint = `/Student/${studentId}`;
+
+    console.log('🔄 Fetching student detail:', endpoint);
+
+    const response = await apiCall(endpoint, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message ||
+          `Failed to fetch student detail: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+    console.log('✅ Student detail fetched successfully:', data.fullName);
+
+    return data;
+  } catch (error: any) {
+    console.error('❌ Error fetching student detail:', error);
+    throw new Error(error.message || 'Failed to fetch student detail');
   }
 }

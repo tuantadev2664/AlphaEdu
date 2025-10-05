@@ -3,7 +3,8 @@ import type {
   GetClassStudentsParams,
   GetClassStudentsResponse,
   GetClassDetailsParams,
-  GetClassDetailsResponse
+  GetClassDetailsResponse,
+  ClassStudentWithStats
 } from '../types';
 
 /**
@@ -14,13 +15,13 @@ export async function getClassStudents(
   params: GetClassStudentsParams
 ): Promise<GetClassStudentsResponse> {
   try {
-    const { classId, academicYearId } = params;
+    const { classId, academicYearId, termId } = params;
 
     if (!classId || !academicYearId) {
       throw new Error('Both classId and academicYearId are required');
     }
 
-    const endpoint = `/Student/class/${classId}/year/${academicYearId}`;
+    const endpoint = `/Student/class/${classId}/year/${academicYearId}/term/${termId}`;
 
     console.log('🔄 Fetching class students:', endpoint);
 
@@ -58,8 +59,8 @@ export async function getClassStudentsCount(
   params: GetClassStudentsParams
 ): Promise<number> {
   try {
-    const students = await getClassStudents(params);
-    return students.length;
+    const response = await getClassStudents(params);
+    return response.data.length;
   } catch (error: any) {
     console.error('❌ Error getting class students count:', error);
     return 0;
@@ -75,11 +76,18 @@ export async function getClassStudentsCount(
 export async function isStudentInClass(
   studentId: string,
   classId: string,
-  academicYearId: string
+  academicYearId: string,
+  termId: string
 ): Promise<boolean> {
   try {
-    const students = await getClassStudents({ classId, academicYearId });
-    return students.some((student) => student.id === studentId);
+    const response = await getClassStudents({
+      classId,
+      academicYearId,
+      termId
+    });
+    return response.data.some(
+      (student: ClassStudentWithStats) => student.studentId === studentId
+    );
   } catch (error: any) {
     console.error('❌ Error checking student enrollment:', error);
     return false;

@@ -65,12 +65,14 @@ export function useClassStudentsCount(
  * @param studentId - The student ID to check
  * @param classId - The class ID
  * @param academicYearId - The academic year ID
+ * @param termId - The term ID
  * @param options - React Query options
  */
 export function useStudentInClass(
   studentId: string,
   classId: string,
   academicYearId: string,
+  termId: string,
   options?: {
     enabled?: boolean;
     staleTime?: number;
@@ -78,12 +80,13 @@ export function useStudentInClass(
   }
 ) {
   return useQuery({
-    queryKey: ['student-in-class', studentId, classId, academicYearId],
-    queryFn: () => isStudentInClass(studentId, classId, academicYearId),
+    queryKey: ['student-in-class', studentId, classId, academicYearId, termId],
+    queryFn: () => isStudentInClass(studentId, classId, academicYearId, termId),
     enabled: !!(
       studentId &&
       classId &&
       academicYearId &&
+      termId &&
       options?.enabled !== false
     ),
     staleTime: 10 * 60 * 1000, // 10 minutes (enrollment changes less frequently)
