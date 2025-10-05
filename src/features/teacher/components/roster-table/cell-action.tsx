@@ -86,7 +86,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </DropdownMenuItem>
         </SendMessageDialog>
 
-        <ViewGradesDialog student={studentData}>
+        <ViewGradesDialog
+          student={studentData}
+          ranking={data.ranking}
+          averageScore={data.averageScore}
+        >
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <GraduationCap className='mr-2 h-4 w-4' />
             View Grades

@@ -72,6 +72,14 @@ export function StudentProfileDialog({
     return 'Needs Improvement';
   };
 
+  const getLetterGrade = (score: number) => {
+    if (score >= 8) return 'A';
+    if (score >= 7) return 'B';
+    if (score >= 6) return 'C';
+    if (score >= 5) return 'D';
+    return 'F';
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
