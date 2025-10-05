@@ -33,10 +33,12 @@ interface BehaviorNotesDetailsDialogProps {
     needs_improvement_count: number;
     poor_count: number;
   };
+  notes?: BehaviorNote[];
   children: React.ReactNode;
 }
 
-// Mock behavior notes data - in real app this would come from API
+// Deprecated: Local mock notes were used before API integration.
+// Keeping example structure for reference, but component now prefers `notes` prop when provided.
 const mockBehaviorNotes: BehaviorNote[] = [
   {
     id: 'behavior-1',
@@ -137,15 +139,15 @@ const mockBehaviorNotes: BehaviorNote[] = [
 
 const getBehaviorIcon = (level: string) => {
   switch (level) {
-    case 'Excellent':
+    case 'excellent':
       return <Star className='h-4 w-4 text-yellow-500' />;
-    case 'Good':
+    case 'good':
       return <CheckCircle className='h-4 w-4 text-green-600' />;
-    case 'Fair':
+    case 'fair':
       return <Minus className='h-4 w-4 text-blue-600' />;
-    case 'Needs improvement':
+    case 'needs_improvement':
       return <AlertTriangle className='h-4 w-4 text-orange-600' />;
-    case 'Poor':
+    case 'poor':
       return <XCircle className='h-4 w-4 text-red-600' />;
     default:
       return <Minus className='h-4 w-4 text-gray-600' />;
@@ -171,15 +173,15 @@ const getBehaviorColor = (level: string) => {
 
 const getBehaviorLabel = (level: string) => {
   switch (level) {
-    case 'Excellent':
+    case 'excellent':
       return 'Xuất sắc';
-    case 'Good':
+    case 'good':
       return 'Tốt';
-    case 'Fair':
+    case 'fair':
       return 'Khá';
-    case 'Needs improvement':
+    case 'needs_improvement':
       return 'Cần cải thiện';
-    case 'Poor':
+    case 'poor':
       return 'Yếu';
     default:
       return 'Không xác định';
@@ -189,15 +191,19 @@ const getBehaviorLabel = (level: string) => {
 export function BehaviorNotesDetailsDialog({
   studentName,
   behaviorSummary,
+  notes,
   children
 }: BehaviorNotesDetailsDialogProps) {
   const [open, setOpen] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState<string>('all');
 
+  const sourceNotes = (
+    notes && notes.length > 0 ? notes : mockBehaviorNotes
+  ).slice();
   const filteredNotes =
     selectedLevel === 'all'
-      ? mockBehaviorNotes
-      : mockBehaviorNotes.filter((note) => note.level === selectedLevel);
+      ? sourceNotes
+      : sourceNotes.filter((note) => note.level === selectedLevel);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -254,11 +260,11 @@ export function BehaviorNotesDetailsDialog({
                   : 'bg-background hover:bg-muted'
               }`}
             >
-              Tất cả ({mockBehaviorNotes.length})
+              Tất cả ({sourceNotes.length})
             </button>
             {['Excellent', 'Good', 'Fair', 'Needs improvement', 'Poor'].map(
               (level) => {
-                const count = mockBehaviorNotes.filter(
+                const count = sourceNotes.filter(
                   (note) => note.level === level
                 ).length;
                 if (count === 0) return null;
@@ -273,7 +279,7 @@ export function BehaviorNotesDetailsDialog({
                         : 'bg-background hover:bg-muted'
                     }`}
                   >
-                    {getBehaviorLabel(level)} ({count})
+                    {getBehaviorLabel(level.toLowerCase())} ({count})
                   </button>
                 );
               }
@@ -288,7 +294,7 @@ export function BehaviorNotesDetailsDialog({
                 Danh sách nhận xét
                 {selectedLevel !== 'all' && (
                   <Badge variant='outline'>
-                    {getBehaviorLabel(selectedLevel)}
+                    {getBehaviorLabel(selectedLevel.toLowerCase())}
                   </Badge>
                 )}
               </CardTitle>
@@ -309,12 +315,12 @@ export function BehaviorNotesDetailsDialog({
                       >
                         <div className='mb-3 flex items-start justify-between'>
                           <div className='flex items-center gap-2'>
-                            {getBehaviorIcon(note.level)}
+                            {getBehaviorIcon(note.level.toLowerCase())}
                             <Badge
                               variant='outline'
                               className={`text-xs ${getBehaviorColor(note.level)}`}
                             >
-                              {getBehaviorLabel(note.level)}
+                              {getBehaviorLabel(note.level.toLowerCase())}
                             </Badge>
                           </div>
                           <div className='text-muted-foreground text-xs'>
@@ -359,16 +365,14 @@ export function BehaviorNotesDetailsDialog({
                 <div className='space-y-3'>
                   <div className='flex justify-between'>
                     <span className='text-sm'>Tổng số nhận xét:</span>
-                    <span className='font-medium'>
-                      {mockBehaviorNotes.length}
-                    </span>
+                    <span className='font-medium'>{notes?.length}</span>
                   </div>
                   <div className='flex justify-between'>
                     <span className='text-sm'>Nhận xét tích cực:</span>
                     <span className='font-medium text-green-600'>
                       {
-                        mockBehaviorNotes.filter((n) =>
-                          ['Excellent', 'Good'].includes(n.level)
+                        notes?.filter((n) =>
+                          ['excellent', 'good'].includes(n.level.toLowerCase())
                         ).length
                       }
                     </span>
@@ -377,8 +381,10 @@ export function BehaviorNotesDetailsDialog({
                     <span className='text-sm'>Cần cải thiện:</span>
                     <span className='font-medium text-orange-600'>
                       {
-                        mockBehaviorNotes.filter((n) =>
-                          ['Needs improvement', 'Poor'].includes(n.level)
+                        notes?.filter((n) =>
+                          ['needs_improvement', 'poor'].includes(
+                            n.level.toLowerCase()
+                          )
                         ).length
                       }
                     </span>
@@ -396,14 +402,12 @@ export function BehaviorNotesDetailsDialog({
                   <div className='flex justify-between'>
                     <span className='text-sm'>Nhận xét gần đây:</span>
                     <span className='font-medium'>
-                      {mockBehaviorNotes.length > 0 && (
+                      {notes?.length && notes.length > 0 && (
                         <Badge
                           variant='outline'
-                          className={getBehaviorColor(
-                            mockBehaviorNotes[0].level
-                          )}
+                          className={getBehaviorColor(notes?.[0].level)}
                         >
-                          {getBehaviorLabel(mockBehaviorNotes[0].level)}
+                          {getBehaviorLabel(notes?.[0].level.toLowerCase())}
                         </Badge>
                       )}
                     </span>
@@ -413,7 +417,7 @@ export function BehaviorNotesDetailsDialog({
                       Giáo viên nhận xét nhiều nhất:
                     </span>
                     <span className='text-sm font-medium'>
-                      Cô Nguyễn Thị Lan
+                      {notes?.[0].created_by_user?.full_name}
                     </span>
                   </div>
                 </div>

@@ -268,3 +268,96 @@ export interface StudentSubjectData {
 }
 
 export type StudentSubjectsResponse = StudentSubjectData[];
+
+// Behavior API response and computed types
+export interface BehaviorNoteData {
+  id: string;
+  note: string;
+  level: 'Excellent' | 'Good' | 'Fair' | 'Needs improvement' | 'Poor' | string;
+  createdAt: string;
+  term?: {
+    termId: string;
+    termName: string;
+  } | null;
+  teacher?: {
+    createdBy: string;
+    teacherName: string;
+  } | null;
+}
+
+export interface BehaviorSummary {
+  excellent_count: number;
+  good_count: number;
+  fair_count: number;
+  needs_improvement_count: number;
+  poor_count: number;
+}
+
+export type BehaviorNoteResponse = BehaviorNoteData[];
+
+// Student Overview API types (/api/Student/{id})
+export interface StudentOverviewClassInfo {
+  classId: string;
+  className: string;
+  gradeName: string; // matches API values like 'primary'
+  academicYearName: string; // e.g., '2025-2026'
+}
+
+export interface StudentOverviewParentInfo {
+  fullName: string;
+  phone: string;
+}
+
+export interface StudentOverviewScoreItem {
+  subject: string;
+  component: string;
+  score: number;
+  weight: number;
+}
+
+export interface StudentOverviewResponse {
+  id: string;
+  fullName: string;
+  email: string;
+  schoolName: string;
+  classes: StudentOverviewClassInfo[];
+  parents: StudentOverviewParentInfo[];
+  behaviorNotes: string[];
+  scores: StudentOverviewScoreItem[];
+}
+
+// Announcement API response types (/api/Announcement/class/{classId})
+export interface AnnouncementSender {
+  id: string;
+  role: 'teacher' | 'student' | 'parent' | 'admin' | string;
+  fullName: string;
+  email: string;
+  phone: string;
+  schoolId: string;
+  createdAt: string;
+}
+
+export interface AnnouncementSubject {
+  id: string;
+  code: string;
+  name: string;
+  level: string;
+  isActive: boolean;
+}
+
+export interface AnnouncementItem {
+  id: string;
+  senderId: string;
+  classId: string | null;
+  subjectId: string | null;
+  title: string;
+  content: string;
+  createdAt: string;
+  expiresAt: string | null;
+  isUrgent: boolean;
+  class?: unknown | null;
+  sender?: AnnouncementSender | null;
+  subject?: AnnouncementSubject | null;
+}
+
+export type AnnouncementItemResponse = AnnouncementItem[];

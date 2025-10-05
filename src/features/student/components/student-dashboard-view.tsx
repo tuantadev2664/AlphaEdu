@@ -32,10 +32,15 @@ import { format, isAfter, formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { Separator } from '@/components/ui/separator';
 import { Heading } from '@/components/ui/heading';
-import { useCurrentStudentSubjects } from '../hooks/use-student.query';
+import {
+  useCurrentStudentSubjects,
+  useCurrentClassAnnouncements
+} from '../hooks/use-student.query';
 import { transformStudentSubjectsData } from '../services/student.service';
 import { getUserData } from '@/features/auth/services/auth.service';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useCurrentStudentBehaviorNotes } from '../hooks/use-behavior.query';
+import { useCurrentStudentOverview } from '../hooks/use-student-overview.query';
 
 const getBehaviorIcon = (level: string) => {
   switch (level) {
@@ -61,6 +66,13 @@ export function StudentDashboardView() {
     error: subjectsError
   } = useCurrentStudentSubjects();
   const currentUser = getUserData();
+  const { data: behaviorData, isLoading: isLoadingBehavior } =
+    useCurrentStudentBehaviorNotes();
+  const { data: overview, isLoading: isLoadingOverview } =
+    useCurrentStudentOverview();
+  // Announcements for student's current class (if available)
+  const classId = overview?.classes?.[0]?.classId || undefined;
+  const { data: announcements } = useCurrentClassAnnouncements(classId);
 
   // subjectsData from hook is already transformed; guard to array
   const transformedSubjects = Array.isArray(subjectsData) ? subjectsData : [];
@@ -109,46 +121,43 @@ export function StudentDashboardView() {
         is_urgent: false
       }
     ],
-    behavior_summary: {
-      excellent_count: 5,
-      good_count: 8,
-      fair_count: 2,
-      needs_improvement_count: 1,
-      poor_count: 0
-    },
+    behavior_summary: undefined as
+      | {
+          excellent_count: number;
+          good_count: number;
+          fair_count: number;
+          needs_improvement_count: number;
+          poor_count: number;
+        }
+      | undefined,
     upcoming_assessments: [] as any[],
-    latest_behavior_note: {
-      id: 'behavior-1',
-      student_id: 'student-1',
-      class_id: 'class-1',
-      term_id: 'term-1',
-      note: 'Học sinh có thái độ học tập tích cực và tham gia tốt các hoạt động lớp',
-      level: 'excellent',
-      created_by: 'teacher-1',
-      created_at: new Date().toISOString(),
-      created_by_user: {
-        id: 'teacher-1',
-        full_name: 'Cô Nguyễn Thị B',
-        email: 'teacher@example.com',
-        role: 'teacher' as const,
-        phone: '',
-        school_id: '',
-        created_at: new Date().toISOString()
-      }
-    }
+    latest_behavior_note: undefined as any
   };
 
-  const {
-    student,
-    current_class,
-    current_term,
-    recent_announcements,
-    behavior_summary,
-    upcoming_assessments,
-    latest_behavior_note
-  } = mockData;
+  // const { student, current_class } = mockData;
 
-  if (isLoadingSubjects) {
+  console.log(behaviorData?.summary);
+
+  // Live behavior data
+  const behavior_summary = behaviorData?.summary ?? {
+    excellent_count: 0,
+    good_count: 0,
+    fair_count: 0,
+    needs_improvement_count: 0,
+    poor_count: 0
+  };
+  const latest_behavior_note = behaviorData?.latest
+    ? {
+        ...behaviorData.latest,
+        // Normalize level to lowercase for UI comparisons below
+        level: (behaviorData.latest.level || 'Fair')
+          .toString()
+          .toLowerCase()
+          .replace(' ', '_')
+      }
+    : undefined;
+
+  if (isLoadingSubjects || isLoadingBehavior || isLoadingOverview) {
     return (
       <div className='flex flex-1 flex-col space-y-4'>
         <div className='flex items-start justify-between'>
@@ -251,10 +260,11 @@ export function StudentDashboardView() {
     }
   );
 
-  // Get active announcements (mock data is empty, so this will be empty too)
-  const activeAnnouncements = recent_announcements.filter(
-    (a: any) => a.expires_at && isAfter(new Date(a.expires_at), new Date())
-  );
+  // Active announcements from API
+  const activeAnnouncements = (announcements || []).filter((a: any) => {
+    if (!a.expiresAt) return true; // no expiry => still active
+    return isAfter(new Date(a.expiresAt), new Date());
+  });
 
   // Calculate behavior score
   const totalBehaviorNotes = Object.values(behavior_summary).reduce(
@@ -278,7 +288,7 @@ export function StudentDashboardView() {
     <div className='flex flex-1 flex-col space-y-4'>
       <div className='flex items-start justify-between'>
         <Heading
-          title={`Welcome back, ${student.full_name}!`}
+          title={`Welcome back, ${overview?.fullName}!`}
           description='Here is your academic overview and recent updates.'
         />
       </div>
@@ -297,7 +307,7 @@ export function StudentDashboardView() {
             <div className='flex items-center gap-4'>
               <Avatar className='h-16 w-16'>
                 <AvatarFallback className='text-lg'>
-                  {student.full_name
+                  {(overview?.fullName || '')
                     .split(' ')
                     .map((n) => n[0])
                     .join('')
@@ -305,14 +315,14 @@ export function StudentDashboardView() {
                 </AvatarFallback>
               </Avatar>
               <div className='space-y-1'>
-                <h3 className='text-xl font-semibold'>{student.full_name}</h3>
+                <h3 className='text-xl font-semibold'>
+                  {overview?.fullName || ''}
+                </h3>
                 <p className='text-muted-foreground'>
-                  Class: {current_class.name}
+                  Class: {overview?.classes?.[0]?.className || ''}
                 </p>
                 <p className='text-muted-foreground text-sm'>
-                  Current Term: {current_term.code} (
-                  {format(new Date(current_term.start_date), 'MMM dd')} -{' '}
-                  {format(new Date(current_term.end_date), 'MMM dd, yyyy')})
+                  School: {overview?.schoolName || '—'}
                 </p>
               </div>
             </div>
@@ -428,8 +438,9 @@ export function StudentDashboardView() {
               Behavior Summary
             </CardTitle>
             <BehaviorNotesDetailsDialog
-              studentName={student.full_name}
+              studentName={overview?.fullName || ''}
               behaviorSummary={behavior_summary}
+              notes={behaviorData?.notes}
             >
               <Button
                 variant='outline'
@@ -446,9 +457,9 @@ export function StudentDashboardView() {
             {latest_behavior_note && (
               <div
                 className={`mb-6 rounded-xl border-2 p-4 shadow-sm transition-all duration-300 hover:shadow-md ${
-                  latest_behavior_note.level === 'excellent'
+                  latest_behavior_note.level === 'Excellent'
                     ? 'border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 dark:border-green-800 dark:from-green-950/30 dark:to-emerald-950/30'
-                    : latest_behavior_note.level === 'poor'
+                    : latest_behavior_note.level === 'Poor'
                       ? 'animate-pulse border-red-200 bg-gradient-to-r from-red-50 to-rose-50 dark:border-red-800 dark:from-red-950/30 dark:to-rose-950/30'
                       : 'border-orange-200 bg-gradient-to-r from-orange-50 to-amber-50 dark:border-orange-800 dark:from-orange-950/30 dark:to-amber-950/30'
                 }`}
@@ -456,9 +467,9 @@ export function StudentDashboardView() {
                 <div className='flex items-start gap-4'>
                   <div
                     className={`flex-shrink-0 rounded-full p-2 ${
-                      latest_behavior_note.level === 'excellent'
+                      latest_behavior_note.level === 'Excellent'
                         ? 'bg-green-100 dark:bg-green-900/50'
-                        : latest_behavior_note.level === 'poor'
+                        : latest_behavior_note.level === 'Poor'
                           ? 'bg-red-100 dark:bg-red-900/50'
                           : 'bg-orange-100 dark:bg-orange-900/50'
                     }`}
@@ -476,16 +487,16 @@ export function StudentDashboardView() {
                       <div className='flex items-center gap-2'>
                         <span
                           className={`text-base font-semibold ${
-                            latest_behavior_note.level === 'excellent'
+                            latest_behavior_note.level === 'Excellent'
                               ? 'text-green-800 dark:text-green-200'
                               : latest_behavior_note.level === 'Poor'
                                 ? 'text-red-800 dark:text-red-200'
                                 : 'text-orange-800 dark:text-orange-200'
                           }`}
                         >
-                          {latest_behavior_note.level === 'excellent'
+                          {latest_behavior_note.level === 'Excellent'
                             ? '🌟 Khen ngợi mới nhất'
-                            : latest_behavior_note.level === 'poor'
+                            : latest_behavior_note.level === 'Poor'
                               ? '🚨 Cảnh báo hành vi'
                               : '⚠️ Cần chú ý'}
                         </span>
@@ -502,9 +513,9 @@ export function StudentDashboardView() {
                         <Badge
                           variant='outline'
                           className={`text-xs ${
-                            latest_behavior_note.level === 'excellent'
+                            latest_behavior_note.level === 'Excellent'
                               ? 'border-green-300 bg-green-50 text-green-700'
-                              : latest_behavior_note.level === 'poor'
+                              : latest_behavior_note.level === 'Poor'
                                 ? 'border-red-300 bg-red-50 text-red-700'
                                 : 'border-orange-300 bg-orange-50 text-orange-700'
                           }`}
@@ -522,18 +533,18 @@ export function StudentDashboardView() {
 
                     <div
                       className={`mb-3 rounded-lg p-3 ${
-                        latest_behavior_note.level === 'excellent'
+                        latest_behavior_note.level === 'Excellent'
                           ? 'border border-green-200/50 bg-white/70 dark:bg-green-900/20'
-                          : latest_behavior_note.level === 'poor'
+                          : latest_behavior_note.level === 'Poor'
                             ? 'border border-red-200/50 bg-white/70 dark:bg-red-900/20'
                             : 'border border-orange-200/50 bg-white/70 dark:bg-orange-900/20'
                       }`}
                     >
                       <p
                         className={`text-sm leading-relaxed font-medium ${
-                          latest_behavior_note.level === 'excellent'
+                          latest_behavior_note.level === 'Excellent'
                             ? 'text-green-800 dark:text-green-200'
-                            : latest_behavior_note.level === 'poor'
+                            : latest_behavior_note.level === 'Poor'
                               ? 'text-red-800 dark:text-red-200'
                               : 'text-orange-800 dark:text-orange-200'
                         }`}
@@ -638,7 +649,7 @@ export function StudentDashboardView() {
           </CardHeader>
           <CardContent>
             <div className='space-y-3'>
-              {activeAnnouncements.slice(0, 3).map((announcement) => (
+              {activeAnnouncements.slice(0, 3).map((announcement: any) => (
                 <div key={announcement.id} className='rounded-lg border p-3'>
                   <div className='flex items-start justify-between'>
                     <div className='flex-1'>
@@ -648,12 +659,12 @@ export function StudentDashboardView() {
                       </div>
                       <div className='text-muted-foreground mt-2 text-xs'>
                         {format(
-                          new Date(announcement.created_at),
+                          new Date(announcement.createdAt),
                           'MMM dd, yyyy'
                         )}
                       </div>
                     </div>
-                    {announcement.is_urgent && (
+                    {announcement.isUrgent && (
                       <Badge variant='destructive' className='ml-2'>
                         Urgent
                       </Badge>

@@ -1,13 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
 import { getUserData } from '@/features/auth/services/auth.service';
 import * as studentService from '@/features/student/services/student.service';
+import { getClassAnnouncements } from '@/features/student/services/announcement.service';
+import type { AnnouncementItemResponse } from '@/features/student/types';
 
 // Query keys factory
 export const studentKeys = {
   all: ['student'] as const,
   subjects: () => [...studentKeys.all, 'subjects'] as const,
   studentSubjects: (studentId: string) =>
-    [...studentKeys.subjects(), studentId] as const
+    [...studentKeys.subjects(), studentId] as const,
+  announcements: () => [...studentKeys.all, 'announcements'] as const,
+  classAnnouncements: (classId: string) =>
+    [...studentKeys.announcements(), classId] as const
 };
 
 // Query để lấy subjects và scores của student
@@ -66,4 +71,20 @@ export function useCurrentStudentId() {
 export function useCurrentStudentSubjects() {
   const studentId = useCurrentStudentId();
   return useStudentSubjectsTransformed(studentId);
+}
+
+// Query: announcements by current student's class
+export function useCurrentClassAnnouncements(classId?: string) {
+  return useQuery({
+    queryKey: studentKeys.classAnnouncements(classId || ''),
+    enabled: !!classId,
+    queryFn: async () => {
+      if (!classId) throw new Error('Class ID is required');
+      const items = await getClassAnnouncements(classId);
+      return items as AnnouncementItemResponse;
+    },
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false
+  });
 }
