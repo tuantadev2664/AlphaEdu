@@ -266,7 +266,16 @@ export type UpdateAnnouncementRequest = {
   isUrgent: boolean;
 };
 
-export type UpdateAnnouncementResponse = TeacherAnnouncementItem;
+export type UpdateAnnouncementResponse = {
+  id: string;
+  title: string;
+  content: string;
+  isUrgent: boolean;
+  createdAt: string;
+  expiresAt: string;
+  classId: string;
+  className: string;
+};
 
 export type DeleteAnnouncementResponse = {
   success: boolean;
