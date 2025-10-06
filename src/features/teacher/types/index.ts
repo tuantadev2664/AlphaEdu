@@ -386,13 +386,10 @@ export type UpdateBehaviorNoteResponse = {
   level: string;
   createdBy: string;
   createdAt: string;
-  updatedAt: string;
+  // updatedAt?: string;
 };
 
-export type DeleteBehaviorNoteResponse = {
-  success: boolean;
-  message: string;
-};
+export type DeleteBehaviorNoteResponse = string;
 
 // Teacher Announcement API types
 export interface TeacherAnnouncementClass {

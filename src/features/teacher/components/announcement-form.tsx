@@ -10,9 +10,14 @@ import {
   TeacherAnnouncementItem,
   CreateAnnouncementForm
 } from '@/features/teacher/types';
+import {
+  useCreateAnnouncement,
+  useUpdateAnnouncement
+} from '@/features/teacher/hooks/use-teacher.query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import * as z from 'zod';
 
 const formSchema = z.object({
@@ -35,6 +40,12 @@ export function AnnouncementForm({
   onClose,
   onSubmit
 }: AnnouncementFormProps) {
+  const createMutation = useCreateAnnouncement();
+  const updateMutation = useUpdateAnnouncement();
+
+  const isEditing = !!initialData;
+  const isLoading = createMutation.isPending || updateMutation.isPending;
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,14 +60,54 @@ export function AnnouncementForm({
     }
   });
 
-  function handleSubmit(values: z.infer<typeof formSchema>) {
-    onSubmit({
-      title: values.title,
-      content: values.content,
-      classId: classId,
-      expiresAt: new Date(values.expiresAt).toISOString(),
-      isUrgent: values.isUrgent
-    });
+  async function handleSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const announcementData = {
+        title: values.title,
+        content: values.content,
+        classId: classId,
+        expiresAt: new Date(values.expiresAt).toISOString(),
+        isUrgent: values.isUrgent
+      };
+
+      if (isEditing && initialData) {
+        // Update existing announcement
+        await updateMutation.mutateAsync({
+          id: initialData.id,
+          ...announcementData
+        });
+
+        toast.success('Announcement Updated', {
+          description: 'Your announcement has been updated successfully.',
+          duration: 3000
+        });
+      } else {
+        // Create new announcement
+        await createMutation.mutateAsync(announcementData);
+
+        toast.success('Announcement Created', {
+          description: 'Your announcement has been created successfully.',
+          duration: 3000
+        });
+      }
+
+      // Call the original onSubmit callback
+      onSubmit(announcementData);
+
+      // Close the form
+      onClose();
+    } catch (error: any) {
+      toast.error(
+        isEditing
+          ? 'Failed to Update Announcement'
+          : 'Failed to Create Announcement',
+        {
+          description:
+            error.message || 'Something went wrong. Please try again.',
+          duration: 3000
+        }
+      );
+    }
   }
 
   return (
@@ -115,11 +166,20 @@ export function AnnouncementForm({
             />
 
             <div className='flex justify-end gap-2'>
-              <Button type='button' variant='outline' onClick={onClose}>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={onClose}
+                disabled={isLoading}
+              >
                 Cancel
               </Button>
-              <Button type='submit'>
-                {initialData ? 'Update' : 'Create'} Announcement
+              <Button type='submit' disabled={isLoading}>
+                {isLoading
+                  ? isEditing
+                    ? 'Updating...'
+                    : 'Creating...'
+                  : (isEditing ? 'Update' : 'Create') + ' Announcement'}
               </Button>
             </div>
           </Form>

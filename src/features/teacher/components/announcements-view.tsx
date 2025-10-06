@@ -18,7 +18,11 @@ import {
 import { format, isAfter } from 'date-fns';
 import { useState } from 'react';
 import { AnnouncementForm } from './announcement-form';
-import { useCurrentClassAnnouncements } from '@/features/teacher/hooks/use-teacher.query';
+import { toast } from 'sonner';
+import {
+  useCurrentClassAnnouncements,
+  useDeleteAnnouncement
+} from '@/features/teacher/hooks/use-teacher.query';
 
 interface AnnouncementsViewProps {
   classId: string;
@@ -31,6 +35,7 @@ export function AnnouncementsView({ classId }: AnnouncementsViewProps) {
 
   const { data: announcements, isLoading } =
     useCurrentClassAnnouncements(classId);
+  const deleteMutation = useDeleteAnnouncement();
 
   const activeAnnouncements = (announcements || []).filter((a) => {
     if (!a.expiresAt) return true; // No expiry means still active
@@ -46,6 +51,21 @@ export function AnnouncementsView({ classId }: AnnouncementsViewProps) {
     console.log('Announcement submitted:', data);
     setShowForm(false);
     setEditingAnnouncement(null);
+  };
+
+  const handleDelete = async (announcementId: string) => {
+    try {
+      await deleteMutation.mutateAsync(announcementId);
+      toast.success('Announcement Deleted', {
+        description: 'The announcement has been deleted successfully.',
+        duration: 3000
+      });
+    } catch (error: any) {
+      toast.error('Failed to Delete Announcement', {
+        description: error.message || 'Something went wrong. Please try again.',
+        duration: 3000
+      });
+    }
   };
 
   return (
@@ -109,6 +129,8 @@ export function AnnouncementsView({ classId }: AnnouncementsViewProps) {
                   key={announcement.id}
                   announcement={announcement}
                   onEdit={() => setEditingAnnouncement(announcement)}
+                  onDelete={() => handleDelete(announcement.id)}
+                  isDeleting={deleteMutation.isPending}
                 />
               ))}
             </div>
@@ -133,6 +155,8 @@ export function AnnouncementsView({ classId }: AnnouncementsViewProps) {
                   announcement={announcement}
                   isExpired
                   onEdit={() => setEditingAnnouncement(announcement)}
+                  onDelete={() => handleDelete(announcement.id)}
+                  isDeleting={deleteMutation.isPending}
                 />
               ))}
             </div>
@@ -166,12 +190,16 @@ interface AnnouncementCardProps {
   announcement: TeacherAnnouncementItem;
   isExpired?: boolean;
   onEdit: () => void;
+  onDelete: () => void;
+  isDeleting?: boolean;
 }
 
 function AnnouncementCard({
   announcement,
   isExpired = false,
-  onEdit
+  onEdit,
+  onDelete,
+  isDeleting = false
 }: AnnouncementCardProps) {
   return (
     <div className={`rounded-lg border p-4 ${isExpired ? 'opacity-60' : ''}`}>
@@ -210,10 +238,21 @@ function AnnouncementCard({
         </div>
 
         <div className='flex items-center gap-1'>
-          <Button variant='ghost' size='sm' onClick={onEdit}>
+          <Button
+            variant='ghost'
+            size='sm'
+            onClick={onEdit}
+            disabled={isDeleting}
+          >
             <Edit className='h-4 w-4' />
           </Button>
-          <Button variant='ghost' size='sm'>
+          <Button
+            variant='ghost'
+            size='sm'
+            onClick={onDelete}
+            disabled={isDeleting}
+            className='text-destructive hover:text-destructive'
+          >
             <Trash2 className='h-4 w-4' />
           </Button>
         </div>

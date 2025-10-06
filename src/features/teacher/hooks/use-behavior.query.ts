@@ -56,10 +56,21 @@ export function useCreateBehaviorNote() {
 
   return useMutation({
     mutationFn: createBehaviorNote,
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
       // Invalidate and refetch behavior notes for the student
+      // Use studentId from the request variables since API response might not include it
       queryClient.invalidateQueries({
-        queryKey: behaviorKeys.byStudent(data.studentId)
+        queryKey: behaviorKeys.byStudent(variables.studentId)
+      });
+
+      // Also invalidate all behavior queries to be safe
+      queryClient.invalidateQueries({
+        queryKey: behaviorKeys.all
+      });
+
+      // Invalidate class behavior notes queries
+      queryClient.invalidateQueries({
+        queryKey: [...behaviorKeys.all, 'class']
       });
     },
     onError: (error) => {
@@ -78,8 +89,19 @@ export function useUpdateBehaviorNote() {
     mutationFn: updateBehaviorNote,
     onSuccess: (data) => {
       // Invalidate and refetch behavior notes for the student
+      // Use studentId from the response data
       queryClient.invalidateQueries({
         queryKey: behaviorKeys.byStudent(data.studentId)
+      });
+
+      // Also invalidate all behavior queries to be safe
+      queryClient.invalidateQueries({
+        queryKey: behaviorKeys.all
+      });
+
+      // Invalidate class behavior notes queries
+      queryClient.invalidateQueries({
+        queryKey: [...behaviorKeys.all, 'class']
       });
     },
     onError: (error) => {
@@ -105,5 +127,49 @@ export function useDeleteBehaviorNote() {
     onError: (error) => {
       console.error('Failed to delete behavior note:', error);
     }
+  });
+}
+
+/**
+ * Hook to fetch behavior notes for all students in a class
+ * @param studentIds - Array of student IDs
+ * @param options - React Query options
+ */
+export function useClassBehaviorNotes(
+  studentIds: string[],
+  options?: {
+    enabled?: boolean;
+    staleTime?: number;
+    refetchOnWindowFocus?: boolean;
+  }
+) {
+  return useQuery({
+    queryKey: [...behaviorKeys.all, 'class', studentIds],
+    enabled: !!studentIds.length && options?.enabled !== false,
+    queryFn: async () => {
+      const allNotes = await Promise.all(
+        studentIds.map(async (studentId) => {
+          try {
+            const response = await getStudentBehaviorNotes(studentId);
+            const studentNotes = transformBehaviorNotes(response || []);
+            return studentNotes.map((note) => ({
+              ...note,
+              student_id: studentId
+            }));
+          } catch (error) {
+            console.error(
+              `Failed to fetch notes for student ${studentId}:`,
+              error
+            );
+            return [];
+          }
+        })
+      );
+
+      return allNotes.flat();
+    },
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    refetchOnWindowFocus: false,
+    ...options
   });
 }
