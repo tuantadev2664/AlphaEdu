@@ -238,10 +238,39 @@ export type TeacherDashboardStats = {
 export type CreateAnnouncementForm = {
   title: string;
   content: string;
-  class_id?: string;
-  subject_id?: string;
-  expires_at: string;
-  is_urgent: boolean;
+  classId?: string;
+  subjectId?: string;
+  expiresAt: string;
+  isUrgent: boolean;
+};
+
+// Announcement CRUD API types
+export type CreateAnnouncementRequest = {
+  title: string;
+  content: string;
+  classId: string;
+  subjectId?: string;
+  expiresAt: string;
+  isUrgent: boolean;
+};
+
+export type CreateAnnouncementResponse = TeacherAnnouncementItem;
+
+export type UpdateAnnouncementRequest = {
+  id: string;
+  title: string;
+  content: string;
+  classId: string;
+  subjectId?: string;
+  expiresAt: string;
+  isUrgent: boolean;
+};
+
+export type UpdateAnnouncementResponse = TeacherAnnouncementItem;
+
+export type DeleteAnnouncementResponse = {
+  success: boolean;
+  message: string;
 };
 
 export type CreateBehaviorNoteForm = {

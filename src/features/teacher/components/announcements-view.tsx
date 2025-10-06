@@ -3,7 +3,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Announcement, CreateAnnouncementForm } from '@/features/teacher/types';
+import {
+  CreateAnnouncementForm,
+  TeacherAnnouncementItem
+} from '@/features/teacher/types';
 import {
   Plus,
   Bell,
@@ -15,27 +18,29 @@ import {
 import { format, isAfter } from 'date-fns';
 import { useState } from 'react';
 import { AnnouncementForm } from './announcement-form';
+import { useCurrentClassAnnouncements } from '@/features/teacher/hooks/use-teacher.query';
 
 interface AnnouncementsViewProps {
-  announcements: Announcement[];
   classId: string;
 }
 
-export function AnnouncementsView({
-  announcements,
-  classId
-}: AnnouncementsViewProps) {
+export function AnnouncementsView({ classId }: AnnouncementsViewProps) {
   const [showForm, setShowForm] = useState(false);
   const [editingAnnouncement, setEditingAnnouncement] =
-    useState<Announcement | null>(null);
+    useState<TeacherAnnouncementItem | null>(null);
 
-  const activeAnnouncements = announcements.filter((a) =>
-    isAfter(new Date(a.expires_at), new Date())
-  );
+  const { data: announcements, isLoading } =
+    useCurrentClassAnnouncements(classId);
 
-  const expiredAnnouncements = announcements.filter(
-    (a) => !isAfter(new Date(a.expires_at), new Date())
-  );
+  const activeAnnouncements = (announcements || []).filter((a) => {
+    if (!a.expiresAt) return true; // No expiry means still active
+    return isAfter(new Date(a.expiresAt), new Date());
+  });
+
+  const expiredAnnouncements = (announcements || []).filter((a) => {
+    if (!a.expiresAt) return false; // No expiry means not expired
+    return !isAfter(new Date(a.expiresAt), new Date());
+  });
 
   const handleSubmit = (data: CreateAnnouncementForm) => {
     console.log('Announcement submitted:', data);
@@ -62,6 +67,19 @@ export function AnnouncementsView({
         </Button>
       </div>
 
+      {/* Loading State */}
+      {isLoading && (
+        <Card>
+          <CardContent className='pt-6'>
+            <div className='flex items-center justify-center py-8'>
+              <div className='text-muted-foreground'>
+                Loading announcements...
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Announcement Form Modal */}
       {(showForm || editingAnnouncement) && (
         <AnnouncementForm
@@ -76,7 +94,7 @@ export function AnnouncementsView({
       )}
 
       {/* Active Announcements */}
-      {activeAnnouncements.length > 0 && (
+      {!isLoading && activeAnnouncements.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
@@ -99,7 +117,7 @@ export function AnnouncementsView({
       )}
 
       {/* Expired Announcements */}
-      {expiredAnnouncements.length > 0 && (
+      {!isLoading && expiredAnnouncements.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className='text-muted-foreground flex items-center gap-2'>
@@ -122,7 +140,7 @@ export function AnnouncementsView({
         </Card>
       )}
 
-      {announcements.length === 0 && (
+      {!isLoading && (announcements || []).length === 0 && (
         <Card>
           <CardContent className='pt-6'>
             <div className='text-muted-foreground py-8 text-center'>
@@ -145,7 +163,7 @@ export function AnnouncementsView({
 }
 
 interface AnnouncementCardProps {
-  announcement: Announcement;
+  announcement: TeacherAnnouncementItem;
   isExpired?: boolean;
   onEdit: () => void;
 }
@@ -161,7 +179,7 @@ function AnnouncementCard({
         <div className='flex-1 space-y-2'>
           <div className='flex items-center gap-2'>
             <h4 className='font-medium'>{announcement.title}</h4>
-            {announcement.is_urgent && (
+            {announcement.isUrgent && (
               <Badge variant='destructive' className='flex items-center gap-1'>
                 <AlertTriangle className='h-3 w-3' />
                 Urgent
@@ -177,12 +195,17 @@ function AnnouncementCard({
           <div className='text-muted-foreground flex items-center gap-4 text-xs'>
             <span>
               Created:{' '}
-              {format(new Date(announcement.created_at), 'MMM dd, yyyy')}
+              {format(new Date(announcement.createdAt), 'MMM dd, yyyy')}
             </span>
-            <span>
-              Expires:{' '}
-              {format(new Date(announcement.expires_at), 'MMM dd, yyyy')}
-            </span>
+            {announcement.expiresAt && (
+              <span>
+                Expires:{' '}
+                {format(new Date(announcement.expiresAt), 'MMM dd, yyyy')}
+              </span>
+            )}
+            {!announcement.expiresAt && (
+              <span className='text-green-600'>No expiry</span>
+            )}
           </div>
         </div>
 

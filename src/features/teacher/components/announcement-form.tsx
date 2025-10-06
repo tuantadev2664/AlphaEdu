@@ -6,7 +6,10 @@ import { FormSwitch } from '@/components/forms/form-switch';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { Announcement, CreateAnnouncementForm } from '@/features/teacher/types';
+import {
+  TeacherAnnouncementItem,
+  CreateAnnouncementForm
+} from '@/features/teacher/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -15,13 +18,13 @@ import * as z from 'zod';
 const formSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
   content: z.string().min(20, 'Content must be at least 20 characters'),
-  expires_at: z.string().min(1, 'Expiration date is required'),
-  is_urgent: z.boolean().default(false)
+  expiresAt: z.string().min(1, 'Expiration date is required'),
+  isUrgent: z.boolean().default(false)
 });
 
 interface AnnouncementFormProps {
   classId: string;
-  initialData?: Announcement | null;
+  initialData?: TeacherAnnouncementItem | null;
   onClose: () => void;
   onSubmit: (data: CreateAnnouncementForm) => void;
 }
@@ -37,12 +40,12 @@ export function AnnouncementForm({
     defaultValues: {
       title: initialData?.title || '',
       content: initialData?.content || '',
-      expires_at: initialData?.expires_at
-        ? new Date(initialData.expires_at).toISOString().slice(0, 16)
+      expiresAt: initialData?.expiresAt
+        ? new Date(initialData.expiresAt).toISOString().slice(0, 16)
         : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
             .toISOString()
             .slice(0, 16),
-      is_urgent: initialData?.is_urgent || false
+      isUrgent: initialData?.isUrgent || false
     }
   });
 
@@ -50,9 +53,9 @@ export function AnnouncementForm({
     onSubmit({
       title: values.title,
       content: values.content,
-      class_id: classId,
-      expires_at: new Date(values.expires_at).toISOString(),
-      is_urgent: values.is_urgent
+      classId: classId,
+      expiresAt: new Date(values.expiresAt).toISOString(),
+      isUrgent: values.isUrgent
     });
   }
 
@@ -98,7 +101,7 @@ export function AnnouncementForm({
 
             <FormInput
               control={form.control}
-              name='expires_at'
+              name='expiresAt'
               label='Expiration Date'
               // type='datetime-local'
               required
@@ -106,7 +109,7 @@ export function AnnouncementForm({
 
             <FormSwitch
               control={form.control}
-              name='is_urgent'
+              name='isUrgent'
               label='Mark as Urgent'
               description='Urgent announcements will be highlighted and may send notifications'
             />
