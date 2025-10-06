@@ -11,6 +11,8 @@ import { ClassStudentWithStats } from '@/features/class/types';
 
 interface CreateColumnsOptions {
   students: ClassStudentWithStats[];
+  classId?: string;
+  termId?: string;
 }
 
 export const createColumns = (
@@ -112,6 +114,12 @@ export const createColumns = (
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />
+    cell: ({ row }) => (
+      <CellAction
+        data={row.original}
+        classId={options.classId}
+        termId={options.termId}
+      />
+    )
   }
 ];

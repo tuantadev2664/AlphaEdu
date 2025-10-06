@@ -21,7 +21,11 @@ export default function RosterListing({ classId }: RosterListingProps) {
 
   // API returns array directly
   const students = studentsData?.data || [];
-  const columns = createColumns({ students });
+  const columns = createColumns({
+    students,
+    classId,
+    termId: '33333333-3333-3333-3333-333333333333'
+  });
 
   if (isLoading) {
     return (

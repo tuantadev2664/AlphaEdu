@@ -56,7 +56,15 @@ const getBehaviorVariant = (level: string) => {
 };
 
 // Component for expandable row content
-const ExpandedNotes = ({ notes }: { notes: BehaviorNote[] }) => {
+const ExpandedNotes = ({
+  notes,
+  classId,
+  termId
+}: {
+  notes: BehaviorNote[];
+  classId: string;
+  termId?: string;
+}) => {
   return (
     <div className='bg-muted/30 space-y-3 p-4'>
       <h4 className='text-sm font-medium'>All Behavior Notes:</h4>
@@ -93,7 +101,7 @@ const ExpandedNotes = ({ notes }: { notes: BehaviorNote[] }) => {
               </div>
             </div>
           </div>
-          <CellAction data={note} />
+          <CellAction data={note} classId={classId} termId={termId} />
         </div>
       ))}
     </div>
@@ -130,7 +138,7 @@ export const groupedColumns: ColumnDef<GroupedBehaviorNote>[] = [
     ),
     cell: ({ row }) => {
       const student = row.original.student;
-      const studentName = row.original.student_name;
+      const studentName = row.original.student_name || 'Unknown Student';
       const initials = studentName
         .split(' ')
         .map((name: string) => name[0])

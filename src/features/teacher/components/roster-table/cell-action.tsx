@@ -27,6 +27,8 @@ import { GenerateReportDialog } from './dialogs/generate-report-dialog';
 
 interface CellActionProps {
   data: ClassStudentWithStats;
+  classId?: string;
+  termId?: string;
 }
 
 // Helper function to convert ClassStudentWithStats to ClassStudent for dialog compatibility
@@ -40,7 +42,7 @@ const mapToClassStudent = (data: ClassStudentWithStats): ClassStudent => ({
   createdAt: new Date().toISOString(), // Default value
   announcements: [],
   behaviorNoteCreatedByNavigations: [],
-  behaviorNoteStudents: [],
+  behaviorNoteStudents: data.behaviorNotes,
   classEnrollments: [],
   classes: [],
   messageReceivers: [],
@@ -53,7 +55,11 @@ const mapToClassStudent = (data: ClassStudentWithStats): ClassStudent => ({
   teacherAssignments: []
 });
 
-export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+export const CellAction: React.FC<CellActionProps> = ({
+  data,
+  classId,
+  termId
+}) => {
   const studentData = mapToClassStudent(data);
 
   return (
@@ -97,7 +103,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           </DropdownMenuItem>
         </ViewGradesDialog>
 
-        <BehaviorNotesDialog student={studentData}>
+        <BehaviorNotesDialog
+          student={studentData}
+          classId={classId}
+          termId={termId}
+        >
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <FileText className='mr-2 h-4 w-4' />
             Behavior Notes

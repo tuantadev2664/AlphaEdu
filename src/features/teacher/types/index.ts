@@ -172,6 +172,7 @@ export type Score = {
 export type BehaviorNote = {
   id: string;
   student_id: string;
+  studentName?: string;
   class_id: string;
   term_id: string;
   note: string;
@@ -319,4 +320,47 @@ export type StudentDetailResponse = {
   parents: StudentDetailParent[];
   behaviorNotes: string[];
   scores: StudentDetailScore[];
+};
+
+// Behavior Note API types
+export type CreateBehaviorNoteRequest = {
+  studentId: string;
+  classId: string;
+  termId: string;
+  note: string;
+  level: 'Excellent' | 'Good' | 'Fair' | 'Needs improvement' | 'Poor';
+};
+
+export type CreateBehaviorNoteResponse = {
+  id: string;
+  studentId: string;
+  classId: string;
+  termId: string;
+  note: string;
+  level: string;
+  createdBy: string;
+  createdAt: string;
+};
+
+export type UpdateBehaviorNoteRequest = {
+  id: string;
+  note: string;
+  level: 'Excellent' | 'Good' | 'Fair' | 'Needs improvement' | 'Poor';
+};
+
+export type UpdateBehaviorNoteResponse = {
+  id: string;
+  studentId: string;
+  classId: string;
+  termId: string;
+  note: string;
+  level: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DeleteBehaviorNoteResponse = {
+  success: boolean;
+  message: string;
 };
