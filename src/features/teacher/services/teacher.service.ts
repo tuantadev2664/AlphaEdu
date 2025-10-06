@@ -2,7 +2,8 @@ import { apiCall } from '@/features/auth/services/auth.service';
 import type {
   GetTeacherClassesParams,
   GetTeacherClassesResponse,
-  StudentDetailResponse
+  StudentDetailResponse,
+  TeacherAnnouncementResponse
 } from '../types';
 
 // API Base URL
@@ -85,5 +86,36 @@ export async function getStudentDetail(
   } catch (error: any) {
     console.error('❌ Error fetching student detail:', error);
     throw new Error(error.message || 'Failed to fetch student detail');
+  }
+}
+
+/**
+ * Get active announcements for teachers
+ */
+export async function getActiveAnnouncements(): Promise<TeacherAnnouncementResponse> {
+  try {
+    const endpoint = `/Announcement/active`;
+
+    console.log('🔄 Fetching active announcements:', endpoint);
+
+    const response = await apiCall(endpoint, {
+      method: 'GET'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message ||
+          `Failed to fetch active announcements: ${response.status}`
+      );
+    }
+
+    const data = await response.json();
+    console.log('✅ Active announcements fetched successfully:', data.length);
+
+    return data;
+  } catch (error: any) {
+    console.error('❌ Error fetching active announcements:', error);
+    throw new Error(error.message || 'Failed to fetch active announcements');
   }
 }

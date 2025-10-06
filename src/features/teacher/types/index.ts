@@ -364,3 +364,69 @@ export type DeleteBehaviorNoteResponse = {
   success: boolean;
   message: string;
 };
+
+// Teacher Announcement API types
+export interface TeacherAnnouncementClass {
+  id: string;
+  gradeId: string;
+  name: string;
+  homeroomTeacherId: string;
+  announcements: any[];
+  behaviorNotes: any[];
+  classEnrollments: any[];
+  grade: any;
+  gradeComponents: any[];
+  homeroomTeacher: TeacherAnnouncementSender | null;
+  teacherAssignments: any[];
+}
+
+export interface TeacherAnnouncementSender {
+  id: string;
+  role: 'teacher' | 'student' | 'parent' | 'admin' | string;
+  fullName: string;
+  email: string;
+  phone: string;
+  schoolId: string;
+  createdAt: string;
+  announcements: any[];
+  behaviorNoteCreatedByNavigations: any[];
+  behaviorNoteStudents: any[];
+  classEnrollments: any[];
+  classes: TeacherAnnouncementClass[];
+  messageReceivers: any[];
+  messageSenders: any[];
+  parentStudentParents: any[];
+  parentStudentStudents: any[];
+  school: any;
+  scoreCreatedByNavigations: any[];
+  scoreStudents: any[];
+  teacherAssignments: any[];
+}
+
+export interface TeacherAnnouncementSubject {
+  id: string;
+  code: string;
+  name: string;
+  level: string;
+  isActive: boolean;
+  announcements: any[];
+  gradeComponents: any[];
+  teacherAssignments: any[];
+}
+
+export interface TeacherAnnouncementItem {
+  id: string;
+  senderId: string;
+  classId: string | null;
+  subjectId: string | null;
+  title: string;
+  content: string;
+  createdAt: string;
+  expiresAt: string | null;
+  isUrgent: boolean;
+  class?: TeacherAnnouncementClass | null;
+  sender?: TeacherAnnouncementSender | null;
+  subject?: TeacherAnnouncementSubject | null;
+}
+
+export type TeacherAnnouncementResponse = TeacherAnnouncementItem[];

@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import {
   getTeacherClasses,
-  getStudentDetail
+  getStudentDetail,
+  getActiveAnnouncements
 } from '../services/teacher.service';
 import type { GetTeacherClassesParams } from '../types';
 
@@ -67,6 +68,25 @@ export function useStudentDetail(
     queryFn: () => getStudentDetail(studentId),
     enabled: !!studentId && options?.enabled !== false,
     staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchOnWindowFocus: false,
+    ...options
+  });
+}
+
+/**
+ * Hook to fetch active announcements for teachers
+ * @param options - React Query options
+ */
+export function useActiveAnnouncements(options?: {
+  enabled?: boolean;
+  staleTime?: number;
+  refetchOnWindowFocus?: boolean;
+}) {
+  return useQuery({
+    queryKey: ['active-announcements'],
+    queryFn: () => getActiveAnnouncements(),
+    enabled: options?.enabled !== false,
+    staleTime: 2 * 60 * 1000, // 2 minutes
     refetchOnWindowFocus: false,
     ...options
   });
