@@ -1,6 +1,8 @@
 // Types for Class Feature
 // Based on API response and db.txt structure
 
+import { BehaviorNoteData } from '@/features/student/types';
+
 // Enums
 export type UserRole = 'student' | 'parent' | 'teacher' | 'admin';
 
@@ -32,18 +34,23 @@ export type ClassStudent = {
 export type GetClassStudentsParams = {
   classId: string;
   academicYearId: string;
+  termId: string;
 };
 
 // API Response
-export type GetClassStudentsResponse = ClassStudent[];
+export type GetClassStudentsResponse = {
+  message: string;
+  data: ClassStudentWithStats[];
+  total: number;
+};
 
 // UI-specific types
-export type ClassStudentWithStats = ClassStudent & {
-  averageScore?: number;
-  attendanceRate?: number;
-  behaviorNotesCount?: number;
-  totalAssignments?: number;
-  completedAssignments?: number;
+export type ClassStudentWithStats = {
+  studentId: string;
+  studentName: string;
+  averageScore: number;
+  ranking: number;
+  behaviorNotes: BehaviorNoteData[];
 };
 
 // For roster/gradebook display

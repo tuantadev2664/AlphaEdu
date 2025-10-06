@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ClassStudent } from '@/features/class/types';
+import { useStudentDetail } from '@/features/teacher/hooks/use-teacher.query';
 import {
   User,
   Mail,
@@ -30,13 +31,26 @@ import { format } from 'date-fns';
 interface StudentProfileDialogProps {
   student: ClassStudent;
   children: React.ReactNode;
+  ranking: number;
+  averageScore: number;
 }
 
 export function StudentProfileDialog({
   student,
-  children
+  children,
+  ranking,
+  averageScore
 }: StudentProfileDialogProps) {
   const [open, setOpen] = useState(false);
+
+  // Fetch detailed student data from API
+  const {
+    data: studentDetail,
+    isLoading,
+    error
+  } = useStudentDetail(student.id, {
+    enabled: open // Only fetch when dialog is open
+  });
 
   const initials = student.fullName
     .split(' ')
@@ -45,17 +59,25 @@ export function StudentProfileDialog({
     .toUpperCase();
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-green-600 bg-green-50';
-    if (score >= 80) return 'text-blue-600 bg-blue-50';
-    if (score >= 70) return 'text-yellow-600 bg-yellow-50';
+    if (score >= 8) return 'text-green-600 bg-green-50';
+    if (score >= 7) return 'text-blue-600 bg-blue-50';
+    if (score >= 6) return 'text-yellow-600 bg-yellow-50';
     return 'text-red-600 bg-red-50';
   };
 
   const getScoreStatus = (score: number) => {
-    if (score >= 90) return 'Excellent';
-    if (score >= 80) return 'Good';
-    if (score >= 70) return 'Average';
+    if (score >= 8) return 'Excellent';
+    if (score >= 7) return 'Good';
+    if (score >= 6) return 'Average';
     return 'Needs Improvement';
+  };
+
+  const getLetterGrade = (score: number) => {
+    if (score >= 8) return 'A';
+    if (score >= 7) return 'B';
+    if (score >= 6) return 'C';
+    if (score >= 5) return 'D';
+    return 'F';
   };
 
   return (
@@ -75,172 +97,199 @@ export function StudentProfileDialog({
         </DialogHeader>
 
         <div className='space-y-6'>
-          {/* Contact Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-2 text-lg'>
-                <User className='h-5 w-5' />
-                Contact Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='space-y-4'>
-              <div className='grid grid-cols-1 gap-4'>
-                <div className='flex items-center gap-3'>
-                  <Mail className='text-muted-foreground h-4 w-4' />
-                  <div>
-                    <div className='text-sm font-medium'>Email</div>
-                    <div className='text-muted-foreground text-sm'>
-                      {student.email}
-                    </div>
-                  </div>
-                </div>
-                <div className='flex items-center gap-3'>
-                  <Phone className='text-muted-foreground h-4 w-4' />
-                  <div>
-                    <div className='text-sm font-medium'>Phone</div>
-                    <div className='text-muted-foreground text-sm'>
-                      {student.phone}
-                    </div>
-                  </div>
-                </div>
+          {isLoading ? (
+            <div className='flex items-center justify-center py-8'>
+              <div className='text-muted-foreground'>
+                Loading student details...
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          ) : error ? (
+            <div className='flex items-center justify-center py-8'>
+              <div className='text-destructive'>
+                Failed to load student details
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Contact Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-2 text-lg'>
+                    <User className='h-5 w-5' />
+                    Contact Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className='space-y-4'>
+                  <div className='grid grid-cols-1 gap-4'>
+                    <div className='flex items-center gap-3'>
+                      <Mail className='text-muted-foreground h-4 w-4' />
+                      <div>
+                        <div className='text-sm font-medium'>Email</div>
+                        <div className='text-muted-foreground text-sm'>
+                          {studentDetail?.email || 'N/A'}
+                        </div>
+                      </div>
+                    </div>
+                    <div className='flex items-center gap-3'>
+                      <Phone className='text-muted-foreground h-4 w-4' />
+                      <div>
+                        <div className='text-sm font-medium'>Phone</div>
+                        <div className='text-muted-foreground text-sm'>
+                          {studentDetail?.parents?.[0]?.phone || 'N/A'}
+                        </div>
+                      </div>
+                    </div>
+                    <div className='flex items-center gap-3'>
+                      <User className='text-muted-foreground h-4 w-4' />
+                      <div>
+                        <div className='text-sm font-medium'>School</div>
+                        <div className='text-muted-foreground text-sm'>
+                          {studentDetail?.schoolName || 'N/A'}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          {/* Academic Performance */}
-          <Card>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-2 text-lg'>
-                <GraduationCap className='h-5 w-5' />
-                Academic Performance
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='grid grid-cols-1 gap-4'>
-                <div className='flex items-center gap-3'>
-                  <div className='bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg'>
-                    <span className='text-primary text-lg font-bold'>
-                      {student.scoreStudents.reduce(
-                        (sum, score) => sum + score.score,
-                        0
-                      ) / student.scoreStudents.length || 'N/A'}
-                      {student.scoreStudents.reduce(
-                        (sum, score) => sum + score.score,
-                        0
-                      ) / student.scoreStudents.length && '%'}
-                    </span>
-                  </div>
-                  <div>
-                    <div className='text-sm font-medium'>Average Score</div>
-                    <div className='text-muted-foreground text-xs'>
-                      {student.scoreStudents.reduce(
-                        (sum, score) => sum + score.score,
-                        0
-                      ) / student.scoreStudents.length
-                        ? getScoreStatus(
-                            student.scoreStudents.reduce(
-                              (sum, score) => sum + score.score,
-                              0
-                            ) / student.scoreStudents.length
-                          )
-                        : 'No data'}
+              {/* Academic Performance */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-2 text-lg'>
+                    <GraduationCap className='h-5 w-5' />
+                    Academic Performance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className='grid grid-cols-1 gap-4'>
+                    <div className='flex items-center gap-3'>
+                      <div className='bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg'>
+                        <span className='text-primary text-lg font-bold'>
+                          {averageScore ? averageScore.toFixed(1) : 'N/A'}
+                        </span>
+                      </div>
+                      <div>
+                        <div className='text-sm font-medium'>Average Score</div>
+                        <div className='text-muted-foreground text-xs'>
+                          {averageScore
+                            ? getScoreStatus(averageScore)
+                            : 'No data'}
+                        </div>
+                      </div>
+                    </div>
+                    <div className='flex items-center gap-3'>
+                      <TrendingUp className='text-muted-foreground h-4 w-4' />
+                      <div>
+                        <div className='text-sm font-medium'>Ranking</div>
+                        <Badge variant='outline' className='text-xs'>
+                          #{ranking}
+                        </Badge>
+                      </div>
+                    </div>
+                    <div className='flex items-center gap-3'>
+                      <Award className='text-muted-foreground h-4 w-4' />
+                      <div>
+                        <div className='text-sm font-medium'>Class</div>
+                        <Badge variant='secondary' className='text-xs'>
+                          {studentDetail?.classes?.[0]?.className || 'N/A'}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className='flex items-center gap-3'>
-                  <TrendingUp className='text-muted-foreground h-4 w-4' />
-                  <div>
-                    <div className='text-sm font-medium'>Trend</div>
-                    <Badge variant='outline' className='text-xs'>
-                      Improving
-                    </Badge>
-                  </div>
-                </div>
-                <div className='flex items-center gap-3'>
-                  <Award className='text-muted-foreground h-4 w-4' />
-                  <div>
-                    <div className='text-sm font-medium'>Class Rank</div>
-                    <Badge variant='secondary' className='text-xs'>
-                      Top 25%
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
 
-          {/* Behavior & Attendance */}
-          <Card>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-2 text-lg'>
-                <FileText className='h-5 w-5' />
-                Behavior & Attendance
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='grid grid-cols-1 gap-4'>
-                <div className='flex items-center gap-3'>
-                  <FileText className='text-muted-foreground h-4 w-4' />
-                  <div className='flex-1'>
-                    <div className='flex items-center justify-between'>
-                      <span className='text-sm font-medium'>
-                        Behavior Notes
-                      </span>
-                      <Badge
-                        variant={
-                          student.behaviorNoteStudents &&
-                          student.behaviorNoteStudents.length > 0
-                            ? 'destructive'
-                            : 'default'
-                        }
-                      >
-                        {student.behaviorNoteStudents.length || 0}
-                      </Badge>
+              {/* Behavior & Attendance */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-2 text-lg'>
+                    <FileText className='h-5 w-5' />
+                    Behavior & Attendance
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className='grid grid-cols-1 gap-4'>
+                    <div className='flex items-center gap-3'>
+                      <FileText className='text-muted-foreground h-4 w-4' />
+                      <div className='flex-1'>
+                        <div className='flex items-center justify-between'>
+                          <span className='text-sm font-medium'>
+                            Behavior Notes
+                          </span>
+                          <Badge
+                            variant={
+                              studentDetail?.behaviorNotes &&
+                              studentDetail.behaviorNotes.length > 0
+                                ? 'destructive'
+                                : 'default'
+                            }
+                          >
+                            {studentDetail?.behaviorNotes?.length || 0}
+                          </Badge>
+                        </div>
+                        <div className='text-muted-foreground text-xs'>
+                          {studentDetail?.behaviorNotes &&
+                          studentDetail.behaviorNotes.length > 0
+                            ? 'Some behavioral concerns noted'
+                            : 'Good behavior record'}
+                        </div>
+                      </div>
                     </div>
-                    <div className='text-muted-foreground text-xs'>
-                      {student.behaviorNoteStudents &&
-                      student.behaviorNoteStudents.length > 0
-                        ? 'Some behavioral concerns noted'
-                        : 'Good behavior record'}
+                    <div className='flex items-center gap-3'>
+                      <Clock className='text-muted-foreground h-4 w-4' />
+                      <div className='flex-1'>
+                        <div className='flex items-center justify-between'>
+                          <span className='text-sm font-medium'>
+                            Parent Contact
+                          </span>
+                          <Badge variant='default'>
+                            {studentDetail?.parents?.[0]?.fullName || 'N/A'}
+                          </Badge>
+                        </div>
+                        <div className='text-muted-foreground text-xs'>
+                          {studentDetail?.parents?.[0]?.phone ||
+                            'No contact info'}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className='flex items-center gap-3'>
-                  <Clock className='text-muted-foreground h-4 w-4' />
-                  <div className='flex-1'>
-                    <div className='flex items-center justify-between'>
-                      <span className='text-sm font-medium'>Attendance</span>
-                      <Badge variant='default'>95%</Badge>
-                    </div>
-                    <div className='text-muted-foreground text-xs'>
-                      Excellent attendance record
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
 
-          {/* Enrollment Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-2 text-lg'>
-                <Clock className='h-5 w-5' />
-                Enrollment Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className='flex items-center gap-3'>
-                <Calendar className='text-muted-foreground h-4 w-4' />
-                <div>
-                  <div className='text-sm font-medium'>Enrolled Since</div>
-                  <div className='text-muted-foreground text-sm'>
-                    {format(new Date(student.createdAt), 'MMMM dd, yyyy')}
+              {/* Enrollment Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className='flex items-center gap-2 text-lg'>
+                    <Clock className='h-5 w-5' />
+                    Enrollment Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className='space-y-3'>
+                    <div className='flex items-center gap-3'>
+                      <Calendar className='text-muted-foreground h-4 w-4' />
+                      <div>
+                        <div className='text-sm font-medium'>Academic Year</div>
+                        <div className='text-muted-foreground text-sm'>
+                          {studentDetail?.classes?.[0]?.academicYearName ||
+                            'N/A'}
+                        </div>
+                      </div>
+                    </div>
+                    <div className='flex items-center gap-3'>
+                      <GraduationCap className='text-muted-foreground h-4 w-4' />
+                      <div>
+                        <div className='text-sm font-medium'>Grade Level</div>
+                        <div className='text-muted-foreground text-sm'>
+                          {studentDetail?.classes?.[0]?.gradeName || 'N/A'}
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>

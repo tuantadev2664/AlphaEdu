@@ -154,6 +154,8 @@ export const columns: ColumnDef<BehaviorNote>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} />
+    cell: ({ row }) => (
+      <CellAction data={row.original} classId={row.original.class_id} />
+    )
   }
 ];

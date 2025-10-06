@@ -172,6 +172,7 @@ export type Score = {
 export type BehaviorNote = {
   id: string;
   student_id: string;
+  studentName?: string;
   class_id: string;
   term_id: string;
   note: string;
@@ -237,10 +238,39 @@ export type TeacherDashboardStats = {
 export type CreateAnnouncementForm = {
   title: string;
   content: string;
-  class_id?: string;
-  subject_id?: string;
-  expires_at: string;
-  is_urgent: boolean;
+  classId?: string;
+  subjectId?: string;
+  expiresAt: string;
+  isUrgent: boolean;
+};
+
+// Announcement CRUD API types
+export type CreateAnnouncementRequest = {
+  title: string;
+  content: string;
+  classId: string;
+  subjectId?: string;
+  expiresAt: string;
+  isUrgent: boolean;
+};
+
+export type CreateAnnouncementResponse = TeacherAnnouncementItem;
+
+export type UpdateAnnouncementRequest = {
+  id: string;
+  title: string;
+  content: string;
+  classId: string;
+  subjectId?: string;
+  expiresAt: string;
+  isUrgent: boolean;
+};
+
+export type UpdateAnnouncementResponse = TeacherAnnouncementItem;
+
+export type DeleteAnnouncementResponse = {
+  success: boolean;
+  message: string;
 };
 
 export type CreateBehaviorNoteForm = {
@@ -289,3 +319,143 @@ export type GetTeacherClassesParams = {
 };
 
 export type GetTeacherClassesResponse = TeacherClass[];
+
+// Student Detail API Response types
+export type StudentDetailClass = {
+  classId: string;
+  className: string;
+  gradeName: string;
+  academicYearName: string;
+};
+
+export type StudentDetailParent = {
+  fullName: string;
+  phone: string;
+};
+
+export type StudentDetailScore = {
+  subject: string;
+  component: string;
+  score: number;
+  weight: number;
+};
+
+export type StudentDetailResponse = {
+  id: string;
+  fullName: string;
+  email: string;
+  schoolName: string;
+  classes: StudentDetailClass[];
+  parents: StudentDetailParent[];
+  behaviorNotes: string[];
+  scores: StudentDetailScore[];
+};
+
+// Behavior Note API types
+export type CreateBehaviorNoteRequest = {
+  studentId: string;
+  classId: string;
+  termId: string;
+  note: string;
+  level: 'Excellent' | 'Good' | 'Fair' | 'Needs improvement' | 'Poor';
+};
+
+export type CreateBehaviorNoteResponse = {
+  id: string;
+  studentId: string;
+  classId: string;
+  termId: string;
+  note: string;
+  level: string;
+  createdBy: string;
+  createdAt: string;
+};
+
+export type UpdateBehaviorNoteRequest = {
+  id: string;
+  note: string;
+  level: 'Excellent' | 'Good' | 'Fair' | 'Needs improvement' | 'Poor';
+};
+
+export type UpdateBehaviorNoteResponse = {
+  id: string;
+  studentId: string;
+  classId: string;
+  termId: string;
+  note: string;
+  level: string;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DeleteBehaviorNoteResponse = {
+  success: boolean;
+  message: string;
+};
+
+// Teacher Announcement API types
+export interface TeacherAnnouncementClass {
+  id: string;
+  gradeId: string;
+  name: string;
+  homeroomTeacherId: string;
+  announcements: any[];
+  behaviorNotes: any[];
+  classEnrollments: any[];
+  grade: any;
+  gradeComponents: any[];
+  homeroomTeacher: TeacherAnnouncementSender | null;
+  teacherAssignments: any[];
+}
+
+export interface TeacherAnnouncementSender {
+  id: string;
+  role: 'teacher' | 'student' | 'parent' | 'admin' | string;
+  fullName: string;
+  email: string;
+  phone: string;
+  schoolId: string;
+  createdAt: string;
+  announcements: any[];
+  behaviorNoteCreatedByNavigations: any[];
+  behaviorNoteStudents: any[];
+  classEnrollments: any[];
+  classes: TeacherAnnouncementClass[];
+  messageReceivers: any[];
+  messageSenders: any[];
+  parentStudentParents: any[];
+  parentStudentStudents: any[];
+  school: any;
+  scoreCreatedByNavigations: any[];
+  scoreStudents: any[];
+  teacherAssignments: any[];
+}
+
+export interface TeacherAnnouncementSubject {
+  id: string;
+  code: string;
+  name: string;
+  level: string;
+  isActive: boolean;
+  announcements: any[];
+  gradeComponents: any[];
+  teacherAssignments: any[];
+}
+
+export interface TeacherAnnouncementItem {
+  id: string;
+  senderId: string;
+  classId: string | null;
+  subjectId: string | null;
+  title: string;
+  content: string;
+  createdAt: string;
+  expiresAt: string | null;
+  isUrgent: boolean;
+  class?: TeacherAnnouncementClass | null;
+  sender?: TeacherAnnouncementSender | null;
+  subject?: TeacherAnnouncementSubject | null;
+}
+
+export type TeacherAnnouncementResponse = TeacherAnnouncementItem[];

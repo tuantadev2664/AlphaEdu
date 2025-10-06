@@ -271,6 +271,7 @@ export type StudentSubjectsResponse = StudentSubjectData[];
 
 // Behavior API response and computed types
 export interface BehaviorNoteData {
+  studentId?: string;
   id: string;
   note: string;
   level: 'Excellent' | 'Good' | 'Fair' | 'Needs improvement' | 'Poor' | string;

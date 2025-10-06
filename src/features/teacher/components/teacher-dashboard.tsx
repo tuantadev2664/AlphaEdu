@@ -27,7 +27,10 @@ import {
 import Link from 'next/link';
 import { TeacherDashboardStats } from '@/features/teacher/types';
 import { format } from 'date-fns';
-import { useTeacherClasses } from '../hooks/use-teacher.query';
+import {
+  useTeacherClasses,
+  useActiveAnnouncements
+} from '../hooks/use-teacher.query';
 
 interface TeacherDashboardProps {
   stats: TeacherDashboardStats;
@@ -37,6 +40,10 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
   const { data: classes, isLoading } = useTeacherClasses({
     academicYearId: '22222222-2222-2222-2222-222222222222'
   });
+
+  // Fetch active announcements from API
+  const { data: announcements, isLoading: isLoadingAnnouncements } =
+    useActiveAnnouncements();
 
   return (
     <div className='flex flex-1 flex-col space-y-8'>
@@ -287,105 +294,116 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
           </CardHeader>
           <CardContent>
             <div className='space-y-4'>
-              {stats.recent_announcements.map((announcement, index) => {
-                const isRecent =
-                  new Date().getTime() -
-                    new Date(announcement.created_at).getTime() <
-                  24 * 60 * 60 * 1000; // Within 24 hours
-                const priorityColor = announcement.is_urgent
-                  ? 'border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-950/50'
-                  : isRecent
-                    ? 'border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/50'
-                    : 'border-border bg-card';
-
-                return (
-                  <div
-                    key={announcement.id}
-                    className={`group relative rounded-lg border p-4 transition-all hover:shadow-md ${priorityColor}`}
-                  >
-                    <div className='flex items-start justify-between gap-3'>
-                      <div className='flex items-start gap-3'>
-                        <div
-                          className={`flex h-10 w-10 items-center justify-center rounded-lg ${
-                            announcement.is_urgent
-                              ? 'bg-red-500/10 text-red-600'
-                              : isRecent
-                                ? 'bg-blue-500/10 text-blue-600'
-                                : 'bg-muted text-muted-foreground'
-                          }`}
-                        >
-                          <Bell className='h-4 w-4' />
-                        </div>
-                        <div className='flex-1 space-y-1'>
-                          <div className='flex items-center gap-2'>
-                            <h5 className='font-semibold'>
-                              {announcement.title}
-                            </h5>
-                            {announcement.is_urgent && (
-                              <Badge
-                                variant='destructive'
-                                className='animate-pulse text-xs'
-                              >
-                                Urgent
-                              </Badge>
-                            )}
-                            {isRecent && !announcement.is_urgent && (
-                              <Badge variant='secondary' className='text-xs'>
-                                New
-                              </Badge>
-                            )}
-                          </div>
-                          <p className='text-muted-foreground line-clamp-2 text-sm leading-relaxed'>
-                            {announcement.content}
-                          </p>
-                          <div className='text-muted-foreground flex items-center gap-2 text-xs'>
-                            <Calendar className='h-3 w-3' />
-                            <span>
-                              {format(
-                                new Date(announcement.created_at),
-                                'MMM dd, yyyy'
-                              )}
-                            </span>
-                            {isRecent && (
-                              <>
-                                <span>•</span>
-                                <span className='text-blue-600 dark:text-blue-400'>
-                                  Today
-                                </span>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <Button
-                        variant='ghost'
-                        size='sm'
-                        className='opacity-0 transition-opacity group-hover:opacity-100'
-                      >
-                        <ArrowRight className='h-3 w-3' />
-                      </Button>
-                    </div>
+              {isLoadingAnnouncements ? (
+                <div className='flex items-center justify-center py-8'>
+                  <div className='text-muted-foreground'>
+                    Loading announcements...
                   </div>
-                );
-              })}
-              {stats.recent_announcements.length === 0 && (
-                <div className='py-12 text-center'>
-                  <div className='bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'>
-                    <Bell className='text-muted-foreground h-8 w-8' />
-                  </div>
-                  <p className='text-lg font-medium'>No recent announcements</p>
-                  <p className='text-muted-foreground text-sm'>
-                    All caught up! Check back later for updates.
-                  </p>
                 </div>
+              ) : (
+                (announcements || []).map((announcement, index) => {
+                  const isRecent =
+                    new Date().getTime() -
+                      new Date(announcement.createdAt).getTime() <
+                    24 * 60 * 60 * 1000; // Within 24 hours
+                  const priorityColor = announcement.isUrgent
+                    ? 'border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-950/50'
+                    : isRecent
+                      ? 'border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/50'
+                      : 'border-border bg-card';
+
+                  return (
+                    <div
+                      key={announcement.id}
+                      className={`group relative rounded-lg border p-4 transition-all hover:shadow-md ${priorityColor}`}
+                    >
+                      <div className='flex items-start justify-between gap-3'>
+                        <div className='flex items-start gap-3'>
+                          <div
+                            className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+                              announcement.isUrgent
+                                ? 'bg-red-500/10 text-red-600'
+                                : isRecent
+                                  ? 'bg-blue-500/10 text-blue-600'
+                                  : 'bg-muted text-muted-foreground'
+                            }`}
+                          >
+                            <Bell className='h-4 w-4' />
+                          </div>
+                          <div className='flex-1 space-y-1'>
+                            <div className='flex items-center gap-2'>
+                              <h5 className='font-semibold'>
+                                {announcement.title}
+                              </h5>
+                              {announcement.isUrgent && (
+                                <Badge
+                                  variant='destructive'
+                                  className='animate-pulse text-xs'
+                                >
+                                  Urgent
+                                </Badge>
+                              )}
+                              {isRecent && !announcement.isUrgent && (
+                                <Badge variant='secondary' className='text-xs'>
+                                  New
+                                </Badge>
+                              )}
+                            </div>
+                            <p className='text-muted-foreground line-clamp-2 text-sm leading-relaxed'>
+                              {announcement.content}
+                            </p>
+                            <div className='text-muted-foreground flex items-center gap-2 text-xs'>
+                              <Calendar className='h-3 w-3' />
+                              <span>
+                                {format(
+                                  new Date(announcement.createdAt),
+                                  'MMM dd, yyyy'
+                                )}
+                              </span>
+                              {isRecent && (
+                                <>
+                                  <span>•</span>
+                                  <span className='text-blue-600 dark:text-blue-400'>
+                                    Today
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        <Button
+                          variant='ghost'
+                          size='sm'
+                          className='opacity-0 transition-opacity group-hover:opacity-100'
+                        >
+                          <ArrowRight className='h-3 w-3' />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })
               )}
+              {!isLoadingAnnouncements &&
+                (announcements || []).length === 0 && (
+                  <div className='py-12 text-center'>
+                    <div className='bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'>
+                      <Bell className='text-muted-foreground h-8 w-8' />
+                    </div>
+                    <p className='text-lg font-medium'>
+                      No recent announcements
+                    </p>
+                    <p className='text-muted-foreground text-sm'>
+                      All caught up! Check back later for updates.
+                    </p>
+                  </div>
+                )}
             </div>
           </CardContent>
           <CardFooter>
             <div className='flex w-full items-center justify-between text-sm'>
               <div className='text-muted-foreground'>
-                {stats.recent_announcements.length} recent{' '}
-                {stats.recent_announcements.length === 1
+                {(announcements || []).length} recent{' '}
+                {(announcements || []).length === 1
                   ? 'announcement'
                   : 'announcements'}
               </div>
