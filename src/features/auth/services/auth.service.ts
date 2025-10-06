@@ -304,7 +304,10 @@ export async function apiCall(
     ...options,
     headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
+      // Only set Content-Type for requests with body (POST, PUT, PATCH)
+      ...(options.body && {
+        'Content-Type': 'application/json'
+      }),
       ...options.headers
     }
   });

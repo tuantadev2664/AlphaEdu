@@ -63,6 +63,7 @@ export async function updateBehaviorNote(
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        id: data.id,
         note: data.note,
         level: data.level
       })
@@ -99,18 +100,32 @@ export async function deleteBehaviorNote(
     console.log('🔄 Deleting behavior note:', endpoint);
 
     const response = await apiCall(endpoint, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        Accept: 'text/plain' // Specify that we expect text response
+      }
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message ||
-          `Failed to delete behavior note: ${response.status}`
-      );
+      // Try to parse error as JSON first, fallback to text
+      let errorMessage = `Failed to delete behavior note: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+      } catch {
+        // If JSON parsing fails, try to get text
+        try {
+          const errorText = await response.text();
+          errorMessage = errorText || errorMessage;
+        } catch {
+          // Use default error message
+        }
+      }
+      throw new Error(errorMessage);
     }
 
-    const result = await response.json();
+    // Get response as text since API returns "Note deleted successfully"
+    const result = await response.text();
     console.log('✅ Behavior note deleted successfully:', noteId);
 
     return result;
