@@ -7,11 +7,21 @@ import type { StudentScore } from '@/features/score/type';
 import { Column, ColumnDef } from '@tanstack/react-table';
 import { User, Calculator, BookOpen } from 'lucide-react';
 import { CellAction } from './cell-action';
+import { EditableScoreCell } from './editable-score-cell';
+import { EditableCommentCell } from './editable-comment-cell';
 
 interface CreateColumnsOptions {
   studentScores: StudentScore[];
   onViewDetails?: (student: StudentScore) => void;
   onEditDetails?: (student: StudentScore) => void;
+  onUpdateScore?: (
+    scoreId: string,
+    newScore: number,
+    isAbsent: boolean
+  ) => Promise<void>;
+  onUpdateComment?: (scoreId: string, comment: string) => Promise<void>;
+  isUpdating?: boolean;
+  canEdit?: boolean;
 }
 
 export const createColumns = (
@@ -69,9 +79,20 @@ export const createColumns = (
         return <span className='text-muted-foreground'>-</span>;
       }
 
-      // Calculate percentage score
-      const percentage = (score.score / score.maxScore) * 100;
+      // Use editable cell if editing is enabled and user can edit
+      if (options.canEdit && options.onUpdateScore) {
+        return (
+          <EditableScoreCell
+            score={score}
+            onUpdate={options.onUpdateScore}
+            isUpdating={options.isUpdating || false}
+            disabled={!options.canEdit}
+          />
+        );
+      }
 
+      // Fallback to read-only display
+      const percentage = (score.score / score.maxScore) * 100;
       let variant: 'default' | 'secondary' | 'destructive' | 'outline' =
         'default';
       if (percentage >= 90) variant = 'default';
@@ -123,6 +144,30 @@ export const createColumns = (
     },
     enableSorting: true
   },
+  // Comments column - only show if editing is enabled
+  // ...(options.canEdit ? [{
+  //   id: 'comments',
+  //   header: 'Comments',
+  //   cell: ({ row }: { row: any }) => {
+  //     const entry = row.original as StudentScore;
+  //     const firstScore = entry.scores[0];
+
+  //     if (!firstScore || !options.onUpdateComment) {
+  //       return <span className='text-muted-foreground'>-</span>;
+  //     }
+
+  //     return (
+  //       <EditableCommentCell
+  //         scoreId={firstScore.scoreId}
+  //         comment={firstScore.comment}
+  //         onUpdate={options.onUpdateComment}
+  //         isUpdating={options.isUpdating || false}
+  //         disabled={!options.canEdit}
+  //       />
+  //     );
+  //   },
+  //   enableSorting: false
+  // }] : []),
   {
     id: 'actions',
     cell: ({ row }) => (

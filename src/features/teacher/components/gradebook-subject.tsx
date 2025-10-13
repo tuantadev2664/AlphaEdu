@@ -34,6 +34,7 @@ export default function GradebookSubject({
   );
   const [addAssessmentOpen, setAddAssessmentOpen] = useState(false);
   const [bulkUpdateOpen, setBulkUpdateOpen] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const updateScoreMutation = useUpdateScore();
 
   // Dialog handlers
@@ -45,6 +46,53 @@ export default function GradebookSubject({
   const handleEditDetails = (student: StudentScore) => {
     setSelectedStudent(student);
     setEditDetailsOpen(true);
+  };
+
+  // Inline editing handlers
+  const handleUpdateScore = async (
+    scoreId: string,
+    newScore: number,
+    isAbsent: boolean
+  ) => {
+    if (isUpdating) return;
+
+    setIsUpdating(true);
+    try {
+      await updateScoreMutation.mutateAsync({
+        scoreId,
+        data: {
+          score1: newScore,
+          isAbsent,
+          comment: '' // Keep existing comment
+        }
+      });
+    } catch (error) {
+      console.error('Score update error:', error);
+      throw error;
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleUpdateComment = async (scoreId: string, comment: string) => {
+    if (isUpdating) return;
+
+    setIsUpdating(true);
+    try {
+      await updateScoreMutation.mutateAsync({
+        scoreId,
+        data: {
+          score1: 0, // Keep existing score
+          isAbsent: false, // Keep existing absence status
+          comment
+        }
+      });
+    } catch (error) {
+      console.error('Comment update error:', error);
+      throw error;
+    } finally {
+      setIsUpdating(false);
+    }
   };
   // Fetch class details to get subject information
   const { data: classDetails, isLoading: classLoading } = useClassDetails({
@@ -79,10 +127,14 @@ export default function GradebookSubject({
       ? createColumns({
           studentScores: gradebookData,
           onViewDetails: handleViewDetails,
-          onEditDetails: handleEditDetails
+          onEditDetails: handleEditDetails,
+          onUpdateScore: handleUpdateScore,
+          onUpdateComment: handleUpdateComment,
+          isUpdating,
+          canEdit: true // Enable editing for teachers
         })
       : [];
-  }, [gradebookData]);
+  }, [gradebookData, isUpdating]);
 
   if (isLoading) {
     return (
