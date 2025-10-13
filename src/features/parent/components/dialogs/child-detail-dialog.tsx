@@ -328,83 +328,87 @@ export function ChildDetailDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className='max-h-[90vh] max-w-[95vw] overflow-y-auto sm:max-w-[1200px]'>
-        <DialogHeader>
-          <DialogTitle className='flex items-center gap-2'>
-            <User className='h-5 w-5' />
-            Chi tiết học tập - {displayData.studentName}
+      <DialogContent className='max-h-[95vh] max-w-[98vw] overflow-y-auto px-3 sm:max-w-[1200px] sm:px-6'>
+        <DialogHeader className='pb-3'>
+          <DialogTitle className='flex items-center gap-2 text-sm sm:text-base'>
+            <User className='h-4 w-4 sm:h-5 sm:w-5' />
+            <span className='truncate'>
+              Chi tiết học tập - {displayData.studentName}
+            </span>
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className='text-xs sm:text-sm'>
             Thông tin chi tiết về kết quả học tập và hạnh kiểm của con
           </DialogDescription>
         </DialogHeader>
 
-        <div className='space-y-6'>
+        <div className='space-y-4 sm:space-y-6'>
           {/* Student Overview */}
           <Card>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-2'>
-                <Award className='h-5 w-5' />
+            <CardHeader className='pb-3'>
+              <CardTitle className='flex items-center gap-2 text-sm sm:text-base'>
+                <Award className='h-4 w-4 sm:h-5 sm:w-5' />
                 Tổng quan học tập
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='grid gap-4 md:grid-cols-4'>
-                <div className='rounded-lg border p-4 text-center'>
+              <div className='grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4'>
+                <div className='rounded-lg border p-3 text-center sm:p-4'>
                   <div className='mb-2 flex items-center justify-center'>
                     {getPerformanceIcon(childData?.overallAverage || 0)}
                   </div>
-                  <div className='text-2xl font-bold'>
+                  <div className='text-lg font-bold sm:text-2xl'>
                     {childData?.overallAverage?.toFixed(1) || 0}
                   </div>
-                  <div className='text-muted-foreground text-sm'>
+                  <div className='text-muted-foreground text-xs sm:text-sm'>
                     Điểm trung bình
                   </div>
                 </div>
-                <div className='rounded-lg border p-4 text-center'>
+                <div className='rounded-lg border p-3 text-center sm:p-4'>
                   <div className='mb-2 flex items-center justify-center'>
                     {studentRankLoading ? (
-                      <div className='h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600'></div>
+                      <div className='h-4 w-4 animate-spin rounded-full border-2 border-gray-300 border-t-blue-600 sm:h-5 sm:w-5'></div>
                     ) : studentRank ? (
                       studentRank.rank <= 3 ? (
-                        <Award className='h-5 w-5 text-amber-600' />
+                        <Award className='h-4 w-4 text-amber-600 sm:h-5 sm:w-5' />
                       ) : (
-                        <Target className='h-5 w-5 text-blue-600' />
+                        <Target className='h-4 w-4 text-blue-600 sm:h-5 sm:w-5' />
                       )
                     ) : (
-                      <Target className='h-5 w-5 text-blue-600' />
+                      <Target className='h-4 w-4 text-blue-600 sm:h-5 sm:w-5' />
                     )}
                   </div>
-                  <div className='text-2xl font-bold'>
+                  <div className='text-lg font-bold sm:text-2xl'>
                     {studentRankLoading ? (
-                      <div className='mx-auto h-8 w-12 animate-pulse rounded bg-gray-200'></div>
+                      <div className='mx-auto h-6 w-8 animate-pulse rounded bg-gray-200 sm:h-8 sm:w-12'></div>
                     ) : studentRank ? (
                       `#${studentRank.rank}`
                     ) : (
                       `#N/A`
                     )}
                   </div>
-                  <div className='text-muted-foreground text-sm'>
+                  <div className='text-muted-foreground text-xs sm:text-sm'>
                     Xếp hạng lớp
                   </div>
                 </div>
-                <div className='rounded-lg border p-4 text-center'>
+                <div className='rounded-lg border p-3 text-center sm:p-4'>
                   <div className='mb-2 flex items-center justify-center'>
-                    <BookOpen className='h-5 w-5 text-purple-600' />
+                    <BookOpen className='h-4 w-4 text-purple-600 sm:h-5 sm:w-5' />
                   </div>
-                  <div className='text-2xl font-bold'>
+                  <div className='text-lg font-bold sm:text-2xl'>
                     {childData?.subjects?.length || 0}
                   </div>
-                  <div className='text-muted-foreground text-sm'>Môn học</div>
-                </div>
-                <div className='rounded-lg border p-4 text-center'>
-                  <div className='mb-2 flex items-center justify-center'>
-                    <CheckCircle className='h-5 w-5 text-green-600' />
+                  <div className='text-muted-foreground text-xs sm:text-sm'>
+                    Môn học
                   </div>
-                  <div className='text-2xl font-bold'>
+                </div>
+                <div className='rounded-lg border p-3 text-center sm:p-4'>
+                  <div className='mb-2 flex items-center justify-center'>
+                    <CheckCircle className='h-4 w-4 text-green-600 sm:h-5 sm:w-5' />
+                  </div>
+                  <div className='text-lg font-bold sm:text-2xl'>
                     {childData?.behaviorNotes?.length || 0}
                   </div>
-                  <div className='text-muted-foreground text-sm'>
+                  <div className='text-muted-foreground text-xs sm:text-sm'>
                     Ghi chú hạnh kiểm
                   </div>
                 </div>
@@ -413,43 +417,60 @@ export function ChildDetailDialog({
           </Card>
 
           <Tabs defaultValue='subjects' className='w-full'>
-            <TabsList className='grid w-full grid-cols-3'>
-              <TabsTrigger value='subjects'>Kết quả học tập</TabsTrigger>
-              <TabsTrigger value='behavior'>Hạnh kiểm</TabsTrigger>
-              <TabsTrigger value='communication'>Liên lạc</TabsTrigger>
+            <TabsList className='grid h-auto w-full grid-cols-3'>
+              <TabsTrigger
+                value='subjects'
+                className='px-1 py-2 text-xs sm:text-sm'
+              >
+                <span className='hidden sm:inline'>Kết quả học tập</span>
+                <span className='sm:hidden'>Học tập</span>
+              </TabsTrigger>
+              <TabsTrigger
+                value='behavior'
+                className='px-1 py-2 text-xs sm:text-sm'
+              >
+                Hạnh kiểm
+              </TabsTrigger>
+              <TabsTrigger
+                value='communication'
+                className='px-1 py-2 text-xs sm:text-sm'
+              >
+                <span className='hidden sm:inline'>Liên lạc</span>
+                <span className='sm:hidden'>Chat</span>
+              </TabsTrigger>
             </TabsList>
 
-            <TabsContent value='subjects' className='space-y-4'>
+            <TabsContent value='subjects' className='space-y-3 sm:space-y-4'>
               <Card>
-                <CardHeader>
-                  <CardTitle className='flex items-center gap-2'>
-                    <BookOpen className='h-5 w-5' />
+                <CardHeader className='pb-3'>
+                  <CardTitle className='flex items-center gap-2 text-sm sm:text-base'>
+                    <BookOpen className='h-4 w-4 sm:h-5 sm:w-5' />
                     Kết quả theo môn học
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className='space-y-4'>
+                  <div className='space-y-3 sm:space-y-4'>
                     {childData?.subjects?.map((subjectData) => (
                       <Card
                         key={subjectData.subjectId}
                         className='hover:bg-muted/50 transition-colors'
                       >
-                        <CardContent className='p-4'>
-                          <div className='mb-4 flex items-center justify-between'>
-                            <div className='flex items-center gap-4'>
-                              <div className='rounded-lg bg-blue-100 p-2'>
-                                <BookOpen className='h-5 w-5 text-blue-600' />
+                        <CardContent className='p-3 sm:p-4'>
+                          <div className='mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+                            <div className='flex min-w-0 flex-1 items-center gap-3'>
+                              <div className='flex-shrink-0 rounded-lg bg-blue-100 p-2'>
+                                <BookOpen className='h-4 w-4 text-blue-600 sm:h-5 sm:w-5' />
                               </div>
-                              <div>
-                                <div className='font-medium'>
+                              <div className='min-w-0 flex-1'>
+                                <div className='truncate text-sm font-medium sm:text-base'>
                                   {subjectData.subjectName}
                                 </div>
-                                <div className='text-muted-foreground text-sm'>
+                                <div className='text-muted-foreground truncate text-xs sm:text-sm'>
                                   Giáo viên: {subjectData.teacherName}
                                 </div>
                               </div>
                             </div>
-                            <div className='flex items-center gap-4'>
+                            <div className='flex items-center gap-2 sm:gap-4'>
                               <div className='text-right'>
                                 {(() => {
                                   const transcriptSubject =
@@ -463,7 +484,7 @@ export function ChildDetailDialog({
                                   return (
                                     <>
                                       <div
-                                        className={`inline-flex items-center justify-center rounded-full border px-3 py-1 text-sm font-medium ${getGradeColor(averageScore)}`}
+                                        className={`inline-flex items-center justify-center rounded-full border px-2 py-1 text-xs font-medium sm:px-3 sm:text-sm ${getGradeColor(averageScore)}`}
                                       >
                                         {averageScore > 0
                                           ? averageScore.toFixed(1)
@@ -479,19 +500,26 @@ export function ChildDetailDialog({
                                   );
                                 })()}
                               </div>
-                              <Button variant='outline' size='sm'>
-                                <MessageSquare className='mr-2 h-4 w-4' />
-                                Nhắn tin
+                              <Button
+                                variant='outline'
+                                size='sm'
+                                className='text-xs sm:text-sm'
+                              >
+                                <MessageSquare className='mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4' />
+                                <span className='hidden sm:inline'>
+                                  Nhắn tin
+                                </span>
+                                <span className='sm:hidden'>Chat</span>
                               </Button>
                             </div>
                           </div>
 
                           {/* Subject Grade Details */}
-                          <div className='space-y-3'>
-                            <div className='text-sm font-medium'>
+                          <div className='space-y-2 sm:space-y-3'>
+                            <div className='text-xs font-medium sm:text-sm'>
                               Chi tiết điểm số:
                             </div>
-                            <div className='grid gap-2'>
+                            <div className='space-y-2'>
                               {(() => {
                                 const allAssessments =
                                   subjectData.components?.flatMap(
@@ -520,21 +548,21 @@ export function ChildDetailDialog({
                                   return (
                                     <div
                                       key={assessment.assessmentId}
-                                      className='bg-muted/30 flex items-center justify-between rounded p-2'
+                                      className='bg-muted/30 flex flex-col gap-2 rounded p-2 sm:flex-row sm:items-center sm:justify-between'
                                     >
-                                      <div className='flex-1'>
-                                        <div className='flex items-center gap-2'>
-                                          <span className='text-sm font-medium'>
+                                      <div className='min-w-0 flex-1'>
+                                        <div className='flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2'>
+                                          <span className='truncate text-xs font-medium sm:text-sm'>
                                             {assessment.title}
                                           </span>
                                           <Badge
                                             variant='outline'
-                                            className='text-xs'
+                                            className='w-fit text-xs'
                                           >
                                             Hệ số {component?.weight || 1}
                                           </Badge>
                                         </div>
-                                        <div className='text-muted-foreground mt-1 text-xs'>
+                                        <div className='text-muted-foreground mt-1 line-clamp-2 text-xs'>
                                           {component?.componentName ||
                                             'Bài kiểm tra'}
                                           {assessment.comment &&
@@ -542,7 +570,7 @@ export function ChildDetailDialog({
                                         </div>
                                       </div>
                                       <div
-                                        className={`inline-flex items-center justify-center rounded-full border px-2 py-1 text-xs font-medium ${
+                                        className={`inline-flex flex-shrink-0 items-center justify-center rounded-full border px-2 py-1 text-xs font-medium ${
                                           assessment.isAbsent
                                             ? 'border-red-200 bg-red-100 text-red-800'
                                             : getGradeColor(assessment.score)
@@ -580,19 +608,19 @@ export function ChildDetailDialog({
               </Card>
             </TabsContent>
 
-            <TabsContent value='behavior' className='space-y-4'>
+            <TabsContent value='behavior' className='space-y-3 sm:space-y-4'>
               <Card>
-                <CardHeader>
-                  <CardTitle className='flex items-center gap-2'>
-                    <Award className='h-5 w-5' />
+                <CardHeader className='pb-3'>
+                  <CardTitle className='flex items-center gap-2 text-sm sm:text-base'>
+                    <Award className='h-4 w-4 sm:h-5 sm:w-5' />
                     Tổng quan hạnh kiểm
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className='space-y-4'>
+                  <div className='space-y-3 sm:space-y-4'>
                     {childData?.behaviorNotes &&
                     childData.behaviorNotes.length > 0 ? (
-                      <div className='grid gap-4 md:grid-cols-5'>
+                      <div className='grid grid-cols-2 gap-2 sm:gap-4 md:grid-cols-5'>
                         {[
                           'Excellent',
                           'Good',
@@ -617,12 +645,14 @@ export function ChildDetailDialog({
                           return (
                             <div
                               key={level}
-                              className='rounded-lg border p-3 text-center'
+                              className='rounded-lg border p-2 text-center sm:p-3'
                             >
                               <div className='mb-2 flex items-center justify-center'>
                                 {getBehaviorIcon(level)}
                               </div>
-                              <div className='text-2xl font-bold'>{count}</div>
+                              <div className='text-lg font-bold sm:text-2xl'>
+                                {count}
+                              </div>
                               <div className='text-muted-foreground text-xs'>
                                 {displayName}
                               </div>
@@ -642,14 +672,14 @@ export function ChildDetailDialog({
 
               {/* Recent Behavior Notes */}
               <Card>
-                <CardHeader>
-                  <CardTitle className='flex items-center gap-2'>
-                    <Bell className='h-5 w-5' />
+                <CardHeader className='pb-3'>
+                  <CardTitle className='flex items-center gap-2 text-sm sm:text-base'>
+                    <Bell className='h-4 w-4 sm:h-5 sm:w-5' />
                     Ghi chú hạnh kiểm gần đây
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className='max-h-96 space-y-4 overflow-y-auto'>
+                  <div className='max-h-80 space-y-3 overflow-y-auto sm:max-h-96 sm:space-y-4'>
                     {childData?.behaviorNotes &&
                     childData.behaviorNotes.length > 0 ? (
                       childData.behaviorNotes
@@ -661,7 +691,7 @@ export function ChildDetailDialog({
                         .map((behaviorNote) => (
                           <div
                             key={behaviorNote.id}
-                            className={`rounded-lg border p-4 ${
+                            className={`rounded-lg border p-3 sm:p-4 ${
                               behaviorNote.level === 'Excellent'
                                 ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20'
                                 : behaviorNote.level === 'Good'
@@ -671,11 +701,11 @@ export function ChildDetailDialog({
                                     : 'border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950/20'
                             }`}
                           >
-                            <div className='mb-3 flex items-start justify-between'>
+                            <div className='mb-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between'>
                               <div className='flex items-center gap-2'>
                                 {getBehaviorIcon(behaviorNote.level)}
                                 <span
-                                  className={`text-sm font-medium capitalize ${
+                                  className={`text-xs font-medium capitalize sm:text-sm ${
                                     behaviorNote.level === 'Excellent'
                                       ? 'text-green-700 dark:text-green-300'
                                       : behaviorNote.level === 'Good'
@@ -696,7 +726,10 @@ export function ChildDetailDialog({
                                         : 'Yếu'}
                                 </span>
                               </div>
-                              <Badge variant='outline' className='text-xs'>
+                              <Badge
+                                variant='outline'
+                                className='w-fit text-xs'
+                              >
                                 {format(
                                   new Date(behaviorNote.createdAt),
                                   'dd/MM/yyyy HH:mm'
@@ -705,7 +738,7 @@ export function ChildDetailDialog({
                             </div>
 
                             <p
-                              className={`mb-3 text-sm leading-relaxed ${
+                              className={`mb-3 text-xs leading-relaxed sm:text-sm ${
                                 behaviorNote.level === 'Excellent'
                                   ? 'text-green-800 dark:text-green-200'
                                   : behaviorNote.level === 'Good'
@@ -721,8 +754,10 @@ export function ChildDetailDialog({
                             <div className='text-muted-foreground flex items-center justify-between text-xs'>
                               <div className='flex items-center gap-4'>
                                 <div className='flex items-center gap-1'>
-                                  <User className='h-3 w-3' />
-                                  <span>{behaviorNote.teacherName}</span>
+                                  <User className='h-3 w-3 flex-shrink-0' />
+                                  <span className='truncate'>
+                                    {behaviorNote.teacherName}
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -739,16 +774,19 @@ export function ChildDetailDialog({
               </Card>
             </TabsContent>
 
-            <TabsContent value='communication' className='space-y-4'>
+            <TabsContent
+              value='communication'
+              className='space-y-3 sm:space-y-4'
+            >
               <Card>
-                <CardHeader>
-                  <CardTitle className='flex items-center gap-2'>
-                    <MessageSquare className='h-5 w-5' />
+                <CardHeader className='pb-3'>
+                  <CardTitle className='flex items-center gap-2 text-sm sm:text-base'>
+                    <MessageSquare className='h-4 w-4 sm:h-5 sm:w-5' />
                     Liên lạc với giáo viên
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className='space-y-4'>
+                  <div className='space-y-3 sm:space-y-4'>
                     {childData?.subjects?.map((subjectData) => {
                       const communication = generateMockCommunication(
                         subjectData.teacherId,
@@ -759,32 +797,32 @@ export function ChildDetailDialog({
                       return (
                         <div
                           key={subjectData.subjectId}
-                          className='hover:bg-muted/50 flex items-center justify-between rounded-lg border p-4 transition-colors'
+                          className='hover:bg-muted/50 flex flex-col gap-3 rounded-lg border p-3 transition-colors sm:flex-row sm:items-center sm:justify-between sm:p-4'
                         >
-                          <div className='flex items-center gap-4'>
-                            <Avatar className='h-10 w-10'>
+                          <div className='flex min-w-0 flex-1 items-center gap-3'>
+                            <Avatar className='h-8 w-8 flex-shrink-0 sm:h-10 sm:w-10'>
                               <AvatarFallback className='bg-blue-100 text-blue-600'>
                                 {subjectData.teacherName.charAt(0)}
                               </AvatarFallback>
                             </Avatar>
-                            <div className='flex-1'>
+                            <div className='min-w-0 flex-1'>
                               <div className='flex items-center gap-2'>
-                                <div className='font-medium'>
+                                <div className='truncate text-sm font-medium sm:text-base'>
                                   {subjectData.teacherName}
                                 </div>
                                 {communication.unreadCount > 0 && (
                                   <Badge
                                     variant='destructive'
-                                    className='text-xs'
+                                    className='flex-shrink-0 text-xs'
                                   >
                                     {communication.unreadCount}
                                   </Badge>
                                 )}
                               </div>
-                              <div className='text-muted-foreground text-sm'>
+                              <div className='text-muted-foreground truncate text-xs sm:text-sm'>
                                 Giáo viên {subjectData.subjectName}
                               </div>
-                              <div className='text-muted-foreground mt-1 line-clamp-1 text-xs'>
+                              <div className='text-muted-foreground mt-1 line-clamp-2 text-xs'>
                                 {communication.lastMessage}
                               </div>
                               <div className='text-muted-foreground text-xs'>
@@ -796,9 +834,14 @@ export function ChildDetailDialog({
                             </div>
                           </div>
                           <div className='flex items-center gap-2'>
-                            <Button variant='outline' size='sm'>
-                              <MessageSquare className='mr-2 h-4 w-4' />
-                              Nhắn tin
+                            <Button
+                              variant='outline'
+                              size='sm'
+                              className='w-full text-xs sm:w-auto sm:text-sm'
+                            >
+                              <MessageSquare className='mr-1 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4' />
+                              <span className='hidden sm:inline'>Nhắn tin</span>
+                              <span className='sm:hidden'>Chat</span>
                             </Button>
                           </div>
                         </div>

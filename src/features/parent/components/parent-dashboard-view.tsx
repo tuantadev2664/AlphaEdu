@@ -328,16 +328,16 @@ export function ParentDashboardView() {
       </div>
       <Separator />
 
-      <div className='space-y-6'>
+      <div className='space-y-4 md:space-y-6'>
         {/* Family Overview Header */}
-        <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
+        <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4'>
           <Card>
             <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
               <CardTitle className='text-sm font-medium'>Tổng số con</CardTitle>
               <Users className='text-muted-foreground h-4 w-4' />
             </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>
+            <CardContent className='pb-3'>
+              <div className='text-xl font-bold sm:text-2xl'>
                 {apiChildrenFullInfo
                   ? apiChildrenFullInfo.length
                   : children.length}
@@ -355,8 +355,8 @@ export function ParentDashboardView() {
               </CardTitle>
               <GraduationCap className='text-muted-foreground h-4 w-4' />
             </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>
+            <CardContent className='pb-3'>
+              <div className='text-xl font-bold sm:text-2xl'>
                 {(apiChildrenFullInfo?.reduce(
                   (sum, child) => sum + (child.overallAverage ?? 0),
                   0
@@ -383,8 +383,10 @@ export function ParentDashboardView() {
               </CardTitle>
               <MessageSquare className='text-muted-foreground h-4 w-4' />
             </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold'>{unread_messages_count}</div>
+            <CardContent className='pb-3'>
+              <div className='text-xl font-bold sm:text-2xl'>
+                {unread_messages_count}
+              </div>
               <p className='text-muted-foreground text-xs'>Từ giáo viên</p>
             </CardContent>
           </Card>
@@ -394,8 +396,8 @@ export function ParentDashboardView() {
               <CardTitle className='text-sm font-medium'>Cảnh báo</CardTitle>
               <AlertTriangle className='text-muted-foreground h-4 w-4' />
             </CardHeader>
-            <CardContent>
-              <div className='text-2xl font-bold text-red-600'>
+            <CardContent className='pb-3'>
+              <div className='text-xl font-bold text-red-600 sm:text-2xl'>
                 {urgentAlerts.length + (studentAnalysis ? 1 : 0)}
               </div>
               <p className='text-muted-foreground text-xs'>
@@ -412,9 +414,9 @@ export function ParentDashboardView() {
         {/* Urgent Alerts */}
         {urgentAlerts.length > 0 && (
           <Card className='border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-950/20'>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-2 text-red-800 dark:text-red-200'>
-                <AlertCircle className='h-5 w-5' />
+            <CardHeader className='pb-3'>
+              <CardTitle className='flex items-center gap-2 text-sm text-red-800 sm:text-base dark:text-red-200'>
+                <AlertCircle className='h-4 w-4 sm:h-5 sm:w-5' />
                 Cảnh báo hành vi khẩn cấp
               </CardTitle>
             </CardHeader>
@@ -423,28 +425,30 @@ export function ParentDashboardView() {
                 {urgentAlerts.map((child) => (
                   <div
                     key={child.studentId}
-                    className='flex items-center justify-between rounded-lg border border-red-200 bg-white p-3 dark:border-red-800 dark:bg-red-900/10'
+                    className='flex flex-col gap-3 rounded-lg border border-red-200 bg-white p-3 sm:flex-row sm:items-center sm:justify-between dark:border-red-800 dark:bg-red-900/10'
                   >
                     <div className='flex items-center gap-3'>
-                      <Avatar className='h-8 w-8'>
+                      <Avatar className='h-8 w-8 flex-shrink-0'>
                         <AvatarFallback className='bg-red-100 text-red-600'>
                           {child.studentName.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
-                      <div>
-                        <div className='font-medium text-red-800 dark:text-red-200'>
+                      <div className='min-w-0 flex-1'>
+                        <div className='truncate font-medium text-red-800 dark:text-red-200'>
                           {child.studentName}
                         </div>
                         <div className='space-y-1 text-sm text-red-600 dark:text-red-400'>
                           {child.overallAverage &&
                             child.overallAverage < 5.0 && (
-                              <div>
+                              <div className='truncate'>
                                 Điểm TB: {child.overallAverage?.toFixed(1)}{' '}
                                 (Yếu)
                               </div>
                             )}
                           {child.latestBehaviorNote?.level === 'Poor' && (
-                            <div>{child.latestBehaviorNote?.note}</div>
+                            <div className='line-clamp-2'>
+                              {child.latestBehaviorNote?.note}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -460,7 +464,7 @@ export function ParentDashboardView() {
                       <Button
                         variant='outline'
                         size='sm'
-                        className='border-red-200 text-red-600 hover:bg-red-50'
+                        className='w-full border-red-200 text-red-600 hover:bg-red-50 sm:w-auto'
                       >
                         Xem chi tiết
                       </Button>
@@ -475,9 +479,9 @@ export function ParentDashboardView() {
         {/* Academic Alerts */}
         {studentAnalysis && (
           <Card className='border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/20'>
-            <CardHeader>
-              <CardTitle className='flex items-center gap-2 text-blue-800 dark:text-blue-200'>
-                <TrendingUp className='h-5 w-5' />
+            <CardHeader className='pb-3'>
+              <CardTitle className='flex items-center gap-2 text-sm text-blue-800 sm:text-base dark:text-blue-200'>
+                <TrendingUp className='h-4 w-4 sm:h-5 sm:w-5' />
                 Cảnh báo học tập
               </CardTitle>
             </CardHeader>
@@ -485,17 +489,17 @@ export function ParentDashboardView() {
               <div className='space-y-4'>
                 <div
                   key={studentAnalysis?.studentId}
-                  className={`rounded-lg border p-4 ${getRiskLevelColor(studentAnalysis?.riskLevel ?? '')}`}
+                  className={`rounded-lg border p-3 sm:p-4 ${getRiskLevelColor(studentAnalysis?.riskLevel ?? '')}`}
                 >
-                  <div className='mb-3 flex items-start justify-between'>
+                  <div className='mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
                     <div className='flex items-center gap-3'>
-                      <Avatar className='h-10 w-10'>
+                      <Avatar className='h-8 w-8 flex-shrink-0 sm:h-10 sm:w-10'>
                         <AvatarFallback className='bg-blue-100 text-blue-600'>
                           {studentAnalysis?.fullName.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
-                      <div>
-                        <div className='text-lg font-medium'>
+                      <div className='min-w-0 flex-1'>
+                        <div className='text-base font-medium sm:text-lg'>
                           {studentAnalysis?.fullName}
                         </div>
                         <div className='text-sm opacity-80'>
@@ -527,14 +531,14 @@ export function ParentDashboardView() {
 
                   <div className='mb-3'>
                     <p className='mb-2 text-sm font-medium'>Tóm tắt:</p>
-                    <p className='text-sm opacity-90'>
+                    <p className='line-clamp-3 text-sm opacity-90'>
                       &ldquo;{studentAnalysis?.summary}&rdquo;
                     </p>
                   </div>
 
                   <div className='mb-3'>
                     <p className='mb-2 text-sm font-medium'>Nhận xét chung:</p>
-                    <p className='text-sm opacity-90'>
+                    <p className='line-clamp-3 text-sm opacity-90'>
                       &ldquo;{studentAnalysis?.comment}&rdquo;
                     </p>
                   </div>
@@ -608,10 +612,10 @@ export function ParentDashboardView() {
                     </div>
                   </div>
 
-                  <div className='flex items-center justify-between border-t border-current/20 pt-3'>
+                  <div className='flex flex-col gap-3 border-t border-current/20 pt-3 sm:flex-row sm:items-center sm:justify-between'>
                     <div className='flex items-center gap-2 text-xs opacity-70'>
-                      <Clock className='h-3 w-3' />
-                      <span>
+                      <Clock className='h-3 w-3 flex-shrink-0' />
+                      <span className='truncate'>
                         Cập nhật lần cuối:{' '}
                         {format(new Date(), 'dd/MM/yyyy HH:mm')}
                       </span>
@@ -627,7 +631,11 @@ export function ParentDashboardView() {
                         (c) => c.studentId === studentAnalysis?.studentId
                       )}
                     >
-                      <Button variant='outline' size='sm' className='text-xs'>
+                      <Button
+                        variant='outline'
+                        size='sm'
+                        className='w-full text-xs sm:w-auto'
+                      >
                         <Eye className='mr-1 h-3 w-3' />
                         Xem chi tiết
                       </Button>
@@ -641,17 +649,17 @@ export function ParentDashboardView() {
 
         {/* Children Overview */}
         <Card>
-          <CardHeader>
-            <div className='flex flex-col justify-between gap-4 sm:flex-row sm:items-center'>
-              <CardTitle className='flex items-center gap-2'>
-                <Users className='h-5 w-5' />
+          <CardHeader className='pb-3'>
+            <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
+              <CardTitle className='flex items-center gap-2 text-sm sm:text-base'>
+                <Users className='h-4 w-4 sm:h-5 sm:w-5' />
                 Tổng quan học tập các con
               </CardTitle>
               <TeacherCommunicationDialog>
                 <Button
                   variant='outline'
                   size='sm'
-                  className='flex items-center gap-2'
+                  className='flex w-full items-center justify-center gap-2 sm:w-auto'
                 >
                   <MessageSquare className='h-4 w-4' />
                   Liên hệ giáo viên
@@ -660,7 +668,7 @@ export function ParentDashboardView() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className='grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'>
+            <div className='grid gap-3 sm:grid-cols-1 sm:gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'>
               {(apiChildrenFullInfo || []).map((child) => (
                 <Card
                   key={child.studentId}
@@ -668,15 +676,17 @@ export function ParentDashboardView() {
                 >
                   <CardHeader className='pb-3'>
                     <div className='flex items-center justify-between'>
-                      <div className='flex items-center gap-3'>
-                        <Avatar className='h-10 w-10'>
+                      <div className='flex min-w-0 flex-1 items-center gap-3'>
+                        <Avatar className='h-8 w-8 flex-shrink-0 sm:h-10 sm:w-10'>
                           <AvatarFallback className='bg-blue-100 text-blue-600'>
                             {child.studentName.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
-                        <div>
-                          <div className='font-medium'>{child.studentName}</div>
-                          <div className='text-muted-foreground text-sm'>
+                        <div className='min-w-0 flex-1'>
+                          <div className='truncate font-medium'>
+                            {child.studentName}
+                          </div>
+                          <div className='text-muted-foreground truncate text-sm'>
                             {child.className || 'Lớp - N/A'}
                           </div>
                         </div>
@@ -852,7 +862,7 @@ export function ParentDashboardView() {
                       termId='33333333-3333-3333-3333-333333333333'
                       childData={child}
                     >
-                      <Button variant='outline' className='mt-4 w-full'>
+                      <Button variant='outline' className='mt-4 w-full text-sm'>
                         <Eye className='mr-2 h-4 w-4' />
                         Xem chi tiết
                       </Button>
@@ -869,17 +879,17 @@ export function ParentDashboardView() {
                   >
                     <CardHeader className='pb-3'>
                       <div className='flex items-center justify-between'>
-                        <div className='flex items-center gap-3'>
-                          <Avatar className='h-10 w-10'>
+                        <div className='flex min-w-0 flex-1 items-center gap-3'>
+                          <Avatar className='h-8 w-8 flex-shrink-0 sm:h-10 sm:w-10'>
                             <AvatarFallback className='bg-blue-100 text-blue-600'>
                               {child.student.full_name.charAt(0)}
                             </AvatarFallback>
                           </Avatar>
-                          <div>
-                            <div className='font-medium'>
+                          <div className='min-w-0 flex-1'>
+                            <div className='truncate font-medium'>
                               {child.student.full_name}
                             </div>
-                            <div className='text-muted-foreground text-sm'>
+                            <div className='text-muted-foreground truncate text-sm'>
                               {child.current_class.name} -{' '}
                               {child.current_class.grade?.level}
                             </div>
@@ -888,7 +898,7 @@ export function ParentDashboardView() {
                         {child.latest_behavior_note?.level === 'Poor' && (
                           <Badge
                             variant='destructive'
-                            className='animate-pulse'
+                            className='flex-shrink-0 animate-pulse'
                           >
                             Cảnh báo
                           </Badge>
@@ -1101,7 +1111,10 @@ export function ParentDashboardView() {
                           (c) => c.studentId === child.student.id
                         )}
                       >
-                        <Button variant='outline' className='mt-4 w-full'>
+                        <Button
+                          variant='outline'
+                          className='mt-4 w-full text-sm'
+                        >
                           <Eye className='mr-2 h-4 w-4' />
                           Xem chi tiết
                         </Button>
@@ -1115,9 +1128,9 @@ export function ParentDashboardView() {
 
         {/* Recent Announcements */}
         <Card>
-          <CardHeader>
-            <CardTitle className='flex items-center gap-2'>
-              <Bell className='h-5 w-5' />
+          <CardHeader className='pb-3'>
+            <CardTitle className='flex items-center gap-2 text-sm sm:text-base'>
+              <Bell className='h-4 w-4 sm:h-5 sm:w-5' />
               Thông báo gần đây
               {apiLoading && (
                 <Badge variant='secondary' className='text-xs'>
@@ -1127,17 +1140,17 @@ export function ParentDashboardView() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='space-y-4'>
+            <div className='space-y-3 sm:space-y-4'>
               {apiLoading ? (
-                <div className='text-muted-foreground py-8 text-center'>
-                  <div className='mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600'></div>
-                  <p>Đang tải thông báo...</p>
+                <div className='text-muted-foreground py-6 text-center sm:py-8'>
+                  <div className='mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600 sm:h-12 sm:w-12'></div>
+                  <p className='text-sm'>Đang tải thông báo...</p>
                 </div>
               ) : recent_announcements.length > 0 ? (
                 recent_announcements.slice(0, 5).map((announcement) => (
                   <div
                     key={announcement.id}
-                    className='hover:bg-muted/50 flex items-start gap-4 rounded-lg border p-4 transition-colors'
+                    className='hover:bg-muted/50 flex items-start gap-3 rounded-lg border p-3 transition-colors sm:gap-4 sm:p-4'
                   >
                     <div
                       className={`flex-shrink-0 rounded-full p-2 ${
@@ -1149,12 +1162,15 @@ export function ParentDashboardView() {
                       <Bell className='h-4 w-4' />
                     </div>
                     <div className='min-w-0 flex-1'>
-                      <div className='mb-1 flex items-center gap-2'>
-                        <h4 className='truncate font-medium'>
+                      <div className='mb-1 flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2'>
+                        <h4 className='truncate text-sm font-medium sm:text-base'>
                           {announcement.title}
                         </h4>
                         {announcement.is_urgent && (
-                          <Badge variant='destructive' className='text-xs'>
+                          <Badge
+                            variant='destructive'
+                            className='w-fit text-xs'
+                          >
                             Khẩn cấp
                           </Badge>
                         )}
@@ -1162,14 +1178,16 @@ export function ParentDashboardView() {
                       <p className='text-muted-foreground mb-2 line-clamp-2 text-sm'>
                         {announcement.content}
                       </p>
-                      <div className='text-muted-foreground flex items-center gap-4 text-xs'>
+                      <div className='text-muted-foreground flex flex-col gap-2 text-xs sm:flex-row sm:items-center sm:gap-4'>
                         <div className='flex items-center gap-1'>
-                          <User className='h-3 w-3' />
-                          <span>{announcement.sender?.full_name}</span>
+                          <User className='h-3 w-3 flex-shrink-0' />
+                          <span className='truncate'>
+                            {announcement.sender?.full_name}
+                          </span>
                         </div>
                         <div className='flex items-center gap-1'>
-                          <Clock className='h-3 w-3' />
-                          <span>
+                          <Clock className='h-3 w-3 flex-shrink-0' />
+                          <span className='truncate'>
                             {format(
                               new Date(announcement.created_at),
                               'dd/MM/yyyy HH:mm'
@@ -1181,9 +1199,9 @@ export function ParentDashboardView() {
                   </div>
                 ))
               ) : (
-                <div className='text-muted-foreground py-8 text-center'>
-                  <Bell className='mx-auto mb-4 h-12 w-12 opacity-50' />
-                  <p>Chưa có thông báo nào</p>
+                <div className='text-muted-foreground py-6 text-center sm:py-8'>
+                  <Bell className='mx-auto mb-4 h-10 w-10 opacity-50 sm:h-12 sm:w-12' />
+                  <p className='text-sm'>Chưa có thông báo nào</p>
                 </div>
               )}
             </div>
