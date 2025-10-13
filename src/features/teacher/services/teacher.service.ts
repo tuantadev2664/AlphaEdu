@@ -214,6 +214,7 @@ export async function updateAnnouncement(
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
+        id: data.id,
         title: data.title,
         content: data.content,
         classId: data.classId,
