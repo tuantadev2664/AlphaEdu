@@ -30,11 +30,11 @@ export default function GradebookListingSubject({
       <div className='flex flex-1 flex-col space-y-6'>
         {/* Header */}
         <div className='flex items-center justify-between'>
-          <h2 className='text-lg font-semibold'>Gradebook</h2>
+          <h2 className='text-lg font-semibold'>Sổ Điểm</h2>
         </div>
 
         <div className='text-muted-foreground text-sm'>
-          Select a subject to view and manage grades
+          Chọn một môn học để xem và quản lý điểm số
         </div>
 
         {/* Loading Subject Cards */}
@@ -67,10 +67,12 @@ export default function GradebookListingSubject({
     return (
       <div className='flex flex-1 flex-col space-y-6'>
         <div className='flex items-center justify-between'>
-          <h2 className='text-lg font-semibold'>Gradebook</h2>
+          <h2 className='text-lg font-semibold'>Sổ Điểm</h2>
         </div>
         <div className='py-8 text-center'>
-          <p className='text-muted-foreground'>Failed to load class subjects</p>
+          <p className='text-muted-foreground'>
+            Không thể tải danh sách môn học
+          </p>
         </div>
       </div>
     );
@@ -80,11 +82,11 @@ export default function GradebookListingSubject({
     <div className='flex flex-1 flex-col space-y-6'>
       {/* Header */}
       <div className='flex items-center justify-between'>
-        <h2 className='text-lg font-semibold'>Gradebook</h2>
+        <h2 className='text-lg font-semibold'>Sổ Điểm</h2>
       </div>
 
       <div className='text-muted-foreground text-sm'>
-        Select a subject to view and manage grades
+        Chọn một môn học để xem và quản lý điểm số
       </div>
 
       {/* Subject Cards */}
@@ -120,7 +122,7 @@ export default function GradebookListingSubject({
                   <div className='flex items-center justify-between'>
                     <div className='text-muted-foreground flex items-center gap-1 text-sm'>
                       <Users className='h-3 w-3' />
-                      {studentCount} students
+                      {studentCount} học sinh
                     </div>
                     <div className='flex items-center gap-1 text-sm'>
                       <Calculator className='h-3 w-3' />
@@ -135,7 +137,7 @@ export default function GradebookListingSubject({
                                 : 'text-red-600'
                         }`}
                       >
-                        {classAverage}% avg
+                        {classAverage}% TB
                       </span>
                     </div>
                   </div>
@@ -149,7 +151,7 @@ export default function GradebookListingSubject({
       {subjects.length === 0 && (
         <div className='py-8 text-center'>
           <p className='text-muted-foreground'>
-            No subjects found for this class
+            Không tìm thấy môn học nào cho lớp này
           </p>
         </div>
       )}

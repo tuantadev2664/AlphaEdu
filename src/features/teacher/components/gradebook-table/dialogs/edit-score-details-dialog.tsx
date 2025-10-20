@@ -69,15 +69,15 @@ export function EditScoreDetailsDialog({
 
       await Promise.all(updates);
 
-      toast.success('Scores Updated', {
-        description: `Scores have been updated for ${data.fullName}`,
+      toast.success('Đã Cập Nhật Điểm', {
+        description: `Điểm số đã được cập nhật cho ${data.fullName}`,
         duration: 3000
       });
 
       onOpenChange(false);
     } catch (error) {
-      toast.error('Update Failed', {
-        description: 'Failed to update scores. Please try again.',
+      toast.error('Không Thể Cập Nhật', {
+        description: 'Không thể cập nhật điểm số. Vui lòng thử lại.',
         duration: 3000
       });
     }
@@ -89,11 +89,11 @@ export function EditScoreDetailsDialog({
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <Edit3 className='h-5 w-5' />
-            Edit Details Score - {data.fullName}
+            Chỉnh Sửa Chi Tiết Điểm - {data.fullName}
           </DialogTitle>
           <DialogDescription>
-            Edit scores, add comments, and set attendance for individual
-            assessments.
+            Chỉnh sửa điểm số, thêm ghi chú và đánh dấu vắng mặt cho từng bài
+            đánh giá.
           </DialogDescription>
         </DialogHeader>
 
@@ -124,7 +124,7 @@ export function EditScoreDetailsDialog({
               <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
                 <div className='space-y-2'>
                   <Label htmlFor={`score-${index}`}>
-                    Score (max: {score.maxScore})
+                    Điểm (tối đa: {score.maxScore})
                   </Label>
                   <Input
                     id={`score-${index}`}
@@ -135,12 +135,12 @@ export function EditScoreDetailsDialog({
                     onChange={(e) =>
                       handleInputChange(index, 'score', e.target.value)
                     }
-                    placeholder={`Enter score (0-${score.maxScore})`}
+                    placeholder={`Nhập điểm (0-${score.maxScore})`}
                   />
                 </div>
 
                 <div className='space-y-2'>
-                  <Label htmlFor={`weight-${index}`}>Weight (%)</Label>
+                  <Label htmlFor={`weight-${index}`}>Trọng Số (%)</Label>
                   <Input
                     id={`weight-${index}`}
                     type='number'
@@ -148,7 +148,7 @@ export function EditScoreDetailsDialog({
                     max='100'
                     defaultValue={score.weight}
                     disabled
-                    placeholder='Enter weight'
+                    placeholder='Nhập trọng số'
                   />
                 </div>
 
@@ -162,17 +162,17 @@ export function EditScoreDetailsDialog({
                       }
                       className='rounded'
                     />
-                    Mark as Absent
+                    Đánh Dấu Vắng Mặt
                   </Label>
                 </div>
               </div>
 
               <div className='space-y-2'>
-                <Label htmlFor={`comment-${index}`}>Comment (Optional)</Label>
+                <Label htmlFor={`comment-${index}`}>Ghi Chú (Tùy Chọn)</Label>
                 <Textarea
                   id={`comment-${index}`}
                   defaultValue={score.comment || ''}
-                  placeholder='Add a comment about this assessment...'
+                  placeholder='Thêm ghi chú về bài đánh giá này...'
                   rows={2}
                   onChange={(e) =>
                     handleInputChange(index, 'comment', e.target.value)
@@ -185,9 +185,9 @@ export function EditScoreDetailsDialog({
 
         <DialogFooter>
           <Button variant='outline' onClick={() => onOpenChange(false)}>
-            Cancel
+            Hủy
           </Button>
-          <Button onClick={handleSave}>Save Changes</Button>
+          <Button onClick={handleSave}>Lưu Thay Đổi</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

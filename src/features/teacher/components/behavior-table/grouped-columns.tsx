@@ -67,7 +67,7 @@ const ExpandedNotes = ({
 }) => {
   return (
     <div className='bg-muted/30 space-y-3 p-4'>
-      <h4 className='text-sm font-medium'>All Behavior Notes:</h4>
+      <h4 className='text-sm font-medium'>Tất Cả Ghi Chú Hành Vi:</h4>
       {notes.map((note) => (
         <div
           key={note.id}
@@ -97,7 +97,7 @@ const ExpandedNotes = ({
                 {format(new Date(note.created_at), 'MMM dd, yyyy')}
               </div>
               <div>
-                By: {note.created_by_user?.full_name || 'Unknown Teacher'}
+                Bởi: {note.created_by_user?.full_name || 'Unknown Teacher'}
               </div>
             </div>
           </div>
@@ -134,7 +134,7 @@ export const groupedColumns: ColumnDef<GroupedBehaviorNote>[] = [
   {
     accessorKey: 'student_name',
     header: ({ column }: { column: Column<GroupedBehaviorNote, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Student' />
+      <DataTableColumnHeader column={column} title='Học Sinh' />
     ),
     cell: ({ row }) => {
       const student = row.original.student;
@@ -155,15 +155,15 @@ export const groupedColumns: ColumnDef<GroupedBehaviorNote>[] = [
             <div className='text-muted-foreground flex items-center gap-1 text-sm'>
               <User className='h-3 w-3' />
               {row.original.note_count}{' '}
-              {row.original.note_count === 1 ? 'note' : 'notes'}
+              {row.original.note_count === 1 ? 'ghi chú' : 'ghi chú'}
             </div>
           </div>
         </div>
       );
     },
     meta: {
-      label: 'Student Name',
-      placeholder: 'Search students...',
+      label: 'Tên Học Sinh',
+      placeholder: 'Tìm kiếm học sinh...',
       variant: 'text',
       icon: User
     },
@@ -173,34 +173,34 @@ export const groupedColumns: ColumnDef<GroupedBehaviorNote>[] = [
   },
   {
     accessorKey: 'behavior_summary',
-    header: 'Behavior Summary',
+    header: 'Tóm Tắt Hành Vi',
     cell: ({ row }) => {
       const data = row.original;
       return (
         <div className='flex flex-wrap gap-1'>
           {data.excellent_count > 0 && (
             <Badge variant='default' className='text-xs'>
-              {data.excellent_count} Excellent
+              {data.excellent_count} Xuất Sắc
             </Badge>
           )}
           {data.good_count > 0 && (
             <Badge variant='secondary' className='text-xs'>
-              {data.good_count} Good
+              {data.good_count} Tốt
             </Badge>
           )}
           {data.fair_count > 0 && (
             <Badge variant='outline' className='text-xs'>
-              {data.fair_count} Fair
+              {data.fair_count} Khá
             </Badge>
           )}
           {data.needs_improvement_count > 0 && (
             <Badge variant='destructive' className='text-xs'>
-              {data.needs_improvement_count} Needs Improvement
+              {data.needs_improvement_count} Cần Cải Thiện
             </Badge>
           )}
           {data.poor_count > 0 && (
             <Badge variant='destructive' className='text-xs'>
-              {data.poor_count} Poor
+              {data.poor_count} Kém
             </Badge>
           )}
         </div>
@@ -210,7 +210,7 @@ export const groupedColumns: ColumnDef<GroupedBehaviorNote>[] = [
   },
   {
     accessorKey: 'latest_note',
-    header: 'Latest Note',
+    header: 'Ghi Chú Gần Nhất',
     cell: ({ row }) => {
       const latestNote = row.original.latest_note;
       const variant = getBehaviorVariant(latestNote.level) as
@@ -235,7 +235,7 @@ export const groupedColumns: ColumnDef<GroupedBehaviorNote>[] = [
   {
     accessorKey: 'latest_date',
     header: ({ column }: { column: Column<GroupedBehaviorNote, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Latest Date' />
+      <DataTableColumnHeader column={column} title='Ngày Gần Nhất' />
     ),
     cell: ({ row }) => {
       const date = new Date(row.original.latest_note.created_at);

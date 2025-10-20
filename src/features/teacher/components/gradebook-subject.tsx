@@ -169,11 +169,11 @@ export default function GradebookSubject({
     return (
       <div className='space-y-6'>
         <div className='flex items-center justify-between'>
-          <h2 className='text-lg font-semibold'>Gradebook</h2>
+          <h2 className='text-lg font-semibold'>Sổ Điểm</h2>
         </div>
         <div className='py-8 text-center'>
           <p className='text-muted-foreground'>
-            {error?.message || 'Failed to load gradebook data'}
+            {error?.message || 'Không thể tải sổ điểm'}
           </p>
         </div>
       </div>
@@ -186,7 +186,7 @@ export default function GradebookSubject({
         {/* Header */}
         <div className='flex items-center justify-between'>
           <h2 className='text-lg font-semibold'>
-            Gradebook - {subjectData?.subjectName} ({subjectData?.teacherName})
+            Sổ Điểm - {subjectData?.subjectName} ({subjectData?.teacherName})
           </h2>
         </div>
 
@@ -197,25 +197,29 @@ export default function GradebookSubject({
               <div className='text-2xl font-bold text-blue-600'>
                 {stats.data.average.toFixed(1)}
               </div>
-              <div className='text-muted-foreground text-sm'>Class Average</div>
+              <div className='text-muted-foreground text-sm'>
+                Điểm Trung Bình
+              </div>
             </div>
             <div className='text-center'>
               <div className='text-2xl font-bold text-green-600'>
                 {stats.data.highest.toFixed(1)}
               </div>
-              <div className='text-muted-foreground text-sm'>Highest Score</div>
+              <div className='text-muted-foreground text-sm'>Điểm Cao Nhất</div>
             </div>
             <div className='text-center'>
               <div className='text-2xl font-bold text-orange-600'>
                 {stats.data.lowest.toFixed(1)}
               </div>
-              <div className='text-muted-foreground text-sm'>Lowest Score</div>
+              <div className='text-muted-foreground text-sm'>
+                Điểm Thấp Nhất
+              </div>
             </div>
             <div className='text-center'>
               <div className='text-2xl font-bold text-purple-600'>
                 {stats.data.passRate.toFixed(1)}%
               </div>
-              <div className='text-muted-foreground text-sm'>Pass Rate</div>
+              <div className='text-muted-foreground text-sm'>Tỉ Lệ Thi Qua</div>
             </div>
           </div>
         )}
@@ -229,7 +233,7 @@ export default function GradebookSubject({
               onClick={() => setBulkUpdateOpen(true)}
             >
               <Edit className='mr-2 h-4 w-4' />
-              Bulk Update Scores
+              Cập Nhật Điểm Số
             </Button>
             <Button
               variant='outline'
@@ -237,13 +241,13 @@ export default function GradebookSubject({
               onClick={() => setAddAssessmentOpen(true)}
             >
               <Plus className='mr-2 h-4 w-4' />
-              Add Assessment
+              Thêm Đánh Giá
             </Button>
           </div>
 
           <div className='text-muted-foreground text-sm'>
-            Showing {gradebookData.length} students
-            {stats.data && ` • ${stats.data.totalStudents} total`}
+            Hiển Thị {gradebookData.length} học sinh
+            {stats.data && ` • ${stats.data.totalStudents} tổng`}
           </div>
         </div>
 
@@ -259,7 +263,7 @@ export default function GradebookSubject({
         {gradebookData.length === 0 && !isLoading && (
           <div className='py-8 text-center'>
             <p className='text-muted-foreground'>
-              No score data found for this subject
+              Không có dữ liệu điểm số cho môn học này
             </p>
           </div>
         )}

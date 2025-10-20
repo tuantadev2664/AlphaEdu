@@ -138,11 +138,11 @@ export function BulkUpdateScoresDialog({
           <DialogHeader>
             <DialogTitle className='flex items-center gap-2'>
               <Edit className='h-5 w-5' />
-              Bulk Update Scores
+              Cập Nhật Điểm Hàng Loạt
             </DialogTitle>
             <DialogDescription>
-              Update scores for multiple students at once. Only modified scores
-              will be saved.
+              Cập nhật điểm cho nhiều học sinh cùng lúc. Chỉ các điểm được chỉnh
+              sửa mới được lưu.
             </DialogDescription>
           </DialogHeader>
 
@@ -162,7 +162,7 @@ export function BulkUpdateScoresDialog({
                       className='bg-background sticky top-0 z-10 grid gap-2 border-b p-2 font-semibold'
                       style={{ gridTemplateColumns }}
                     >
-                      <div>Student Name</div>
+                      <div>Tên Học Sinh</div>
                       {assessments.map((assessment) => (
                         <div
                           key={assessment.gradeComponentId}
@@ -172,7 +172,7 @@ export function BulkUpdateScoresDialog({
                             {assessment.gradeComponentName}
                           </div>
                           <div className='text-muted-foreground text-xs'>
-                            Max: {assessment.maxScore} |{' '}
+                            Tối đa: {assessment.maxScore} |{' '}
                             {assessment.kind.toUpperCase()}
                           </div>
                         </div>
@@ -228,7 +228,7 @@ export function BulkUpdateScoresDialog({
                                 />
                               ) : (
                                 <div className='text-muted-foreground py-2 text-center text-xs'>
-                                  No record
+                                  Không có bản ghi
                                 </div>
                               )}
                             </div>
@@ -245,11 +245,11 @@ export function BulkUpdateScoresDialog({
           <DialogFooter className='gap-2'>
             <Button variant='outline' onClick={handleCancel}>
               <X className='mr-2 h-4 w-4' />
-              Cancel
+              Hủy
             </Button>
             <Button onClick={handleSave}>
               <Save className='mr-2 h-4 w-4' />
-              Save Changes
+              Lưu Thay Đổi
             </Button>
           </DialogFooter>
         </div>

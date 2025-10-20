@@ -66,12 +66,12 @@ export const CellAction: React.FC<CellActionProps> = ({
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant='ghost' className='h-8 w-8 p-0'>
-          <span className='sr-only'>Open menu</span>
+          <span className='sr-only'>Mở menu</span>
           <MoreHorizontal className='h-4 w-4' />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
-        <DropdownMenuLabel>Student Actions</DropdownMenuLabel>
+        <DropdownMenuLabel>Hành Động Học Sinh</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
         <StudentProfileDialog
@@ -81,14 +81,14 @@ export const CellAction: React.FC<CellActionProps> = ({
         >
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <User className='mr-2 h-4 w-4' />
-            View Profile
+            Xem Hồ Sơ
           </DropdownMenuItem>
         </StudentProfileDialog>
 
         <SendMessageDialog student={studentData}>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <MessageSquare className='mr-2 h-4 w-4' />
-            Send Message
+            Gửi Tin Nhắn
           </DropdownMenuItem>
         </SendMessageDialog>
 
@@ -99,7 +99,7 @@ export const CellAction: React.FC<CellActionProps> = ({
         >
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <GraduationCap className='mr-2 h-4 w-4' />
-            View Grades
+            Xem Điểm Số
           </DropdownMenuItem>
         </ViewGradesDialog>
 
@@ -110,7 +110,7 @@ export const CellAction: React.FC<CellActionProps> = ({
         >
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <FileText className='mr-2 h-4 w-4' />
-            Behavior Notes
+            Ghi Chú Hành Vi
           </DropdownMenuItem>
         </BehaviorNotesDialog>
 
@@ -119,7 +119,7 @@ export const CellAction: React.FC<CellActionProps> = ({
         <GenerateReportDialog student={studentData}>
           <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
             <ClipboardList className='mr-2 h-4 w-4' />
-            Generate Report
+            Tạo Báo Cáo
           </DropdownMenuItem>
         </GenerateReportDialog>
       </DropdownMenuContent>

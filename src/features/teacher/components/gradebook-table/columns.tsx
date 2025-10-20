@@ -30,7 +30,7 @@ export const createColumns = (
   {
     accessorKey: 'student',
     header: ({ column }: { column: Column<StudentScore, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Student' />
+      <DataTableColumnHeader column={column} title='Học Sinh' />
     ),
     cell: ({ row }) => {
       const student = row.original;
@@ -56,8 +56,8 @@ export const createColumns = (
       );
     },
     meta: {
-      label: 'Student Name',
-      placeholder: 'Search students...',
+      label: 'Tên Học Sinh',
+      placeholder: 'Tìm kiếm học sinh...',
       variant: 'text',
       icon: User
     },
@@ -70,7 +70,7 @@ export const createColumns = (
     id: `assessment_${assessmentIndex}`,
     header:
       options.studentScores[0]?.scores[assessmentIndex]?.gradeComponentName ||
-      `Assessment ${assessmentIndex + 1}`,
+      `Đánh Giá ${assessmentIndex + 1}`,
     cell: ({ row }: { row: any }) => {
       const entry = row.original as StudentScore;
       const score = entry.scores[assessmentIndex];
@@ -107,7 +107,7 @@ export const createColumns = (
           </Badge>
           {score.isAbsent && (
             <Badge variant='destructive' className='text-xs'>
-              Absent
+              Vắng
             </Badge>
           )}
         </div>
@@ -118,7 +118,7 @@ export const createColumns = (
   {
     accessorKey: 'average_score',
     header: ({ column }: { column: Column<StudentScore, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Average Score' />
+      <DataTableColumnHeader column={column} title='Điểm Trung Bình' />
     ),
     cell: ({ row }) => {
       const average =
@@ -126,7 +126,8 @@ export const createColumns = (
           (sum, score) => sum + score.score * score.weight,
           0
         ) / row.original.scores.reduce((sum, score) => sum + score.weight, 0);
-      if (!average) return <span className='text-muted-foreground'>N/A</span>;
+      if (!average)
+        return <span className='text-muted-foreground'>Không Có Điểm</span>;
 
       let variant: 'default' | 'secondary' | 'destructive' | 'outline' =
         'default';

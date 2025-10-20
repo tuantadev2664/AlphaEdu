@@ -52,31 +52,31 @@ interface BehaviorNotesDialogProps {
 const behaviorLevels = [
   {
     value: 'Excellent',
-    label: 'Excellent',
+    label: 'Xuất Sắc',
     icon: Star,
     color: 'bg-green-100 text-green-800 border-green-200'
   },
   {
     value: 'Good',
-    label: 'Good',
+    label: 'Tốt',
     icon: CheckCircle,
     color: 'bg-blue-100 text-blue-800 border-blue-200'
   },
   {
     value: 'Fair',
-    label: 'Fair',
+    label: 'Khá',
     icon: Clock,
     color: 'bg-yellow-100 text-yellow-800 border-yellow-200'
   },
   {
     value: 'Needs improvement',
-    label: 'Needs Improvement',
+    label: 'Cần Cải Thiện',
     icon: AlertTriangle,
     color: 'bg-orange-100 text-orange-800 border-orange-200'
   },
   {
     value: 'Poor',
-    label: 'Poor',
+    label: 'Kém',
     icon: AlertTriangle,
     color: 'bg-red-100 text-red-800 border-red-200'
   }
@@ -132,17 +132,16 @@ export function BehaviorNotesDialog({
 
   const handleAddNote = async () => {
     if (!newNote.trim()) {
-      toast.error('Missing Information', {
-        description: 'Please enter a behavior note.',
+      toast.error('Thiếu Thông Tin', {
+        description: 'Vui lòng nhập ghi chú hành vi.',
         duration: 3000
       });
       return;
     }
 
     if (!classId || !termId) {
-      toast.error('Missing Information', {
-        description:
-          'Class ID and Term ID are required to create behavior notes.',
+      toast.error('Thiếu Thông Tin', {
+        description: 'Cần có ID lớp và ID học kỳ để tạo ghi chú hành vi.',
         duration: 3000
       });
       return;
@@ -163,13 +162,13 @@ export function BehaviorNotesDialog({
       setNewNote('');
       setSelectedLevel('Good');
 
-      toast.success('Note Added', {
-        description: 'Behavior note has been added successfully.',
+      toast.success('Đã Thêm Ghi Chú', {
+        description: 'Ghi chú hành vi đã được thêm thành công.',
         duration: 3000
       });
     } catch (error: any) {
-      toast.error('Failed to Add Note', {
-        description: error.message || 'Something went wrong. Please try again.',
+      toast.error('Không Thể Thêm Ghi Chú', {
+        description: error.message || 'Đã xảy ra lỗi. Vui lòng thử lại.',
         duration: 3000
       });
     }
@@ -189,8 +188,8 @@ export function BehaviorNotesDialog({
 
   const handleUpdateNote = async () => {
     if (!editNote.trim()) {
-      toast.error('Missing Information', {
-        description: 'Please enter a behavior note.',
+      toast.error('Thiếu Thông Tin', {
+        description: 'Vui lòng nhập ghi chú hành vi.',
         duration: 3000
       });
       return;
@@ -211,13 +210,13 @@ export function BehaviorNotesDialog({
       setEditNote('');
       setEditLevel('Good');
 
-      toast.success('Note Updated', {
-        description: 'Behavior note has been updated successfully.',
+      toast.success('Đã Cập Nhật Ghi Chú', {
+        description: 'Ghi chú hành vi đã được cập nhật thành công.',
         duration: 3000
       });
     } catch (error: any) {
-      toast.error('Failed to Update Note', {
-        description: error.message || 'Something went wrong. Please try again.',
+      toast.error('Không Thể Cập Nhật Ghi Chú', {
+        description: error.message || 'Đã xảy ra lỗi. Vui lòng thử lại.',
         duration: 3000
       });
     }
@@ -227,13 +226,13 @@ export function BehaviorNotesDialog({
     try {
       await deleteBehaviorNoteMutation.mutateAsync(noteId);
 
-      toast.success('Note Deleted', {
-        description: 'Behavior note has been deleted.',
+      toast.success('Đã Xóa Ghi Chú', {
+        description: 'Ghi chú hành vi đã được xóa.',
         duration: 3000
       });
     } catch (error: any) {
-      toast.error('Failed to Delete Note', {
-        description: error.message || 'Something went wrong. Please try again.',
+      toast.error('Không Thể Xóa Ghi Chú', {
+        description: error.message || 'Đã xảy ra lỗi. Vui lòng thử lại.',
         duration: 3000
       });
     }
@@ -249,7 +248,7 @@ export function BehaviorNotesDialog({
             <div>
               <div className='text-lg font-semibold'>{student.fullName}</div>
               <div className='text-muted-foreground text-sm'>
-                Behavior Notes & Tracking
+                Ghi Chú & Theo Dõi Hành Vi
               </div>
             </div>
           </DialogTitle>
@@ -259,13 +258,13 @@ export function BehaviorNotesDialog({
           {isLoadingNotes ? (
             <div className='flex items-center justify-center py-8'>
               <div className='text-muted-foreground'>
-                Loading behavior notes...
+                Đang tải ghi chú hành vi...
               </div>
             </div>
           ) : error ? (
             <div className='flex items-center justify-center py-8'>
               <div className='text-destructive'>
-                Failed to load behavior notes
+                Không thể tải ghi chú hành vi
               </div>
             </div>
           ) : (
@@ -276,10 +275,10 @@ export function BehaviorNotesDialog({
                   <CardTitle className='flex items-center justify-between'>
                     <span className='flex items-center gap-2'>
                       <FileText className='h-5 w-5' />
-                      Behavior Summary
+                      Tổng Kết Hành Vi
                     </span>
                     <Badge variant='outline'>
-                      {behaviorNotes.length} total notes
+                      {behaviorNotes.length} ghi chú
                     </Badge>
                   </CardTitle>
                 </CardHeader>
@@ -320,12 +319,12 @@ export function BehaviorNotesDialog({
                 <Card>
                   <CardHeader>
                     <CardTitle className='text-lg'>
-                      Add New Behavior Note
+                      Thêm Ghi Chú Hành Vi Mới
                     </CardTitle>
                   </CardHeader>
                   <CardContent className='space-y-4'>
                     <div className='space-y-2'>
-                      <Label>Behavior Level</Label>
+                      <Label>Mức Độ Hành Vi</Label>
                       <div className='flex flex-wrap gap-2'>
                         {behaviorLevels.map((level) => {
                           const Icon = level.icon;
@@ -352,10 +351,10 @@ export function BehaviorNotesDialog({
                       </div>
                     </div>
                     <div className='space-y-2'>
-                      <Label htmlFor='note'>Note</Label>
+                      <Label htmlFor='note'>Ghi Chú</Label>
                       <Textarea
                         id='note'
-                        placeholder='Enter behavior note...'
+                        placeholder='Nhập ghi chú hành vi...'
                         value={newNote}
                         onChange={(e) => setNewNote(e.target.value)}
                         rows={3}
@@ -367,14 +366,14 @@ export function BehaviorNotesDialog({
                         disabled={createBehaviorNoteMutation.isPending}
                       >
                         {createBehaviorNoteMutation.isPending
-                          ? 'Adding...'
-                          : 'Add Note'}
+                          ? 'Đang Thêm...'
+                          : 'Thêm Ghi Chú'}
                       </Button>
                       <Button
                         variant='outline'
                         onClick={() => setShowAddForm(false)}
                       >
-                        Cancel
+                        Hủy
                       </Button>
                     </div>
                   </CardContent>
@@ -382,11 +381,11 @@ export function BehaviorNotesDialog({
               ) : (
                 <div className='flex items-center justify-between'>
                   <h3 className='text-lg font-semibold'>
-                    Recent Behavior Notes
+                    Ghi Chú Hành Vi Gần Đây
                   </h3>
                   <Button onClick={() => setShowAddForm(true)}>
                     <Plus className='mr-2 h-4 w-4' />
-                    Add Note
+                    Thêm Ghi Chú
                   </Button>
                 </div>
               )}
@@ -408,7 +407,7 @@ export function BehaviorNotesDialog({
                           // Edit Mode
                           <div className='space-y-4'>
                             <div className='space-y-2'>
-                              <Label>Behavior Level</Label>
+                              <Label>Mức Độ Hành Vi</Label>
                               <div className='flex flex-wrap gap-2'>
                                 {behaviorLevels.map((level) => {
                                   const LevelIcon = level.icon;
@@ -435,10 +434,10 @@ export function BehaviorNotesDialog({
                               </div>
                             </div>
                             <div className='space-y-2'>
-                              <Label htmlFor='edit-note'>Note</Label>
+                              <Label htmlFor='edit-note'>Ghi Chú</Label>
                               <Textarea
                                 id='edit-note'
-                                placeholder='Enter behavior note...'
+                                placeholder='Nhập ghi chú hành vi...'
                                 value={editNote}
                                 onChange={(e) => setEditNote(e.target.value)}
                                 rows={3}
@@ -452,8 +451,8 @@ export function BehaviorNotesDialog({
                               >
                                 <Save className='mr-2 h-3 w-3' />
                                 {updateBehaviorNoteMutation.isPending
-                                  ? 'Updating...'
-                                  : 'Update'}
+                                  ? 'Đang Cập Nhật...'
+                                  : 'Cập Nhật'}
                               </Button>
                               <Button
                                 variant='outline'
@@ -461,7 +460,7 @@ export function BehaviorNotesDialog({
                                 size='sm'
                               >
                                 <X className='mr-2 h-3 w-3' />
-                                Cancel
+                                Hủy
                               </Button>
                             </div>
                           </div>
@@ -488,9 +487,9 @@ export function BehaviorNotesDialog({
                               <p className='mb-2 text-sm'>{note.note}</p>
                               <div className='text-muted-foreground flex items-center gap-1 text-xs'>
                                 <User className='h-3 w-3' />
-                                Added by{' '}
+                                Thêm bởi{' '}
                                 {note.created_by_user?.full_name ||
-                                  'Unknown Teacher'}
+                                  'Giáo viên không rõ'}
                               </div>
                             </div>
                             <div className='flex gap-1'>
@@ -522,9 +521,9 @@ export function BehaviorNotesDialog({
                 {behaviorNotes.length === 0 && (
                   <div className='text-muted-foreground py-8 text-center'>
                     <FileText className='mx-auto mb-4 h-12 w-12 opacity-50' />
-                    <p>No behavior notes recorded yet.</p>
+                    <p>Chưa có ghi chú hành vi nào được ghi nhận.</p>
                     <p className='text-sm'>
-                      Click &quot;Add Note&quot; to start tracking behavior.
+                      Nhấp &quot;Thêm Ghi Chú&quot; để bắt đầu theo dõi hành vi.
                     </p>
                   </div>
                 )}

@@ -54,14 +54,14 @@ import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
 
 export const teacherCompany = {
-  name: 'Teacher Portal',
+  name: 'Cổng Giáo Viên',
   logo: IconPhotoUp,
-  plan: 'Education'
+  plan: 'Giáo Dục'
 };
 
 const tenants = [
-  { id: '1', name: 'My School' },
-  { id: '2', name: 'District Office' }
+  { id: '1', name: 'Trường Của Tôi' },
+  { id: '2', name: 'Văn Phòng Quận' }
 ];
 
 export default function TeacherSidebar() {
@@ -92,31 +92,31 @@ export default function TeacherSidebar() {
     ? [
         {
           value: 'overview',
-          label: 'Overview',
+          label: 'Tổng Quan',
           icon: IconUsers,
           url: `/teacher/classes/${currentClassId}`
         },
         {
           value: 'roster',
-          label: 'Roster',
+          label: 'Danh Sách',
           icon: IconUsers,
           url: `/teacher/classes/${currentClassId}/roster`
         },
         {
           value: 'gradebook',
-          label: 'Gradebook',
+          label: 'Sổ Điểm',
           icon: IconAward,
           url: `/teacher/classes/${currentClassId}/gradebook`
         },
         {
           value: 'behavior',
-          label: 'Behavior',
+          label: 'Hành Vi',
           icon: IconStar,
           url: `/teacher/classes/${currentClassId}/behavior`
         },
         {
           value: 'announcements',
-          label: 'Announcements',
+          label: 'Thông Báo',
           icon: IconCalendar,
           url: `/teacher/classes/${currentClassId}/announcements`
         }
@@ -158,9 +158,9 @@ export default function TeacherSidebar() {
       <Sidebar collapsible='icon'>
         <SidebarContent className='flex items-center justify-center p-4'>
           <div className='text-center'>
-            <p className='text-muted-foreground text-sm'>Access denied</p>
+            <p className='text-muted-foreground text-sm'>Truy cập bị từ chối</p>
             <p className='text-muted-foreground text-xs'>
-              Teacher role required
+              Yêu cầu quyền giáo viên
             </p>
           </div>
         </SidebarContent>
@@ -185,7 +185,7 @@ export default function TeacherSidebar() {
               {classLoading ? (
                 <div className='bg-muted h-4 w-16 animate-pulse rounded' />
               ) : (
-                currentClass?.className || 'Class'
+                currentClass?.className || 'Lớp Học'
               )}
             </SidebarGroupLabel>
             <SidebarMenu>
@@ -216,7 +216,7 @@ export default function TeacherSidebar() {
 
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel>Teacher Portal</SidebarGroupLabel>
+          <SidebarGroupLabel>Cổng Giáo Viên</SidebarGroupLabel>
           <SidebarMenu>
             {teacherNavItems.map((item) => {
               const Icon = item.icon ? Icons[item.icon] : Icons.logo;
@@ -321,19 +321,19 @@ export default function TeacherSidebar() {
                     onClick={() => router.push('/teacher/profile')}
                   >
                     <IconUserCircle className='mr-2 h-4 w-4' />
-                    Profile
+                    Hồ Sơ
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => router.push('/teacher/schedule')}
                   >
                     <IconCalendar className='mr-2 h-4 w-4' />
-                    Schedule
+                    Lịch Trình
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => router.push('/teacher/settings')}
                   >
                     <IconBell className='mr-2 h-4 w-4' />
-                    Settings
+                    Cài Đặt
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
 
@@ -344,7 +344,7 @@ export default function TeacherSidebar() {
                   className='text-red-600 focus:text-red-600'
                 >
                   <IconLogout className='mr-2 h-4 w-4' />
-                  Sign Out
+                  Đăng Xuất
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

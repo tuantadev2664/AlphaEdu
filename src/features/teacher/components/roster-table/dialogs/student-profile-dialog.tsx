@@ -66,10 +66,10 @@ export function StudentProfileDialog({
   };
 
   const getScoreStatus = (score: number) => {
-    if (score >= 8) return 'Excellent';
-    if (score >= 7) return 'Good';
-    if (score >= 6) return 'Average';
-    return 'Needs Improvement';
+    if (score >= 8) return 'Xuất Sắc';
+    if (score >= 7) return 'Tốt';
+    if (score >= 6) return 'Trung Bình';
+    return 'Cần Cải Thiện';
   };
 
   const getLetterGrade = (score: number) => {
@@ -91,7 +91,7 @@ export function StudentProfileDialog({
             </Avatar>
             <div>
               <div className='text-lg font-semibold'>{student.fullName}</div>
-              <DialogDescription>Student Profile</DialogDescription>
+              <DialogDescription>Hồ Sơ Học Sinh</DialogDescription>
             </div>
           </DialogTitle>
         </DialogHeader>
@@ -100,13 +100,13 @@ export function StudentProfileDialog({
           {isLoading ? (
             <div className='flex items-center justify-center py-8'>
               <div className='text-muted-foreground'>
-                Loading student details...
+                Đang Tải Thông Tin Học Sinh...
               </div>
             </div>
           ) : error ? (
             <div className='flex items-center justify-center py-8'>
               <div className='text-destructive'>
-                Failed to load student details
+                Không thể tải thông tin học sinh
               </div>
             </div>
           ) : (
@@ -116,7 +116,7 @@ export function StudentProfileDialog({
                 <CardHeader>
                   <CardTitle className='flex items-center gap-2 text-lg'>
                     <User className='h-5 w-5' />
-                    Contact Information
+                    Thông Tin Liên Hệ
                   </CardTitle>
                 </CardHeader>
                 <CardContent className='space-y-4'>
@@ -124,7 +124,7 @@ export function StudentProfileDialog({
                     <div className='flex items-center gap-3'>
                       <Mail className='text-muted-foreground h-4 w-4' />
                       <div>
-                        <div className='text-sm font-medium'>Email</div>
+                        <div className='text-sm font-medium'>Email Liên Hệ</div>
                         <div className='text-muted-foreground text-sm'>
                           {studentDetail?.email || 'N/A'}
                         </div>
@@ -133,7 +133,7 @@ export function StudentProfileDialog({
                     <div className='flex items-center gap-3'>
                       <Phone className='text-muted-foreground h-4 w-4' />
                       <div>
-                        <div className='text-sm font-medium'>Phone</div>
+                        <div className='text-sm font-medium'>Số Điện Thoại</div>
                         <div className='text-muted-foreground text-sm'>
                           {studentDetail?.parents?.[0]?.phone || 'N/A'}
                         </div>
@@ -142,7 +142,7 @@ export function StudentProfileDialog({
                     <div className='flex items-center gap-3'>
                       <User className='text-muted-foreground h-4 w-4' />
                       <div>
-                        <div className='text-sm font-medium'>School</div>
+                        <div className='text-sm font-medium'>Trường Học</div>
                         <div className='text-muted-foreground text-sm'>
                           {studentDetail?.schoolName || 'N/A'}
                         </div>
@@ -157,7 +157,7 @@ export function StudentProfileDialog({
                 <CardHeader>
                   <CardTitle className='flex items-center gap-2 text-lg'>
                     <GraduationCap className='h-5 w-5' />
-                    Academic Performance
+                    Điểm Số
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -169,7 +169,9 @@ export function StudentProfileDialog({
                         </span>
                       </div>
                       <div>
-                        <div className='text-sm font-medium'>Average Score</div>
+                        <div className='text-sm font-medium'>
+                          Điểm Trung Bình
+                        </div>
                         <div className='text-muted-foreground text-xs'>
                           {averageScore
                             ? getScoreStatus(averageScore)
@@ -180,7 +182,7 @@ export function StudentProfileDialog({
                     <div className='flex items-center gap-3'>
                       <TrendingUp className='text-muted-foreground h-4 w-4' />
                       <div>
-                        <div className='text-sm font-medium'>Ranking</div>
+                        <div className='text-sm font-medium'>Xếp Hạng</div>
                         <Badge variant='outline' className='text-xs'>
                           #{ranking}
                         </Badge>
@@ -189,7 +191,7 @@ export function StudentProfileDialog({
                     <div className='flex items-center gap-3'>
                       <Award className='text-muted-foreground h-4 w-4' />
                       <div>
-                        <div className='text-sm font-medium'>Class</div>
+                        <div className='text-sm font-medium'>Lớp Học</div>
                         <Badge variant='secondary' className='text-xs'>
                           {studentDetail?.classes?.[0]?.className || 'N/A'}
                         </Badge>
@@ -204,7 +206,7 @@ export function StudentProfileDialog({
                 <CardHeader>
                   <CardTitle className='flex items-center gap-2 text-lg'>
                     <FileText className='h-5 w-5' />
-                    Behavior & Attendance
+                    Hành Vi & Điểm Danh
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -214,7 +216,7 @@ export function StudentProfileDialog({
                       <div className='flex-1'>
                         <div className='flex items-center justify-between'>
                           <span className='text-sm font-medium'>
-                            Behavior Notes
+                            Ghi Chú Hành Vi
                           </span>
                           <Badge
                             variant={
@@ -230,8 +232,8 @@ export function StudentProfileDialog({
                         <div className='text-muted-foreground text-xs'>
                           {studentDetail?.behaviorNotes &&
                           studentDetail.behaviorNotes.length > 0
-                            ? 'Some behavioral concerns noted'
-                            : 'Good behavior record'}
+                            ? 'Có một số vấn đề về hành vi được ghi chú'
+                            : 'Hành vi tốt'}
                         </div>
                       </div>
                     </div>
@@ -240,7 +242,7 @@ export function StudentProfileDialog({
                       <div className='flex-1'>
                         <div className='flex items-center justify-between'>
                           <span className='text-sm font-medium'>
-                            Parent Contact
+                            Liên Hệ Phụ Huynh
                           </span>
                           <Badge variant='default'>
                             {studentDetail?.parents?.[0]?.fullName || 'N/A'}
@@ -261,7 +263,7 @@ export function StudentProfileDialog({
                 <CardHeader>
                   <CardTitle className='flex items-center gap-2 text-lg'>
                     <Clock className='h-5 w-5' />
-                    Enrollment Information
+                    Thông Tin Đăng Ký
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -269,7 +271,7 @@ export function StudentProfileDialog({
                     <div className='flex items-center gap-3'>
                       <Calendar className='text-muted-foreground h-4 w-4' />
                       <div>
-                        <div className='text-sm font-medium'>Academic Year</div>
+                        <div className='text-sm font-medium'>Năm Học</div>
                         <div className='text-muted-foreground text-sm'>
                           {studentDetail?.classes?.[0]?.academicYearName ||
                             'N/A'}
@@ -279,7 +281,7 @@ export function StudentProfileDialog({
                     <div className='flex items-center gap-3'>
                       <GraduationCap className='text-muted-foreground h-4 w-4' />
                       <div>
-                        <div className='text-sm font-medium'>Grade Level</div>
+                        <div className='text-sm font-medium'>Khối Lớp</div>
                         <div className='text-muted-foreground text-sm'>
                           {studentDetail?.classes?.[0]?.gradeName || 'N/A'}
                         </div>

@@ -35,36 +35,36 @@ export function LandingHeader() {
 
           {/* Navigation */}
           <nav className='hidden items-center gap-8 md:flex'>
-            <button
-              onClick={() => scrollToSection('home')}
+            <Link
+              href='/landing'
               className='text-muted-foreground hover:text-foreground transition-colors'
             >
               Trang chủ
-            </button>
-            <button
-              onClick={() => scrollToSection('role')}
+            </Link>
+            <Link
+              href='/landing/role'
               className='text-muted-foreground hover:text-foreground transition-colors'
             >
               Kết nối
-            </button>
-            <button
-              onClick={() => scrollToSection('features')}
+            </Link>
+            <Link
+              href='/landing/feature'
               className='text-muted-foreground hover:text-foreground transition-colors'
             >
               Tính năng
-            </button>
-            <button
-              onClick={() => scrollToSection('news')}
+            </Link>
+            <Link
+              href='/landing/news'
               className='text-muted-foreground hover:text-foreground transition-colors'
             >
               Tin tức
-            </button>
-            <button
-              onClick={() => scrollToSection('contact')}
+            </Link>
+            {/* <Link
+              href='/landing/contact'
               className='text-muted-foreground hover:text-foreground transition-colors'
             >
               Liên hệ
-            </button>
+            </Link> */}
           </nav>
 
           {/* Login Button */}

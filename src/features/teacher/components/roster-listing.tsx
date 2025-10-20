@@ -31,7 +31,7 @@ export default function RosterListing({ classId }: RosterListingProps) {
     return (
       <div className='space-y-6'>
         <div className='flex items-center justify-between'>
-          <h2 className='text-lg font-semibold'>Student Roster</h2>
+          <h2 className='text-lg font-semibold'>Danh Sách Học Sinh</h2>
         </div>
         <div className='space-y-4'>
           {Array.from({ length: 5 }).map((_, i) => (
@@ -49,11 +49,11 @@ export default function RosterListing({ classId }: RosterListingProps) {
     return (
       <div className='space-y-6'>
         <div className='flex items-center justify-between'>
-          <h2 className='text-lg font-semibold'>Student Roster</h2>
+          <h2 className='text-lg font-semibold'>Danh Sách Học Sinh</h2>
         </div>
         <div className='rounded-lg border border-red-200 bg-red-50 p-4'>
           <p className='text-red-800'>
-            Failed to load student roster: {error.message}
+            Không thể tải danh sách học sinh: {error.message}
           </p>
         </div>
       </div>
@@ -63,7 +63,7 @@ export default function RosterListing({ classId }: RosterListingProps) {
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
-        <h2 className='text-lg font-semibold'>Student Roster</h2>
+        <h2 className='text-lg font-semibold'>Danh Sách Học Sinh</h2>
       </div>
 
       <RosterTable

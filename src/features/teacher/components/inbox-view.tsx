@@ -48,7 +48,7 @@ export function InboxView({ messages }: InboxViewProps) {
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <MessageSquare className='h-5 w-5' />
-              Messages
+              Tin Nhắn
               {unreadMessages.length > 0 && (
                 <Badge variant='destructive' className='ml-auto'>
                   {unreadMessages.length}
@@ -61,7 +61,7 @@ export function InboxView({ messages }: InboxViewProps) {
             <div className='relative mb-4'>
               <Search className='text-muted-foreground absolute top-3 left-3 h-4 w-4' />
               <Input
-                placeholder='Search messages...'
+                placeholder='Tìm kiếm tin nhắn...'
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className='pl-10'
@@ -76,10 +76,10 @@ export function InboxView({ messages }: InboxViewProps) {
                 className='flex items-center gap-1'
               >
                 <Filter className='h-3 w-3' />
-                All
+                Tất Cả
               </Button>
               <Button variant='outline' size='sm'>
-                Unread ({unreadMessages.length})
+                Chưa Đọc ({unreadMessages.length})
               </Button>
             </div>
 
@@ -97,8 +97,8 @@ export function InboxView({ messages }: InboxViewProps) {
               {filteredMessages.length === 0 && (
                 <div className='text-muted-foreground py-8 text-center'>
                   {searchTerm
-                    ? 'No messages match your search'
-                    : 'No messages found'}
+                    ? 'Không có tin nhắn phù hợp'
+                    : 'Không tìm thấy tin nhắn'}
                 </div>
               )}
             </div>
@@ -115,9 +115,9 @@ export function InboxView({ messages }: InboxViewProps) {
             <CardContent className='pt-6'>
               <div className='text-muted-foreground py-12 text-center'>
                 <MessageSquare className='mx-auto mb-4 h-12 w-12 opacity-50' />
-                <h3 className='mb-2 font-medium'>Select a message</h3>
+                <h3 className='mb-2 font-medium'>Chọn một tin nhắn</h3>
                 <p className='text-sm'>
-                  Choose a message from the list to view its content
+                  Chọn tin nhắn từ danh sách để xem nội dung
                 </p>
               </div>
             </CardContent>
@@ -139,7 +139,7 @@ function MessageListItem({
   isSelected,
   onClick
 }: MessageListItemProps) {
-  const senderName = message.sender?.full_name || 'Unknown Sender';
+  const senderName = message.sender?.full_name || 'Người gửi không rõ';
   const initials = senderName
     .split(' ')
     .map((name) => name[0])
@@ -176,7 +176,7 @@ function MessageListItem({
 
           {!message.is_read && (
             <Badge variant='destructive' className='mt-1 text-xs'>
-              New
+              Mới
             </Badge>
           )}
         </div>
@@ -190,7 +190,7 @@ interface MessageDetailProps {
 }
 
 function MessageDetail({ message }: MessageDetailProps) {
-  const senderName = message.sender?.full_name || 'Unknown Sender';
+  const senderName = message.sender?.full_name || 'Người gửi không rõ';
   const initials = senderName
     .split(' ')
     .map((name) => name[0])
@@ -222,15 +222,15 @@ function MessageDetail({ message }: MessageDetailProps) {
             <DropdownMenuContent>
               <DropdownMenuItem>
                 <Reply className='mr-2 h-4 w-4' />
-                Reply
+                Trả Lời
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Archive className='mr-2 h-4 w-4' />
-                Archive
+                Lưu Trữ
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Trash2 className='mr-2 h-4 w-4' />
-                Delete
+                Xóa
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -246,11 +246,11 @@ function MessageDetail({ message }: MessageDetailProps) {
           <div className='flex gap-2 border-t pt-4'>
             <Button size='sm'>
               <Reply className='mr-2 h-4 w-4' />
-              Reply
+              Trả Lời
             </Button>
             <Button variant='outline' size='sm'>
               <Send className='mr-2 h-4 w-4' />
-              Forward
+              Chuyển Tiếp
             </Button>
           </div>
         </div>

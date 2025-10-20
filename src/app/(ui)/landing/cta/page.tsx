@@ -1,11 +1,11 @@
-import { LandingHeader, HeroSection, Footer } from '@/components/ui/landing';
+import { CTASection, Footer, LandingHeader } from '@/components/ui/landing';
 
-export default function LandingPage() {
+export default function CTAPage() {
   return (
     <div className='min-h-screen'>
       <LandingHeader />
       <main className='pt-0'>
-        <HeroSection />
+        <CTASection />
       </main>
       <Footer />
     </div>
