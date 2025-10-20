@@ -31,14 +31,14 @@ export function EditableScoreCell({
   disabled = false
 }: EditableScoreCellProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [value, setValue] = useState(score.score.toString());
-  const [isAbsent, setIsAbsent] = useState(score.isAbsent);
+  const [value, setValue] = useState(score.score?.toString() || '0');
+  const [isAbsent, setIsAbsent] = useState(score.isAbsent || false);
   const [isSaving, setIsSaving] = useState(false);
 
   // Reset value when score changes externally
   useEffect(() => {
-    setValue(score.score.toString());
-    setIsAbsent(score.isAbsent);
+    setValue(score.score?.toString() || '0');
+    setIsAbsent(score.isAbsent || false);
   }, [score.score, score.isAbsent]);
 
   const getScoreColor = (score: number, maxScore: number) => {
@@ -102,16 +102,16 @@ export function EditableScoreCell({
         duration: 4000
       });
       // Reset to original values on error
-      setValue(score.score.toString());
-      setIsAbsent(score.isAbsent);
+      setValue(score.score?.toString() || '0');
+      setIsAbsent(Boolean(score.isAbsent));
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleCancel = () => {
-    setValue(score.score.toString());
-    setIsAbsent(score.isAbsent);
+    setValue(score.score?.toString() || '0');
+    setIsAbsent(Boolean(score.isAbsent));
     setIsEditing(false);
   };
 
