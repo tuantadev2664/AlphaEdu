@@ -1,11 +1,11 @@
-import { LandingHeader, HeroSection, Footer } from '@/components/ui/landing';
+import { Footer, LandingHeader, NewsSection } from '@/components/ui/landing';
 
-export default function LandingPage() {
+export default function NewsPage() {
   return (
     <div className='min-h-screen'>
       <LandingHeader />
       <main className='pt-0'>
-        <HeroSection />
+        <NewsSection />
       </main>
       <Footer />
     </div>

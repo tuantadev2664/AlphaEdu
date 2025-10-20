@@ -7,9 +7,9 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
 export const metadata: Metadata = {
-  title: 'Teacher Portal - School Management System',
+  title: 'Cổng Giáo Viên - Hệ Thống Quản Lý Trường Học',
   description:
-    'Comprehensive teacher dashboard for class and student management'
+    'Bảng điều khiển giáo viên toàn diện để quản lý lớp học và học sinh'
 };
 
 export default async function TeacherLayout({

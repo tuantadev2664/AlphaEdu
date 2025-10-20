@@ -124,33 +124,33 @@ export const CellAction: React.FC<CellActionProps> = ({
           <DialogHeader>
             <DialogTitle className='flex items-center gap-2'>
               <Eye className='h-5 w-5' />
-              Behavior Note Details
+              Chi Tiết Ghi Chú Hành Vi
             </DialogTitle>
             <DialogDescription>
-              Note for {data.student?.full_name || 'Unknown Student'} on{' '}
-              {new Date(data.created_at).toLocaleDateString()}
+              Ghi Chú Hành Vi cho {data.student?.full_name || 'Unknown Student'}{' '}
+              vào {new Date(data.created_at).toLocaleDateString()}
             </DialogDescription>
           </DialogHeader>
           <div className='py-4'>
             <div className='space-y-4'>
               <div>
-                <Label>Student</Label>
+                <Label>Học Sinh</Label>
                 <p className='text-sm font-medium'>
                   {data.student?.full_name || 'Unknown Student'}
                 </p>
               </div>
               <div>
-                <Label>Behavior Level</Label>
+                <Label>Mức Độ Hành Vi</Label>
                 <p className='text-sm font-medium capitalize'>
                   {data.level.replace('_', ' ')}
                 </p>
               </div>
               <div>
-                <Label>Note</Label>
+                <Label>Ghi Chú</Label>
                 <p className='text-sm'>{data.note}</p>
               </div>
               <div>
-                <Label>Teacher</Label>
+                <Label>Giáo Viên</Label>
                 <p className='text-sm'>
                   {data.created_by_user?.full_name || 'Unknown Teacher'}
                 </p>
@@ -158,7 +158,7 @@ export const CellAction: React.FC<CellActionProps> = ({
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={() => setViewOpen(false)}>Close</Button>
+            <Button onClick={() => setViewOpen(false)}>Đóng</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -169,56 +169,56 @@ export const CellAction: React.FC<CellActionProps> = ({
           <DialogHeader>
             <DialogTitle className='flex items-center gap-2'>
               <Edit3 className='h-5 w-5' />
-              Edit Behavior Note
+              Chỉnh Sửa Ghi Chú Hành Vi
             </DialogTitle>
             <DialogDescription>
-              Edit the behavior note for{' '}
+              Chỉnh sửa ghi chú hành vi cho{' '}
               {data.student?.full_name || 'Unknown Student'}
             </DialogDescription>
           </DialogHeader>
           <div className='space-y-4 py-4'>
             <div className='space-y-2'>
-              <Label htmlFor='behavior-level'>Behavior Level</Label>
+              <Label htmlFor='behavior-level'>Mức Độ Hành Vi</Label>
               <Select
                 value={editLevel}
                 onValueChange={(value: any) => setEditLevel(value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder='Select behavior level' />
+                  <SelectValue placeholder='Chọn mức độ hành vi' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value='Excellent'>Excellent</SelectItem>
-                  <SelectItem value='Good'>Good</SelectItem>
-                  <SelectItem value='Fair'>Fair</SelectItem>
+                  <SelectItem value='Excellent'>Xuất Sắc</SelectItem>
+                  <SelectItem value='Good'>Tốt</SelectItem>
+                  <SelectItem value='Fair'>Khá</SelectItem>
                   <SelectItem value='Needs improvement'>
-                    Needs Improvement
+                    Cần Cải Thiện
                   </SelectItem>
-                  <SelectItem value='Poor'>Poor</SelectItem>
+                  <SelectItem value='Poor'>Kém</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className='space-y-2'>
-              <Label htmlFor='note'>Note</Label>
+              <Label htmlFor='note'>Ghi Chú</Label>
               <Textarea
                 id='note'
                 value={editNote}
                 onChange={(e) => setEditNote(e.target.value)}
                 rows={4}
-                placeholder='Enter behavior note...'
+                placeholder='Nhập ghi chú hành vi...'
               />
             </div>
           </div>
           <DialogFooter>
             <Button variant='outline' onClick={() => setEditOpen(false)}>
-              Cancel
+              Hủy
             </Button>
             <Button
               onClick={handleSaveEdit}
               disabled={updateBehaviorNoteMutation.isPending}
             >
               {updateBehaviorNoteMutation.isPending
-                ? 'Saving...'
-                : 'Save Changes'}
+                ? 'Đang Lưu...'
+                : 'Lưu Thay Đổi'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -230,24 +230,24 @@ export const CellAction: React.FC<CellActionProps> = ({
           <DialogHeader>
             <DialogTitle className='flex items-center gap-2'>
               <Trash2 className='h-5 w-5' />
-              Delete Behavior Note
+              Xóa Ghi Chú Hành Vi
             </DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this behavior note for{' '}
+              Bạn có chắc chắn muốn xóa ghi chú hành vi cho{' '}
               {data.student?.full_name || 'Unknown Student'}? This action cannot
-              be undone.
+              không thể được hoàn tác.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant='outline' onClick={() => setDeleteOpen(false)}>
-              Cancel
+              Hủy
             </Button>
             <Button
               variant='destructive'
               onClick={handleDelete}
               disabled={deleteBehaviorNoteMutation.isPending}
             >
-              {deleteBehaviorNoteMutation.isPending ? 'Deleting...' : 'Delete'}
+              {deleteBehaviorNoteMutation.isPending ? 'Đang Xóa...' : 'Xóa'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -257,22 +257,22 @@ export const CellAction: React.FC<CellActionProps> = ({
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button variant='ghost' className='h-8 w-8 p-0'>
-            <span className='sr-only'>Open menu</span>
+            <span className='sr-only'>Mở menu</span>
             <MoreHorizontal className='h-4 w-4' />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuLabel>Hành Động</DropdownMenuLabel>
           <DropdownMenuSeparator />
 
           <DropdownMenuItem onClick={handleView}>
             <Eye className='mr-2 h-4 w-4' />
-            View Details
+            Xem Chi Tiết
           </DropdownMenuItem>
 
           <DropdownMenuItem onClick={handleEdit}>
             <Edit3 className='mr-2 h-4 w-4' />
-            Edit Note
+            Chỉnh Sửa Ghi Chú
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
@@ -282,7 +282,7 @@ export const CellAction: React.FC<CellActionProps> = ({
             className='text-red-600 focus:text-red-600'
           >
             <Trash2 className='mr-2 h-4 w-4' />
-            Delete Note
+            Xóa Ghi Chú
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

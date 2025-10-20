@@ -10,7 +10,7 @@ export default async function BehaviorPage({ params }: BehaviorPageProps) {
   return (
     <div className='space-y-6'>
       <div className='flex items-center justify-between'>
-        <h2 className='text-lg font-semibold'>Behavior Management</h2>
+        <h2 className='text-lg font-semibold'>Quản Lý Hành Vi</h2>
       </div>
 
       <BehaviorTableWrapper classId={classId} />

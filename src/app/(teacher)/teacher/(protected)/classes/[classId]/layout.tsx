@@ -70,16 +70,16 @@ export default function ClassLayout({ children, params }: ClassLayoutProps) {
               <h1 className='text-2xl font-bold tracking-tight'>
                 {classDetails.className}
               </h1>
-              {isMyClass && <Badge variant='secondary'>My Class</Badge>}
+              {isMyClass && <Badge variant='secondary'>Lớp Của Tôi</Badge>}
             </div>
             <div className='text-muted-foreground flex items-center gap-4 text-sm'>
               <div className='flex items-center gap-1'>
                 <TrendingUp className='h-4 w-4' />
-                <span>Grade {gradeLevel}</span>
+                <span>Khối {gradeLevel}</span>
               </div>
               <div className='flex items-center gap-1'>
                 <Users className='h-4 w-4' />
-                <span>{totalStudents} students</span>
+                <span>{totalStudents} học sinh</span>
               </div>
               <div className='flex items-center gap-1'>
                 <BookOpen className='h-4 w-4' />

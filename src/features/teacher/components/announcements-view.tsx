@@ -74,16 +74,16 @@ export function AnnouncementsView({ classId }: AnnouncementsViewProps) {
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-4'>
           <Badge variant='outline' className='text-sm'>
-            {activeAnnouncements.length} active
+            {activeAnnouncements.length} hoạt động
           </Badge>
           <Badge variant='secondary' className='text-sm'>
-            {expiredAnnouncements.length} expired
+            {expiredAnnouncements.length} hết hạn
           </Badge>
         </div>
 
         <Button onClick={() => setShowForm(true)}>
           <Plus className='mr-2 h-4 w-4' />
-          New Announcement
+          Thêm Thông Báo
         </Button>
       </div>
 
@@ -92,9 +92,7 @@ export function AnnouncementsView({ classId }: AnnouncementsViewProps) {
         <Card>
           <CardContent className='pt-6'>
             <div className='flex items-center justify-center py-8'>
-              <div className='text-muted-foreground'>
-                Loading announcements...
-              </div>
+              <div className='text-muted-foreground'>Đang tải thông báo...</div>
             </div>
           </CardContent>
         </Card>
@@ -119,7 +117,7 @@ export function AnnouncementsView({ classId }: AnnouncementsViewProps) {
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <Bell className='h-5 w-5' />
-              Active Announcements
+              Thông Báo Hoạt Động
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -144,7 +142,7 @@ export function AnnouncementsView({ classId }: AnnouncementsViewProps) {
           <CardHeader>
             <CardTitle className='text-muted-foreground flex items-center gap-2'>
               <Calendar className='h-5 w-5' />
-              Past Announcements
+              Thông Báo Hết Hạn
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -169,14 +167,14 @@ export function AnnouncementsView({ classId }: AnnouncementsViewProps) {
           <CardContent className='pt-6'>
             <div className='text-muted-foreground py-8 text-center'>
               <Bell className='mx-auto mb-4 h-12 w-12 opacity-50' />
-              <h3 className='mb-2 font-medium'>No announcements yet</h3>
+              <h3 className='mb-2 font-medium'>Không có thông báo nào</h3>
               <p className='mb-4 text-sm'>
-                Create your first announcement to communicate with students and
+                Tạo thông báo đầu tiên để liên hệ với học sinh và phụ huynh.
                 parents.
               </p>
               <Button onClick={() => setShowForm(true)}>
                 <Plus className='mr-2 h-4 w-4' />
-                Create Announcement
+                Tạo Thông Báo
               </Button>
             </div>
           </CardContent>
@@ -210,10 +208,10 @@ function AnnouncementCard({
             {announcement.isUrgent && (
               <Badge variant='destructive' className='flex items-center gap-1'>
                 <AlertTriangle className='h-3 w-3' />
-                Urgent
+                Gấp
               </Badge>
             )}
-            {isExpired && <Badge variant='secondary'>Expired</Badge>}
+            {isExpired && <Badge variant='secondary'>Hết Hạn</Badge>}
           </div>
 
           <p className='text-muted-foreground text-sm'>
@@ -232,7 +230,7 @@ function AnnouncementCard({
               </span>
             )}
             {!announcement.expiresAt && (
-              <span className='text-green-600'>No expiry</span>
+              <span className='text-green-600'>Không hết hạn</span>
             )}
           </div>
         </div>

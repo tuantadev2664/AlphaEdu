@@ -51,8 +51,8 @@ export function SendMessageDialog({
 
   const handleSendMessage = async () => {
     if (!subject.trim() || !message.trim()) {
-      toast.error('Missing Information', {
-        description: 'Please fill in both subject and message fields.',
+      toast.error('Thiếu Thông Tin', {
+        description: 'Vui lòng điền cả tiêu đề và nội dung tin nhắn.',
         duration: 3000
       });
       return;
@@ -69,8 +69,8 @@ export function SendMessageDialog({
     setMessage('');
     setPriority('normal');
 
-    toast.success('Message Sent', {
-      description: `Your message has been sent to ${student.fullName}.`,
+    toast.success('Đã Gửi Tin Nhắn', {
+      description: `Tin nhắn đã được gửi đến ${student.fullName}.`,
       duration: 3000
     });
   };
@@ -104,10 +104,10 @@ export function SendMessageDialog({
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <MessageSquare className='h-5 w-5' />
-            Send Message
+            Gửi Tin Nhắn
           </DialogTitle>
           <DialogDescription>
-            Send a message to the student and their guardians.
+            Gửi tin nhắn đến học sinh và phụ huynh.
           </DialogDescription>
         </DialogHeader>
 
@@ -124,13 +124,13 @@ export function SendMessageDialog({
               </div>
             </div>
             <Badge variant='outline' className='text-xs'>
-              Student & Guardians
+              Học Sinh & Phụ Huynh
             </Badge>
           </div>
 
           {/* Priority Selection */}
           <div className='space-y-2'>
-            <Label htmlFor='priority'>Priority Level</Label>
+            <Label htmlFor='priority'>Mức Độ Ưu Tiên</Label>
             <div className='flex gap-2'>
               {(['normal', 'high', 'urgent'] as const).map((level) => (
                 <Button
@@ -150,10 +150,10 @@ export function SendMessageDialog({
 
           {/* Subject */}
           <div className='space-y-2'>
-            <Label htmlFor='subject'>Subject</Label>
+            <Label htmlFor='subject'>Tiêu Đề</Label>
             <Input
               id='subject'
-              placeholder='Enter message subject...'
+              placeholder='Nhập tiêu đề tin nhắn...'
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
             />
@@ -161,23 +161,23 @@ export function SendMessageDialog({
 
           {/* Message */}
           <div className='space-y-2'>
-            <Label htmlFor='message'>Message</Label>
+            <Label htmlFor='message'>Nội Dung</Label>
             <Textarea
               id='message'
-              placeholder='Type your message here...'
+              placeholder='Nhập nội dung tin nhắn...'
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows={6}
               className='resize-none'
             />
             <div className='text-muted-foreground text-xs'>
-              {message.length}/500 characters
+              {message.length}/500 ký tự
             </div>
           </div>
 
           {/* Quick Templates */}
           <div className='space-y-2'>
-            <Label>Quick Templates</Label>
+            <Label>Mẫu Tin Nhắn Nhanh</Label>
             <div className='grid grid-cols-1 gap-2 md:grid-cols-2'>
               <Button
                 variant='outline'
@@ -190,7 +190,7 @@ export function SendMessageDialog({
                 }}
                 className='justify-start text-xs'
               >
-                Academic Update
+                Cập Nhật Điểm Số
               </Button>
               <Button
                 variant='outline'
@@ -203,7 +203,7 @@ export function SendMessageDialog({
                 }}
                 className='justify-start text-xs'
               >
-                Behavior Notice
+                Thông Báo Hành Vi
               </Button>
               <Button
                 variant='outline'
@@ -216,7 +216,7 @@ export function SendMessageDialog({
                 }}
                 className='justify-start text-xs'
               >
-                Positive Recognition
+                Nhận Xét Tích Cực
               </Button>
               <Button
                 variant='outline'
@@ -229,7 +229,7 @@ export function SendMessageDialog({
                 }}
                 className='justify-start text-xs'
               >
-                Meeting Request
+                Yêu Cầu Họp
               </Button>
             </div>
           </div>
@@ -237,18 +237,18 @@ export function SendMessageDialog({
 
         <DialogFooter>
           <Button variant='outline' onClick={() => setOpen(false)}>
-            Cancel
+            Hủy Bỏ
           </Button>
           <Button onClick={handleSendMessage} disabled={isLoading}>
             {isLoading ? (
               <>
                 <div className='mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent' />
-                Sending...
+                Đang Gửi...
               </>
             ) : (
               <>
                 <Send className='mr-2 h-4 w-4' />
-                Send Message
+                Gửi Tin Nhắn
               </>
             )}
           </Button>
