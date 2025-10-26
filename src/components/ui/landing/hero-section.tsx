@@ -1,8 +1,16 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/ui/dialog';
 import {
   Sparkles,
   TrendingUp,
@@ -27,6 +35,8 @@ const features = [
 ];
 
 export function HeroSection() {
+  const [isDemoOpen, setIsDemoOpen] = useState(false);
+
   return (
     <section className='relative min-h-screen overflow-hidden pt-16'>
       {/* Animated Background */}
@@ -94,12 +104,14 @@ export function HeroSection() {
               <Button
                 size='lg'
                 variant='outline'
-                asChild
                 className='group border-2'
+                onClick={() => setIsDemoOpen(true)}
               >
                 <Link href='#demo'>
-                  <Play className='mr-2 h-4 w-4' />
-                  Xem demo
+                  <div className='flex items-center gap-2'>
+                    <Play className='mr-2 h-4 w-4' />
+                    <span>Xem demo</span>
+                  </div>
                 </Link>
               </Button>
             </div>
@@ -274,6 +286,25 @@ export function HeroSection() {
           animation-delay: 4s;
         }
       `}</style>
+
+      {/* Demo Dialog */}
+      <Dialog open={isDemoOpen} onOpenChange={setIsDemoOpen}>
+        <DialogContent className='max-w-4xl'>
+          <DialogHeader>
+            <DialogTitle>Demo Sổ liên lạc điện tử</DialogTitle>
+            <DialogDescription>
+              Xem hướng dẫn sử dụng hệ thống
+            </DialogDescription>
+          </DialogHeader>
+          <div className='flex justify-center py-4'>
+            <img
+              src='/1025.gif'
+              alt='Demo video'
+              className='max-h-[70vh] w-auto rounded-lg'
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

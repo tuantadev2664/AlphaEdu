@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -40,7 +40,10 @@ import {
   Phone,
   Mail,
   CheckCircle,
-  Circle
+  Circle,
+  ArrowLeft,
+  Save,
+  FileText
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { vi } from 'date-fns/locale';
@@ -210,16 +213,103 @@ export function TeacherCommunicationDialog({
   const [newMessage, setNewMessage] = useState('');
   const [selectedChild, setSelectedChild] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+  const [showConversation, setShowConversation] = useState(false);
+  const [draftMessages, setDraftMessages] = useState<Record<string, string>>(
+    {}
+  );
+  const [showDrafts, setShowDrafts] = useState(false);
 
   const data = mockCommunicationData;
   const conversations = mockConversations;
+
+  // Check if mobile on mount and resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Load draft messages from localStorage on mount
+  useEffect(() => {
+    const savedDrafts = localStorage.getItem('teacher-communication-drafts');
+    if (savedDrafts) {
+      setDraftMessages(JSON.parse(savedDrafts));
+    }
+  }, []);
+
+  // Save draft messages to localStorage
+  useEffect(() => {
+    localStorage.setItem(
+      'teacher-communication-drafts',
+      JSON.stringify(draftMessages)
+    );
+  }, [draftMessages]);
+
+  // Load draft when conversation changes
+  useEffect(() => {
+    if (selectedConversation && draftMessages[selectedConversation]) {
+      setNewMessage(draftMessages[selectedConversation]);
+    } else {
+      setNewMessage('');
+    }
+  }, [selectedConversation, draftMessages]);
 
   const handleSendMessage = () => {
     if (!newMessage.trim() || !selectedConversation) return;
 
     // In real app, send message via API
     console.log('Sending message:', newMessage);
+
+    // Clear draft for this conversation
+    const newDrafts = { ...draftMessages };
+    delete newDrafts[selectedConversation];
+    setDraftMessages(newDrafts);
+
     setNewMessage('');
+  };
+
+  const handleSaveDraft = () => {
+    if (!newMessage.trim() || !selectedConversation) return;
+
+    setDraftMessages((prev) => ({
+      ...prev,
+      [selectedConversation]: newMessage
+    }));
+  };
+
+  const handleMessageChange = (value: string) => {
+    setNewMessage(value);
+
+    // Auto-save draft after 2 seconds of no typing
+    if (selectedConversation) {
+      const timeoutId = setTimeout(() => {
+        if (value.trim()) {
+          setDraftMessages((prev) => ({
+            ...prev,
+            [selectedConversation]: value
+          }));
+        }
+      }, 2000);
+
+      return () => clearTimeout(timeoutId);
+    }
+  };
+
+  const handleConversationSelect = (conversationId: string) => {
+    setSelectedConversation(conversationId);
+    if (isMobile) {
+      setShowConversation(true);
+    }
+  };
+
+  const handleBackToList = () => {
+    setShowConversation(false);
+    setSelectedConversation(null);
   };
 
   const filteredTeachers = data.teachers.filter(
@@ -239,10 +329,26 @@ export function TeacherCommunicationDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className='fixed top-[50%] left-[50%] z-50 max-h-[90vh] max-w-[95vw] translate-x-[-50%] translate-y-[-50%] overflow-hidden p-0 sm:max-w-[1400px]'>
-        <div className='p-6'>
+      <DialogContent
+        className={`fixed top-[50%] left-[50%] z-50 max-h-[90vh] translate-x-[-50%] translate-y-[-50%] overflow-hidden p-0 ${
+          isMobile
+            ? 'h-full max-h-[100vh] w-full max-w-[100vw] rounded-none'
+            : 'max-w-[95vw] sm:max-w-[1400px]'
+        }`}
+      >
+        <div className='p-4 sm:p-6'>
           <DialogHeader>
             <DialogTitle className='flex items-center gap-2'>
+              {isMobile && showConversation && (
+                <Button
+                  variant='ghost'
+                  size='sm'
+                  onClick={handleBackToList}
+                  className='mr-2 p-1'
+                >
+                  <ArrowLeft className='h-4 w-4' />
+                </Button>
+              )}
               <MessageSquare className='h-5 w-5' />
               Liên lạc với giáo viên
             </DialogTitle>
@@ -252,13 +358,26 @@ export function TeacherCommunicationDialog({
           </DialogHeader>
         </div>
 
-        <div className='flex h-[70vh] gap-4 px-6 pb-6'>
+        <div
+          className={`flex gap-4 px-4 pb-4 sm:px-6 sm:pb-6 ${
+            isMobile ? 'h-[calc(100vh-120px)]' : 'h-[70vh]'
+          }`}
+        >
           {/* Left Sidebar - Teacher List */}
-          <div className='w-1/3 border-r pr-4'>
+          <div
+            className={`${
+              isMobile
+                ? showConversation
+                  ? 'hidden'
+                  : 'w-full'
+                : 'w-1/3 border-r pr-4'
+            }`}
+          >
             <Tabs defaultValue='teachers' className='w-full'>
-              <TabsList className='grid w-full grid-cols-2'>
+              <TabsList className='grid w-full grid-cols-3'>
                 <TabsTrigger value='teachers'>Giáo viên</TabsTrigger>
                 <TabsTrigger value='conversations'>Tin nhắn</TabsTrigger>
+                <TabsTrigger value='drafts'>Bản nháp</TabsTrigger>
               </TabsList>
 
               <TabsContent value='teachers' className='space-y-4'>
@@ -287,7 +406,9 @@ export function TeacherCommunicationDialog({
                 </Select>
 
                 {/* Teachers List */}
-                <ScrollArea className='h-[400px]'>
+                <ScrollArea
+                  className={`${isMobile ? 'h-[calc(100vh-200px)]' : 'h-[400px]'}`}
+                >
                   <div className='space-y-2'>
                     {filteredTeachers.map((teacherContact) => (
                       <Card
@@ -299,7 +420,7 @@ export function TeacherCommunicationDialog({
                             : ''
                         }`}
                         onClick={() =>
-                          setSelectedConversation(
+                          handleConversationSelect(
                             `conv-${teacherContact.teacher.id}`
                           )
                         }
@@ -346,7 +467,9 @@ export function TeacherCommunicationDialog({
               </TabsContent>
 
               <TabsContent value='conversations' className='space-y-4'>
-                <ScrollArea className='h-[400px]'>
+                <ScrollArea
+                  className={`${isMobile ? 'h-[calc(100vh-200px)]' : 'h-[400px]'}`}
+                >
                   <div className='space-y-2'>
                     {conversations.map((conversation) => (
                       <Card
@@ -356,7 +479,9 @@ export function TeacherCommunicationDialog({
                             ? 'bg-muted'
                             : ''
                         }`}
-                        onClick={() => setSelectedConversation(conversation.id)}
+                        onClick={() =>
+                          handleConversationSelect(conversation.id)
+                        }
                       >
                         <CardContent className='p-4'>
                           <div className='flex items-start gap-3'>
@@ -402,11 +527,83 @@ export function TeacherCommunicationDialog({
                   </div>
                 </ScrollArea>
               </TabsContent>
+
+              <TabsContent value='drafts' className='space-y-4'>
+                <ScrollArea
+                  className={`${isMobile ? 'h-[calc(100vh-200px)]' : 'h-[400px]'}`}
+                >
+                  <div className='space-y-2'>
+                    {Object.keys(draftMessages).length === 0 ? (
+                      <div className='text-muted-foreground py-8 text-center'>
+                        <FileText className='mx-auto mb-4 h-12 w-12 opacity-50' />
+                        <p>Chưa có bản nháp nào</p>
+                      </div>
+                    ) : (
+                      Object.entries(draftMessages).map(
+                        ([conversationId, draft]) => {
+                          const conversation = conversations.find(
+                            (c) => c.id === conversationId
+                          );
+                          if (!conversation) return null;
+
+                          return (
+                            <Card
+                              key={conversationId}
+                              className='hover:bg-muted/50 cursor-pointer transition-colors'
+                              onClick={() =>
+                                handleConversationSelect(conversationId)
+                              }
+                            >
+                              <CardContent className='p-4'>
+                                <div className='flex items-start gap-3'>
+                                  <Avatar className='h-10 w-10'>
+                                    <AvatarFallback className='bg-orange-100 text-orange-600'>
+                                      <FileText className='h-4 w-4' />
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div className='min-w-0 flex-1'>
+                                    <div className='mb-1 flex items-center justify-between'>
+                                      <h4 className='truncate font-medium'>
+                                        {
+                                          conversation.participants.find(
+                                            (p) => p.id !== data.parent.id
+                                          )?.full_name
+                                        }
+                                      </h4>
+                                      <Badge
+                                        variant='secondary'
+                                        className='text-xs'
+                                      >
+                                        Bản nháp
+                                      </Badge>
+                                    </div>
+                                    <div className='text-muted-foreground mb-2 text-sm'>
+                                      {conversation.subject_context?.name} •{' '}
+                                      {conversation.student_context?.full_name}
+                                    </div>
+                                    <div className='text-muted-foreground line-clamp-2 text-xs'>
+                                      {draft}
+                                    </div>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          );
+                        }
+                      )
+                    )}
+                  </div>
+                </ScrollArea>
+              </TabsContent>
             </Tabs>
           </div>
 
           {/* Right Side - Conversation */}
-          <div className='flex flex-1 flex-col'>
+          <div
+            className={`flex flex-1 flex-col ${
+              isMobile ? (showConversation ? 'block' : 'hidden') : 'block'
+            }`}
+          >
             {selectedConv ? (
               <>
                 {/* Conversation Header */}
@@ -419,7 +616,7 @@ export function TeacherCommunicationDialog({
                           ?.full_name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <div>
+                    <div className='flex-1'>
                       <h3 className='font-semibold'>
                         {
                           selectedConv.participants.find(
@@ -432,6 +629,16 @@ export function TeacherCommunicationDialog({
                         {selectedConv.student_context?.full_name}
                       </div>
                     </div>
+                    {isMobile && (
+                      <Button
+                        variant='ghost'
+                        size='sm'
+                        onClick={handleBackToList}
+                        className='p-2'
+                      >
+                        <ArrowLeft className='h-4 w-4' />
+                      </Button>
+                    )}
                   </div>
                 </div>
 
@@ -480,26 +687,48 @@ export function TeacherCommunicationDialog({
                 </ScrollArea>
 
                 {/* Message Input */}
-                <div className='flex gap-2'>
-                  <Textarea
-                    placeholder='Nhập tin nhắn...'
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    className='min-h-[80px] flex-1 resize-none'
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleSendMessage();
-                      }
-                    }}
-                  />
-                  <Button
-                    onClick={handleSendMessage}
-                    disabled={!newMessage.trim()}
-                    className='self-end'
-                  >
-                    <Send className='h-4 w-4' />
-                  </Button>
+                <div className='space-y-2'>
+                  <div className='flex gap-2'>
+                    <Textarea
+                      placeholder='Nhập tin nhắn...'
+                      value={newMessage}
+                      onChange={(e) => handleMessageChange(e.target.value)}
+                      className={`${isMobile ? 'min-h-[60px]' : 'min-h-[80px]'} flex-1 resize-none`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleSendMessage();
+                        }
+                      }}
+                    />
+                    <div className='flex flex-col gap-1'>
+                      <Button
+                        onClick={handleSendMessage}
+                        disabled={!newMessage.trim()}
+                        className='self-end'
+                        size={isMobile ? 'sm' : 'default'}
+                      >
+                        <Send className='h-4 w-4' />
+                      </Button>
+                      {newMessage.trim() && (
+                        <Button
+                          onClick={handleSaveDraft}
+                          variant='outline'
+                          size={isMobile ? 'sm' : 'default'}
+                          className='self-end'
+                        >
+                          <Save className='h-4 w-4' />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  {selectedConversation &&
+                    draftMessages[selectedConversation] && (
+                      <div className='text-muted-foreground flex items-center gap-1 text-xs'>
+                        <FileText className='h-3 w-3' />
+                        <span>Đã lưu bản nháp</span>
+                      </div>
+                    )}
                 </div>
               </>
             ) : (
