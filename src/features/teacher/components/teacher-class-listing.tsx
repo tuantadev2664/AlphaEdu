@@ -76,15 +76,15 @@ export default function TeacherClassListing() {
       {/* Header */}
       <div className='flex items-center justify-between space-y-2'>
         <div>
-          <h2 className='text-2xl font-bold tracking-tight'>My Classes</h2>
+          <h2 className='text-2xl font-bold tracking-tight'>Lớp Học Của Tôi</h2>
           <p className='text-muted-foreground'>
-            Classes you are assigned to teach
+            Các lớp bạn được phân công giảng dạy
           </p>
         </div>
         <Button asChild variant='outline'>
           <Link href='/teacher' className='flex items-center gap-2'>
             <ArrowLeft className='h-4 w-4' />
-            Back to Dashboard
+            Quay Lại Bảng Điều Khiển
           </Link>
         </Button>
       </div>
@@ -93,7 +93,7 @@ export default function TeacherClassListing() {
       <div className='*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs md:grid-cols-2 lg:grid-cols-4'>
         <Card className='@container/card'>
           <CardHeader>
-            <CardDescription>My Classes</CardDescription>
+            <CardDescription>Lớp Của Tôi</CardDescription>
             <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
               {isLoading ? '...' : totalClasses}
             </CardTitle>
@@ -105,15 +105,15 @@ export default function TeacherClassListing() {
           </CardHeader>
           <CardFooter className='flex-col items-start gap-1.5 text-sm'>
             <div className='line-clamp-1 flex gap-2 font-medium'>
-              Active classes <BookOpen className='size-4' />
+              Lớp đang hoạt động <BookOpen className='size-4' />
             </div>
-            <div className='text-muted-foreground'>Across all grade levels</div>
+            <div className='text-muted-foreground'>Trên tất cả các khối</div>
           </CardFooter>
         </Card>
 
         <Card className='@container/card'>
           <CardHeader>
-            <CardDescription>Total Students</CardDescription>
+            <CardDescription>Tổng Học Sinh</CardDescription>
             <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
               {isLoading ? '...' : totalStudents}
             </CardTitle>
@@ -125,15 +125,15 @@ export default function TeacherClassListing() {
           </CardHeader>
           <CardFooter className='flex-col items-start gap-1.5 text-sm'>
             <div className='line-clamp-1 flex gap-2 font-medium'>
-              Enrolled students <Users className='size-4' />
+              Học sinh đã đăng ký <Users className='size-4' />
             </div>
-            <div className='text-muted-foreground'>Total enrollment count</div>
+            <div className='text-muted-foreground'>Tổng số học sinh</div>
           </CardFooter>
         </Card>
 
         <Card className='@container/card'>
           <CardHeader>
-            <CardDescription>Avg Class Size</CardDescription>
+            <CardDescription>Sĩ Số TB</CardDescription>
             <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
               {isLoading ? '...' : averageClassSize}
             </CardTitle>
@@ -145,15 +145,15 @@ export default function TeacherClassListing() {
           </CardHeader>
           <CardFooter className='flex-col items-start gap-1.5 text-sm'>
             <div className='line-clamp-1 flex gap-2 font-medium'>
-              Students per class <TrendingUp className='size-4' />
+              Học sinh mỗi lớp <TrendingUp className='size-4' />
             </div>
-            <div className='text-muted-foreground'>Average enrollment</div>
+            <div className='text-muted-foreground'>Sĩ số trung bình</div>
           </CardFooter>
         </Card>
 
         <Card className='@container/card'>
           <CardHeader>
-            <CardDescription>Active Classes</CardDescription>
+            <CardDescription>Lớp Đang Dạy</CardDescription>
             <CardTitle className='text-2xl font-semibold tabular-nums @[250px]/card:text-3xl'>
               {isLoading ? '...' : myClasses}
             </CardTitle>
@@ -165,9 +165,9 @@ export default function TeacherClassListing() {
           </CardHeader>
           <CardFooter className='flex-col items-start gap-1.5 text-sm'>
             <div className='line-clamp-1 flex gap-2 font-medium'>
-              Classes I teach <Star className='size-4' />
+              Lớp tôi dạy <Star className='size-4' />
             </div>
-            <div className='text-muted-foreground'>My assigned classes</div>
+            <div className='text-muted-foreground'>Lớp được phân công</div>
           </CardFooter>
         </Card>
       </div>
@@ -179,7 +179,7 @@ export default function TeacherClassListing() {
           <div className='relative flex-1'>
             <Search className='text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2' />
             <Input
-              placeholder='Search classes...'
+              placeholder='Tìm kiếm lớp học...'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className='pl-10'
@@ -192,7 +192,7 @@ export default function TeacherClassListing() {
               variant={showMyClassesOnly ? 'default' : 'outline'}
               onClick={() => setShowMyClassesOnly(!showMyClassesOnly)}
             >
-              {showMyClassesOnly ? 'Show All Classes' : 'My Classes Only'}
+              {showMyClassesOnly ? 'Hiện Tất Cả' : 'Chỉ Lớp Của Tôi'}
             </Button>
           </div>
         </div>
@@ -200,14 +200,14 @@ export default function TeacherClassListing() {
         {/* Grade Filter */}
         <div className='flex flex-wrap gap-2'>
           <span className='text-muted-foreground flex items-center text-sm font-medium'>
-            Filter by Grade:
+            Lọc theo Khối:
           </span>
           <Button
             variant={selectedGrade === 'all' ? 'default' : 'outline'}
             onClick={() => setSelectedGrade('all')}
             size='sm'
           >
-            All Grades
+            Tất Cả Khối
           </Button>
           {availableGrades.map(({ gradeId, name }) => (
             <Button
@@ -224,7 +224,7 @@ export default function TeacherClassListing() {
         {/* Results Count */}
         <div className='flex items-center justify-between'>
           <p className='text-muted-foreground'>
-            Showing {filteredClasses.length} of {totalClasses} classes
+            Hiển thị {filteredClasses.length} trong tổng số {totalClasses} lớp
           </p>
         </div>
       </div>
@@ -241,10 +241,10 @@ export default function TeacherClassListing() {
                   </div>
                   <div>
                     <CardTitle className='text-lg'>{cls.name}</CardTitle>
-                    <CardDescription>Grade ID: {cls.name}</CardDescription>
+                    <CardDescription>Mã Khối: {cls.name}</CardDescription>
                   </div>
                 </div>
-                <Badge variant='secondary'>My Class</Badge>
+                <Badge variant='secondary'>Lớp Của Tôi</Badge>
               </div>
             </CardHeader>
 
@@ -252,16 +252,16 @@ export default function TeacherClassListing() {
               <div className='text-muted-foreground flex items-center gap-2 text-sm'>
                 <Users className='h-4 w-4' />
                 <span>
-                  {cls.classEnrollments?.length || 0} students enrolled
+                  {cls.classEnrollments?.length || 0} học sinh đã đăng ký
                 </span>
               </div>
               <div className='text-muted-foreground flex items-center gap-2 text-sm'>
                 <User className='h-4 w-4' />
-                {/* <span>Homeroom Teacher: {cls.homeroomTeacherId}</span> */}
+                {/* <span>Giáo viên chủ nhiệm: {cls.homeroomTeacherId}</span> */}
               </div>
               <div className='text-muted-foreground flex items-center gap-2 text-sm'>
                 <MapPin className='h-4 w-4' />
-                <span>Assignments: {cls.teacherAssignments?.length || 0}</span>
+                <span>Phân công: {cls.teacherAssignments?.length || 0}</span>
               </div>
             </CardContent>
 
@@ -269,7 +269,7 @@ export default function TeacherClassListing() {
               <Button asChild className='w-full'>
                 <Link href={`/teacher/classes/${cls.id}/roster`}>
                   <BookOpen className='mr-2 h-4 w-4' />
-                  View Details
+                  Xem Chi Tiết
                   <ArrowRight className='ml-2 h-4 w-4' />
                 </Link>
               </Button>
@@ -284,9 +284,9 @@ export default function TeacherClassListing() {
           <div className='bg-muted mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full'>
             <Search className='text-muted-foreground h-12 w-12' />
           </div>
-          <h3 className='mb-2 text-xl font-semibold'>No classes found</h3>
+          <h3 className='mb-2 text-xl font-semibold'>Không tìm thấy lớp học</h3>
           <p className='text-muted-foreground mb-6'>
-            Try adjusting your search terms or filters
+            Thử điều chỉnh từ khóa tìm kiếm hoặc bộ lọc
           </p>
           <Button
             onClick={() => {
@@ -296,7 +296,7 @@ export default function TeacherClassListing() {
             }}
             variant='outline'
           >
-            Clear Filters
+            Xóa Bộ Lọc
           </Button>
         </div>
       )}

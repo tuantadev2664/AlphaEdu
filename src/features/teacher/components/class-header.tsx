@@ -22,11 +22,11 @@ export function ClassHeader({ classData }: ClassHeaderProps) {
             <div>
               <h1 className='text-2xl font-bold'>{classData.name}</h1>
               <div className='text-muted-foreground flex items-center gap-2'>
-                <span>Grade {classData.grade?.grade_number}</span>
+                <span>Khối {classData.grade?.grade_number}</span>
                 <span>•</span>
                 <div className='flex items-center gap-1'>
                   <Users className='h-4 w-4' />
-                  <span>{classData.student_count} students</span>
+                  <span>{classData.student_count} học sinh</span>
                 </div>
               </div>
             </div>
@@ -38,7 +38,7 @@ export function ClassHeader({ classData }: ClassHeaderProps) {
             </Badge>
             <Button variant='outline' size='sm'>
               <BookOpen className='mr-2 h-4 w-4' />
-              Class Settings
+              Cài Đặt Lớp
             </Button>
           </div>
         </div>

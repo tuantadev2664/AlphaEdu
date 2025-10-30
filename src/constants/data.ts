@@ -63,7 +63,7 @@ export const navItems: NavItem[] = [
 // Teacher navigation items
 export const teacherNavItems: NavItem[] = [
   {
-    title: 'Teacher Dashboard',
+    title: 'Bảng Điều Khiển',
     url: '/teacher',
     icon: 'dashboard',
     isActive: false,
@@ -71,7 +71,7 @@ export const teacherNavItems: NavItem[] = [
     items: []
   },
   {
-    title: 'All Classes',
+    title: 'Tất Cả Lớp Học',
     url: '/teacher/classes',
     icon: 'graduationCap',
     isActive: true,
@@ -79,7 +79,7 @@ export const teacherNavItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Inbox',
+    title: 'Hộp Thư',
     url: '/teacher/inbox',
     icon: 'mail',
     shortcut: ['t', 'i'],
@@ -87,7 +87,7 @@ export const teacherNavItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Assignments',
+    title: 'Bài Tập',
     url: '/teacher/assignments',
     icon: 'fileText',
     shortcut: ['t', 'a'],
@@ -95,30 +95,30 @@ export const teacherNavItems: NavItem[] = [
     items: []
   },
   {
-    title: 'Reports',
+    title: 'Báo Cáo',
     url: '#',
     icon: 'barChart3',
     isActive: false,
     items: [
       {
-        title: 'Grade Reports',
+        title: 'Báo Cáo Điểm',
         url: '/teacher/reports/grades',
         icon: 'award'
       },
       {
-        title: 'Behavior Reports',
+        title: 'Báo Cáo Hành Vi',
         url: '/teacher/reports/behavior',
         icon: 'star'
       },
       {
-        title: 'Attendance',
+        title: 'Điểm Danh',
         url: '/teacher/reports/attendance',
         icon: 'calendar'
       }
     ]
   },
   {
-    title: 'Settings',
+    title: 'Cài Đặt',
     url: '/teacher/settings',
     icon: 'settings',
     shortcut: ['t', 's'],

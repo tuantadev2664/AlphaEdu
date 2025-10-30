@@ -37,7 +37,7 @@ export function createScoreColumns(
     {
       accessorKey: 'fullName',
       header: ({ column }: { column: Column<StudentScore, unknown> }) => (
-        <DataTableColumnHeader column={column} title='Student' />
+        <DataTableColumnHeader column={column} title='Học Sinh' />
       ),
       cell: ({ row }) => {
         const student = row.original;
@@ -63,8 +63,8 @@ export function createScoreColumns(
         );
       },
       meta: {
-        label: 'Student Name',
-        placeholder: 'Search students...',
+        label: 'Tên Học Sinh',
+        placeholder: 'Tìm kiếm học sinh...',
         variant: 'text',
         icon: User
       },
@@ -82,7 +82,7 @@ export function createScoreColumns(
         <div className='text-center'>
           <div className='font-medium'>{assessment.gradeComponentName}</div>
           <div className='text-muted-foreground text-xs'>
-            {assessment.kind} • Max: {assessment.maxScore}
+            {assessment.kind} • Tối Đa: {assessment.maxScore}
           </div>
         </div>
       ),
@@ -100,7 +100,7 @@ export function createScoreColumns(
           return (
             <div className='flex flex-col items-center gap-1'>
               <Badge variant='destructive' className='text-xs'>
-                Absent
+                Vắng
               </Badge>
             </div>
           );
@@ -162,7 +162,7 @@ export function createScoreColumns(
   const averageColumn: ColumnDef<StudentScore> = {
     id: 'average',
     header: ({ column }: { column: Column<StudentScore, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Average' />
+      <DataTableColumnHeader column={column} title='Điểm Trung Bình' />
     ),
     cell: ({ row }) => {
       const student = row.original;

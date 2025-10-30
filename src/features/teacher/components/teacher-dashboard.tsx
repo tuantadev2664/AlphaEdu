@@ -51,24 +51,24 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
       <div className='flex items-center justify-between space-y-2'>
         <div>
           <h2 className='text-2xl font-bold tracking-tight'>
-            Welcome back, Teacher! 👋
+            Chào mừng trở lại, Giáo viên! 👋
           </h2>
           <p className='text-muted-foreground'>
-            Here&apos;s your classroom overview and what needs your attention.
+            Đây là tổng quan lớp học và những việc cần chú ý.
           </p>
         </div>
         <div className='hidden items-center gap-2 md:flex'>
           <Button asChild variant='outline'>
             <Link href='/teacher/inbox'>
               <MessageSquare className='mr-2 h-4 w-4' />
-              Messages ({stats.unread_messages})
+              Tin nhắn ({stats.unread_messages})
             </Link>
           </Button>
           {stats.pending_assignments > 0 && (
             <Button asChild>
               <Link href='/teacher/assignments'>
                 <ClipboardList className='mr-2 h-4 w-4' />
-                {stats.pending_assignments} to grade
+                {stats.pending_assignments} cần chấm
               </Link>
             </Button>
           )}
@@ -79,7 +79,7 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
       <div className='*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs md:grid-cols-2 lg:grid-cols-4'>
         <Card className='@container/card'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Total Classes</CardTitle>
+            <CardTitle className='text-sm font-medium'>Tổng Số Lớp</CardTitle>
             <GraduationCap className='text-muted-foreground h-4 w-4' />
           </CardHeader>
           <CardContent>
@@ -89,10 +89,10 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
           </CardContent>
           <CardFooter className='flex-col items-start gap-1.5 text-sm'>
             <div className='line-clamp-1 flex gap-2 font-medium'>
-              Active this semester <TrendingUp className='size-4' />
+              Hoạt động học kỳ này <TrendingUp className='size-4' />
             </div>
             <div className='text-muted-foreground'>
-              All classes are running smoothly
+              Tất cả lớp đang hoạt động tốt
             </div>
           </CardFooter>
         </Card>
@@ -100,7 +100,7 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
         <Card className='@container/card'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>
-              Total Students
+              Tổng Số Học Sinh
             </CardTitle>
             <Users className='text-muted-foreground h-4 w-4' />
           </CardHeader>
@@ -111,17 +111,19 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
           </CardContent>
           <CardFooter className='flex-col items-start gap-1.5 text-sm'>
             <div className='line-clamp-1 flex gap-2 font-medium'>
-              Across all classes <Star className='size-4' />
+              Trên tất cả lớp học <Star className='size-4' />
             </div>
             <div className='text-muted-foreground'>
-              Strong engagement this term
+              Sự tham gia tích cực học kỳ này
             </div>
           </CardFooter>
         </Card>
 
         <Card className='@container/card'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-            <CardTitle className='text-sm font-medium'>Pending Tasks</CardTitle>
+            <CardTitle className='text-sm font-medium'>
+              Công Việc Đang Chờ
+            </CardTitle>
             <ClipboardList className='text-muted-foreground h-4 w-4' />
           </CardHeader>
           <CardContent>
@@ -132,14 +134,14 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
           <CardFooter className='flex-col items-start gap-1.5 text-sm'>
             <div className='line-clamp-1 flex gap-2 font-medium'>
               {stats.pending_assignments > 0
-                ? 'Needs attention'
-                : 'All caught up'}{' '}
+                ? 'Cần chú ý'
+                : 'Đã hoàn thành hết'}{' '}
               <Award className='size-4' />
             </div>
             <div className='text-muted-foreground'>
               {stats.pending_assignments > 0
-                ? 'Assignments awaiting grades'
-                : 'Great job staying current!'}
+                ? 'Bài tập đang chờ chấm điểm'
+                : 'Làm tốt lắm!'}
             </div>
           </CardFooter>
         </Card>
@@ -147,7 +149,7 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
         <Card className='@container/card'>
           <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
             <CardTitle className='text-sm font-medium'>
-              Unread Messages
+              Tin Nhắn Chưa Đọc
             </CardTitle>
             <MessageSquare className='text-muted-foreground h-4 w-4' />
           </CardHeader>
@@ -158,13 +160,13 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
           </CardContent>
           <CardFooter className='flex-col items-start gap-1.5 text-sm'>
             <div className='line-clamp-1 flex gap-2 font-medium'>
-              {stats.unread_messages > 0 ? 'Require response' : 'All caught up'}{' '}
+              {stats.unread_messages > 0 ? 'Cần phản hồi' : 'Đã hoàn thành hết'}{' '}
               <Bell className='size-4' />
             </div>
             <div className='text-muted-foreground'>
               {stats.unread_messages > 0
-                ? 'Messages need your attention'
-                : 'Communication is up to date'}
+                ? 'Tin nhắn cần chú ý'
+                : 'Giao tiếp đã được cập nhật'}
             </div>
           </CardFooter>
         </Card>
@@ -177,10 +179,10 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <BookOpen className='h-5 w-5' />
-              My Classes
+              Lớp Học Của Tôi
             </CardTitle>
             <CardDescription>
-              Manage your active classes and track progress
+              Quản lý các lớp đang hoạt động và theo dõi tiến độ
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -212,23 +214,23 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                             <div className='text-muted-foreground flex items-center gap-3 text-sm'>
                               <span className='flex items-center gap-1'>
                                 <GraduationCap className='h-3 w-3' />
-                                Grade{' '}
+                                Khối{' '}
                                 {classItem.grade?.grade_number ||
                                   classItem.name.charAt(0).toUpperCase()}
                               </span>
                               <span className='flex items-center gap-1'>
                                 <Users className='h-3 w-3' />
-                                {classItem.studentCount} students
+                                {classItem.studentCount} học sinh
                               </span>
                             </div>
                           </div>
                           <div className='space-y-2'>
                             <div className='flex items-center justify-between space-x-2 text-xs'>
                               <span className='text-muted-foreground'>
-                                Class Performance
+                                Hiệu Suất Lớp Học
                               </span>
                               <span className='font-medium'>
-                                {avgGrade}% avg
+                                {avgGrade}% TB
                               </span>
                             </div>
                             <Progress value={avgGrade} className='h-1.5' />
@@ -237,13 +239,13 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                       </div>
                       <div className='flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100'>
                         <Badge variant='secondary' className='text-xs'>
-                          {attendanceRate}% attendance
+                          {attendanceRate}% điểm danh
                         </Badge>
                         <Button variant='ghost' size='sm' asChild>
                           <Link
                             href={`/teacher/classes/${classItem.id}/roster`}
                           >
-                            View
+                            Xem
                             <ArrowRight className='ml-1 h-3 w-3' />
                           </Link>
                         </Button>
@@ -257,9 +259,11 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                   <div className='bg-muted mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full'>
                     <BookOpen className='text-muted-foreground h-8 w-8' />
                   </div>
-                  <p className='text-lg font-medium'>No classes assigned yet</p>
+                  <p className='text-lg font-medium'>
+                    Chưa có lớp được phân công
+                  </p>
                   <p className='text-muted-foreground text-sm'>
-                    Contact your administrator to get started
+                    Liên hệ quản trị viên để bắt đầu
                   </p>
                 </div>
               )}
@@ -268,12 +272,11 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
           <CardFooter>
             <div className='flex w-full items-center justify-between text-sm'>
               <div className='text-muted-foreground'>
-                {classes?.length} active{' '}
-                {classes?.length === 1 ? 'class' : 'classes'}
+                {classes?.length} lớp đang hoạt động
               </div>
               <Button variant='outline' size='sm' asChild>
                 <Link href='/teacher/classes'>
-                  View All Classes
+                  Xem Tất Cả Lớp
                   <ArrowRight className='ml-1 h-3 w-3' />
                 </Link>
               </Button>
@@ -286,10 +289,10 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
           <CardHeader>
             <CardTitle className='flex items-center gap-2'>
               <Bell className='h-5 w-5' />
-              Recent Announcements
+              Thông Báo Gần Đây
             </CardTitle>
             <CardDescription>
-              Stay updated with latest school news and updates
+              Cập nhật tin tức và thông báo mới nhất của trường
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -297,7 +300,7 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
               {isLoadingAnnouncements ? (
                 <div className='flex items-center justify-center py-8'>
                   <div className='text-muted-foreground'>
-                    Loading announcements...
+                    Đang tải thông báo...
                   </div>
                 </div>
               ) : (
@@ -340,12 +343,12 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                                   variant='destructive'
                                   className='animate-pulse text-xs'
                                 >
-                                  Urgent
+                                  Khẩn Cấp
                                 </Badge>
                               )}
                               {isRecent && !announcement.isUrgent && (
                                 <Badge variant='secondary' className='text-xs'>
-                                  New
+                                  Mới
                                 </Badge>
                               )}
                             </div>
@@ -364,7 +367,7 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                                 <>
                                   <span>•</span>
                                   <span className='text-blue-600 dark:text-blue-400'>
-                                    Today
+                                    Hôm nay
                                   </span>
                                 </>
                               )}
@@ -390,10 +393,10 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                       <Bell className='text-muted-foreground h-8 w-8' />
                     </div>
                     <p className='text-lg font-medium'>
-                      No recent announcements
+                      Không có thông báo gần đây
                     </p>
                     <p className='text-muted-foreground text-sm'>
-                      All caught up! Check back later for updates.
+                      Tất cả đã cập nhật! Kiểm tra lại sau.
                     </p>
                   </div>
                 )}
@@ -402,13 +405,10 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
           <CardFooter>
             <div className='flex w-full items-center justify-between text-sm'>
               <div className='text-muted-foreground'>
-                {(announcements || []).length} recent{' '}
-                {(announcements || []).length === 1
-                  ? 'announcement'
-                  : 'announcements'}
+                {(announcements || []).length} thông báo gần đây
               </div>
               <Button variant='outline' size='sm'>
-                View All
+                Xem Tất Cả
                 <ArrowRight className='ml-1 h-3 w-3' />
               </Button>
             </div>
@@ -421,10 +421,10 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
         <CardHeader>
           <CardTitle className='flex items-center gap-2'>
             <TrendingUp className='h-5 w-5' />
-            Quick Actions
+            Hành Động Nhanh
           </CardTitle>
           <CardDescription>
-            Access frequently used tools and shortcuts
+            Truy cập các công cụ và lối tắt thường dùng
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -436,9 +436,9 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                     <GraduationCap className='h-6 w-6' />
                   </div>
                   <div>
-                    <div className='font-semibold'>View All Classes</div>
+                    <div className='font-semibold'>Xem Tất Cả Lớp</div>
                     <div className='text-muted-foreground text-sm'>
-                      Manage your courses
+                      Quản lý các lớp học
                     </div>
                   </div>
                 </div>
@@ -457,11 +457,11 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                     )}
                   </div>
                   <div>
-                    <div className='font-semibold'>Check Messages</div>
+                    <div className='font-semibold'>Kiểm Tra Tin Nhắn</div>
                     <div className='text-muted-foreground text-sm'>
                       {stats.unread_messages > 0
-                        ? `${stats.unread_messages} unread`
-                        : 'Stay connected'}
+                        ? `${stats.unread_messages} chưa đọc`
+                        : 'Giữ liên lạc'}
                     </div>
                   </div>
                 </div>
@@ -475,9 +475,9 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                     <Calendar className='h-6 w-6' />
                   </div>
                   <div>
-                    <div className='font-semibold'>Schedule</div>
+                    <div className='font-semibold'>Lịch Trình</div>
                     <div className='text-muted-foreground text-sm'>
-                      Coming soon
+                      Sắp ra mắt
                     </div>
                   </div>
                 </div>
@@ -496,11 +496,11 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
                     )}
                   </div>
                   <div>
-                    <div className='font-semibold'>Grade Book</div>
+                    <div className='font-semibold'>Sổ Điểm</div>
                     <div className='text-muted-foreground text-sm'>
                       {stats.pending_assignments > 0
-                        ? `${stats.pending_assignments} pending`
-                        : 'Track progress'}
+                        ? `${stats.pending_assignments} đang chờ`
+                        : 'Theo dõi tiến độ'}
                     </div>
                   </div>
                 </div>
@@ -511,10 +511,10 @@ export function TeacherDashboard({ stats }: TeacherDashboardProps) {
         <CardFooter>
           <div className='flex w-full items-center justify-between text-sm'>
             <div className='text-muted-foreground'>
-              Quick access to essential teacher tools
+              Truy cập nhanh các công cụ giáo viên thiết yếu
             </div>
             <Button variant='ghost' size='sm'>
-              Customize
+              Tùy Chỉnh
               <ArrowRight className='ml-1 h-3 w-3' />
             </Button>
           </div>

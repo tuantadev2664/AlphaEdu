@@ -55,7 +55,7 @@ export const columns: ColumnDef<BehaviorNote>[] = [
   {
     accessorKey: 'student',
     header: ({ column }: { column: Column<BehaviorNote, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Student' />
+      <DataTableColumnHeader column={column} title='Học Sinh' />
     ),
     cell: ({ row }) => {
       const student = row.original.student;
@@ -82,8 +82,8 @@ export const columns: ColumnDef<BehaviorNote>[] = [
       );
     },
     meta: {
-      label: 'Student Name',
-      placeholder: 'Search students...',
+      label: 'Tên Học Sinh',
+      placeholder: 'Tìm kiếm học sinh...',
       variant: 'text',
       icon: User
     },
@@ -94,7 +94,7 @@ export const columns: ColumnDef<BehaviorNote>[] = [
   {
     accessorKey: 'level',
     header: ({ column }: { column: Column<BehaviorNote, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Behavior Level' />
+      <DataTableColumnHeader column={column} title='Mức Độ Hành Vi' />
     ),
     cell: ({ row }) => {
       const level = row.original.level;
@@ -117,7 +117,7 @@ export const columns: ColumnDef<BehaviorNote>[] = [
   },
   {
     accessorKey: 'note',
-    header: 'Note',
+    header: 'Ghi Chú',
     cell: ({ row }) => {
       const note = row.original.note;
       return (
@@ -130,7 +130,7 @@ export const columns: ColumnDef<BehaviorNote>[] = [
   {
     accessorKey: 'created_at',
     header: ({ column }: { column: Column<BehaviorNote, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Date' />
+      <DataTableColumnHeader column={column} title='Ngày' />
     ),
     cell: ({ row }) => {
       const date = new Date(row.original.created_at);
@@ -145,7 +145,7 @@ export const columns: ColumnDef<BehaviorNote>[] = [
   },
   {
     accessorKey: 'created_by_user',
-    header: 'Teacher',
+    header: 'Giáo Viên',
     cell: ({ row }) => {
       const teacher = row.original.created_by_user;
       const teacherName = teacher?.full_name || 'Unknown Teacher';

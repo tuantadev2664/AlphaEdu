@@ -35,14 +35,14 @@ interface AddAssessmentDialogProps {
 }
 
 const assessmentKinds: { value: AssessmentKind; label: string }[] = [
-  { value: 'quiz', label: 'Quiz' },
-  { value: 'test', label: 'Test' },
-  { value: 'midterm', label: 'Midterm' },
-  { value: 'final', label: 'Final' },
-  { value: 'project', label: 'Project' },
-  { value: 'oral', label: 'Oral' },
-  { value: 'attendance', label: 'Attendance' },
-  { value: 'other', label: 'Other' }
+  { value: 'quiz', label: 'Kiểm Tra Nhỏ' },
+  { value: 'test', label: 'Kiểm Tra' },
+  { value: 'midterm', label: 'Giữa Kỳ' },
+  { value: 'final', label: 'Cuối Kỳ' },
+  { value: 'project', label: 'Dự Án' },
+  { value: 'oral', label: 'Vấn Đáp' },
+  { value: 'attendance', label: 'Điểm Danh' },
+  { value: 'other', label: 'Khác' }
 ];
 
 export function AddAssessmentDialog({
@@ -69,7 +69,7 @@ export function AddAssessmentDialog({
     e.preventDefault();
 
     if (!formData.name || !formData.title || !formData.dueDate) {
-      toast.error('Please fill in all required fields');
+      toast.error('Vui lòng điền đầy đủ các trường bắt buộc');
       return;
     }
 
@@ -95,8 +95,8 @@ export function AddAssessmentDialog({
       });
 
       if (result.success) {
-        toast.success('Assessment Created', {
-          description: `${formData.title} has been created successfully`,
+        toast.success('Đã Tạo Bài Đánh Giá', {
+          description: `${formData.title} đã được tạo thành công`,
           duration: 3000
         });
 
@@ -113,14 +113,14 @@ export function AddAssessmentDialog({
 
         onOpenChange(false);
       } else {
-        toast.error('Creation Failed', {
+        toast.error('Không Thể Tạo', {
           description: result.message,
           duration: 3000
         });
       }
     } catch (error) {
-      toast.error('Creation Failed', {
-        description: 'Failed to create assessment. Please try again.',
+      toast.error('Không Thể Tạo', {
+        description: 'Không thể tạo bài đánh giá. Vui lòng thử lại.',
         duration: 3000
       });
     }
@@ -132,35 +132,35 @@ export function AddAssessmentDialog({
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <Plus className='h-5 w-5' />
-            Add New Assessment
+            Thêm Đánh Giá Mới
           </DialogTitle>
           <DialogDescription>
-            Create a new assessment for this class and subject. Scores will be
-            initialized for all students.
+            Tạo mới một đánh giá cho lớp và môn học này. Điểm số sẽ được khởi
+            tạo cho tất cả học sinh.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className='space-y-6'>
           {/* Grade Component Section */}
           <div className='space-y-4'>
-            <h3 className='text-lg font-semibold'>Grade Component</h3>
+            <h3 className='text-lg font-semibold'>Thành Phần Điểm</h3>
 
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
               <div className='space-y-2'>
-                <Label htmlFor='name'>Component Name *</Label>
+                <Label htmlFor='name'>Tên Thành Phần *</Label>
                 <Input
                   id='name'
                   value={formData.name}
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, name: e.target.value }))
                   }
-                  placeholder='e.g., Quiz 1, Midterm Exam'
+                  placeholder='VD: Kiểm tra 1, Thi giữa kỳ'
                   required
                 />
               </div>
 
               <div className='space-y-2'>
-                <Label htmlFor='kind'>Assessment Type *</Label>
+                <Label htmlFor='kind'>Loại Đánh Giá *</Label>
                 <Select
                   value={formData.kind}
                   onValueChange={(value: AssessmentKind) =>
@@ -181,7 +181,7 @@ export function AddAssessmentDialog({
               </div>
 
               <div className='space-y-2'>
-                <Label htmlFor='weight'>Weight (%)</Label>
+                <Label htmlFor='weight'>Trọng Số (%)</Label>
                 <Input
                   id='weight'
                   type='number'
@@ -199,7 +199,7 @@ export function AddAssessmentDialog({
               </div>
 
               <div className='space-y-2'>
-                <Label htmlFor='maxScore'>Max Score</Label>
+                <Label htmlFor='maxScore'>Điểm Tối Đa</Label>
                 <Input
                   id='maxScore'
                   type='number'
@@ -219,24 +219,24 @@ export function AddAssessmentDialog({
 
           {/* Assessment Section */}
           <div className='space-y-4'>
-            <h3 className='text-lg font-semibold'>Assessment Details</h3>
+            <h3 className='text-lg font-semibold'>Chi Tiết Đánh Giá</h3>
 
             <div className='space-y-4'>
               <div className='space-y-2'>
-                <Label htmlFor='title'>Assessment Title *</Label>
+                <Label htmlFor='title'>Tiêu Đề Đánh Giá *</Label>
                 <Input
                   id='title'
                   value={formData.title}
                   onChange={(e) =>
                     setFormData((prev) => ({ ...prev, title: e.target.value }))
                   }
-                  placeholder='e.g., Quiz 1 - Chapter 5'
+                  placeholder='VD: Kiểm tra 1 - Chương 5'
                   required
                 />
               </div>
 
               <div className='space-y-2'>
-                <Label htmlFor='dueDate'>Due Date *</Label>
+                <Label htmlFor='dueDate'>Hạn Nộp Đánh Giá *</Label>
                 <Input
                   id='dueDate'
                   type='date'
@@ -252,7 +252,7 @@ export function AddAssessmentDialog({
               </div>
 
               <div className='space-y-2'>
-                <Label htmlFor='description'>Description (Optional)</Label>
+                <Label htmlFor='description'>Mô Tả (Tùy Chọn)</Label>
                 <Textarea
                   id='description'
                   value={formData.description}
@@ -262,7 +262,7 @@ export function AddAssessmentDialog({
                       description: e.target.value
                     }))
                   }
-                  placeholder='Additional notes about this assessment...'
+                  placeholder='Ghi chú thêm về đánh giá này...'
                   rows={3}
                 />
               </div>
@@ -277,15 +277,15 @@ export function AddAssessmentDialog({
             onClick={() => onOpenChange(false)}
             disabled={createAssessmentMutation.isPending}
           >
-            Cancel
+            Hủy
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={createAssessmentMutation.isPending}
           >
             {createAssessmentMutation.isPending
-              ? 'Creating...'
-              : 'Create Assessment'}
+              ? 'Đang Tạo...'
+              : 'Tạo Đánh Giá'}
           </Button>
         </DialogFooter>
       </DialogContent>

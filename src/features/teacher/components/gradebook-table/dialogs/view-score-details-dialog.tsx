@@ -29,10 +29,10 @@ export function ViewScoreDetailsDialog({
         <DialogHeader>
           <DialogTitle className='flex items-center gap-2'>
             <FileText className='h-5 w-5' />
-            Score Details - {data.fullName}
+            Chi Tiết Điểm - {data.fullName}
           </DialogTitle>
           <DialogDescription>
-            View detailed scores, weights, and comments for all assessments.
+            Xem điểm số chi tiết, trọng số và ghi chú cho tất cả bài đánh giá.
           </DialogDescription>
         </DialogHeader>
 
@@ -61,7 +61,7 @@ export function ViewScoreDetailsDialog({
                   </span>
                   {score.isAbsent && (
                     <span className='rounded bg-red-100 px-2 py-1 text-sm font-medium text-red-800'>
-                      ABSENT
+                      VẮNG MẶT
                     </span>
                   )}
                 </div>
@@ -70,7 +70,7 @@ export function ViewScoreDetailsDialog({
               <div className='grid grid-cols-1 gap-4 text-sm md:grid-cols-3'>
                 <div>
                   <span className='text-muted-foreground font-medium'>
-                    Score:
+                    Điểm:
                   </span>
                   <p className='text-lg font-bold'>
                     {score.score}/{score.maxScore}
@@ -81,13 +81,13 @@ export function ViewScoreDetailsDialog({
                 </div>
                 <div>
                   <span className='text-muted-foreground font-medium'>
-                    Weight:
+                    Trọng Số:
                   </span>
                   <p className='text-lg font-bold'>{score.weight}%</p>
                 </div>
                 <div>
                   <span className='text-muted-foreground font-medium'>
-                    Assessment:
+                    Đánh Giá:
                   </span>
                   <p className='font-medium'>{score.assessmentName}</p>
                 </div>
@@ -100,7 +100,7 @@ export function ViewScoreDetailsDialog({
               {score.comment && (
                 <div>
                   <span className='text-muted-foreground font-medium'>
-                    Comment:
+                    Ghi Chú:
                   </span>
                   <p className='bg-muted mt-1 rounded p-2 text-sm'>
                     {score.comment}
@@ -114,9 +114,9 @@ export function ViewScoreDetailsDialog({
         <DialogFooter>
           <div className='flex w-full items-center justify-between'>
             <div className='text-muted-foreground text-sm'>
-              Total Assessments: {data.scores.length}
+              Tổng Số Đánh Giá: {data.scores.length}
             </div>
-            <Button onClick={() => onOpenChange(false)}>Close</Button>
+            <Button onClick={() => onOpenChange(false)}>Đóng</Button>
           </div>
         </DialogFooter>
       </DialogContent>

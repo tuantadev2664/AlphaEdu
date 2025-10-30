@@ -24,7 +24,7 @@ export const createColumns = (
       column
     }: {
       column: Column<ClassStudentWithStats, unknown>;
-    }) => <DataTableColumnHeader column={column} title='Student' />,
+    }) => <DataTableColumnHeader column={column} title='Học Sinh' />,
     cell: ({ row }) => {
       const student = row.original;
       const initials = student.studentName
@@ -48,8 +48,8 @@ export const createColumns = (
       );
     },
     meta: {
-      label: 'Student Name',
-      placeholder: 'Search students...',
+      label: 'Tên Học Sinh',
+      placeholder: 'Tìm kiếm học sinh...',
       variant: 'text',
       icon: User
     },
@@ -61,7 +61,7 @@ export const createColumns = (
       column
     }: {
       column: Column<ClassStudentWithStats, unknown>;
-    }) => <DataTableColumnHeader column={column} title='Ranking' />,
+    }) => <DataTableColumnHeader column={column} title='Xếp Hạng' />,
     cell: ({ row }) => {
       const ranking = row.original.ranking;
       return (
@@ -77,7 +77,7 @@ export const createColumns = (
       column
     }: {
       column: Column<ClassStudentWithStats, unknown>;
-    }) => <DataTableColumnHeader column={column} title='Average Score' />,
+    }) => <DataTableColumnHeader column={column} title='Điểm Trung Bình' />,
     cell: ({ row }) => {
       const averageScore = row.original.averageScore;
 
@@ -102,12 +102,12 @@ export const createColumns = (
   },
   {
     accessorKey: 'behaviorNotes',
-    header: 'Behavior Notes',
+    header: 'Ghi Chú Hành Vi',
     cell: ({ row }) => {
       const count = row.original.behaviorNotes?.length || 0;
       return (
         <Badge variant={count > 0 ? 'outline' : 'secondary'}>
-          {count} {count === 1 ? 'note' : 'notes'}
+          {count} {count === 1 ? 'ghi chú' : 'ghi chú'}
         </Badge>
       );
     }

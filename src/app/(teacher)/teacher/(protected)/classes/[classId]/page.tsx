@@ -64,30 +64,30 @@ export default function ClassOverviewPage({
   const tabConfigs = [
     {
       value: 'roster',
-      label: 'Roster',
+      label: 'Danh Sách',
       icon: Users,
-      description: 'Student list & info',
+      description: 'Danh sách & thông tin học sinh',
       url: `/teacher/classes/${classId}/roster`
     },
     {
       value: 'gradebook',
-      label: 'Gradebook',
+      label: 'Sổ Điểm',
       icon: Award,
-      description: 'Grades & assessments',
+      description: 'Điểm số & đánh giá',
       url: `/teacher/classes/${classId}/gradebook`
     },
     {
       value: 'behavior',
-      label: 'Behavior',
+      label: 'Hành Vi',
       icon: Star,
-      description: 'Behavior tracking',
+      description: 'Theo dõi hành vi',
       url: `/teacher/classes/${classId}/behavior`
     },
     {
       value: 'announcements',
-      label: 'Announcements',
+      label: 'Thông Báo',
       icon: Calendar,
-      description: 'Class announcements',
+      description: 'Thông báo lớp học',
       url: `/teacher/classes/${classId}/announcements`
     }
   ];
@@ -101,16 +101,15 @@ export default function ClassOverviewPage({
         </div>
         <div className='space-y-2'>
           <h3 className='text-xl font-semibold'>
-            Welcome to {classDetails.className}
+            Chào mừng đến với {classDetails.className}
           </h3>
           <p className='text-muted-foreground mx-auto max-w-md'>
-            Choose a section below to manage your class effectively.
+            Chọn một phần bên dưới để quản lý lớp học hiệu quả.
           </p>
         </div>
         <div className='text-muted-foreground text-sm'>
           <p>
-            Grade {classDetails.gradeName} • {classDetails.studentCount}{' '}
-            students
+            Khối {classDetails.gradeName} • {classDetails.studentCount} học sinh
           </p>
         </div>
       </div>
