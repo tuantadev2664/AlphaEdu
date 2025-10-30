@@ -9,6 +9,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import './globals.css';
 import './theme.css';
+import Script from 'next/script';
 
 const META_THEME_COLORS = {
   light: '#ffffff',
@@ -60,6 +61,22 @@ export default async function RootLayout({
           fontVariables
         )}
       >
+        <Script
+          src='https://www.googletagmanager.com/gtag/js?id=G-Z3WCC6X8ZY'
+          strategy='afterInteractive'
+        />
+        <Script
+          id='ga4-init'
+          strategy='afterInteractive'
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-Z3WCC6X8ZY');
+            `
+          }}
+        />
         <NextTopLoader showSpinner={false} />
         <NuqsAdapter>
           <ThemeProvider
