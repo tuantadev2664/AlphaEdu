@@ -132,69 +132,189 @@ export const announcementKeys = {
 };
 
 /**
- * Hook to create a new announcement
+ * Hook to create a new announcement with optimistic update
  */
 export function useCreateAnnouncement() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: createAnnouncement,
-    onSuccess: (data) => {
+    // Optimistic update: Add the announcement to cache immediately
+    onMutate: async (newAnnouncement) => {
+      const queryKey = ['class-announcements', newAnnouncement.classId];
+
+      // Cancel any outgoing refetches to prevent overwriting optimistic update
+      await queryClient.cancelQueries({ queryKey });
+
+      // Snapshot the previous value
+      const previousAnnouncements = queryClient.getQueryData(queryKey);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(queryKey, (old: any) => {
+        const optimisticAnnouncement = {
+          id: `temp-${Date.now()}`, // Temporary ID
+          title: newAnnouncement.title,
+          content: newAnnouncement.content,
+          classId: newAnnouncement.classId,
+          expiresAt: newAnnouncement.expiresAt,
+          isUrgent: newAnnouncement.isUrgent || false,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+
+        return old
+          ? [...old, optimisticAnnouncement]
+          : [optimisticAnnouncement];
+      });
+
+      // Return context with previous data for rollback
+      return { previousAnnouncements, queryKey };
+    },
+    // If mutation fails, rollback to previous value
+    onError: (error, newAnnouncement, context) => {
+      console.error('Failed to create announcement:', error);
+      if (context?.previousAnnouncements) {
+        queryClient.setQueryData(
+          context.queryKey,
+          context.previousAnnouncements
+        );
+      }
+    },
+    // After success or error, refetch to sync with server
+    onSettled: (data, error, variables) => {
       // Invalidate and refetch announcements for the class
       queryClient.invalidateQueries({
-        queryKey: announcementKeys.byClass(data.classId!)
+        queryKey: ['class-announcements', variables.classId]
       });
       // Also invalidate active announcements
       queryClient.invalidateQueries({
         queryKey: announcementKeys.active()
       });
-    },
-    onError: (error) => {
-      console.error('Failed to create announcement:', error);
     }
   });
 }
 
 /**
- * Hook to update an announcement
+ * Hook to update an announcement with optimistic update
  */
 export function useUpdateAnnouncement() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: updateAnnouncement,
-    onSuccess: (data) => {
+    // Optimistic update: Update the announcement in cache immediately
+    onMutate: async (updatedAnnouncement) => {
+      const queryKey = ['class-announcements', updatedAnnouncement.classId];
+
+      // Cancel any outgoing refetches to prevent overwriting optimistic update
+      await queryClient.cancelQueries({ queryKey });
+
+      // Snapshot the previous value
+      const previousAnnouncements = queryClient.getQueryData(queryKey);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(queryKey, (old: any) => {
+        if (!old) return old;
+
+        return old.map((announcement: any) =>
+          announcement.id === updatedAnnouncement.id
+            ? {
+                ...announcement,
+                title: updatedAnnouncement.title,
+                content: updatedAnnouncement.content,
+                expiresAt: updatedAnnouncement.expiresAt,
+                isUrgent: updatedAnnouncement.isUrgent,
+                updatedAt: new Date().toISOString()
+              }
+            : announcement
+        );
+      });
+
+      // Return context with previous data for rollback
+      return { previousAnnouncements, queryKey };
+    },
+    // If mutation fails, rollback to previous value
+    onError: (error, updatedAnnouncement, context) => {
+      console.error('Failed to update announcement:', error);
+      if (context?.previousAnnouncements) {
+        queryClient.setQueryData(
+          context.queryKey,
+          context.previousAnnouncements
+        );
+      }
+    },
+    // After success or error, refetch to sync with server
+    onSettled: (data, error, variables) => {
       // Invalidate and refetch announcements for the class
       queryClient.invalidateQueries({
-        queryKey: announcementKeys.byClass(data.classId!)
+        queryKey: ['class-announcements', variables.classId]
       });
       // Also invalidate active announcements
       queryClient.invalidateQueries({
         queryKey: announcementKeys.active()
       });
-    },
-    onError: (error) => {
-      console.error('Failed to update announcement:', error);
     }
   });
 }
 
 /**
- * Hook to delete an announcement
+ * Hook to delete an announcement with optimistic update
  */
 export function useDeleteAnnouncement() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: deleteAnnouncement,
-    onSuccess: (data, announcementId) => {
+    // Optimistic update: Remove the announcement from cache immediately
+    onMutate: async (announcementId) => {
+      // Get all announcement queries to update
+      const queryCache = queryClient.getQueryCache();
+      const allQueries = queryCache.findAll({
+        queryKey: ['class-announcements']
+      });
+
+      // Store previous data for all affected queries
+      const previousData: Array<{ queryKey: any; data: any }> = [];
+
+      // Cancel outgoing refetches and optimistically remove the announcement
+      for (const query of allQueries) {
+        await queryClient.cancelQueries({ queryKey: query.queryKey });
+
+        const previousAnnouncements = queryClient.getQueryData(query.queryKey);
+        previousData.push({
+          queryKey: query.queryKey,
+          data: previousAnnouncements
+        });
+
+        // Remove the announcement from cache
+        queryClient.setQueryData(query.queryKey, (old: any) => {
+          if (!old) return old;
+          return old.filter(
+            (announcement: any) => announcement.id !== announcementId
+          );
+        });
+      }
+
+      // Return context with previous data for rollback
+      return { previousData };
+    },
+    // If mutation fails, rollback to previous values
+    onError: (error, announcementId, context) => {
+      console.error('Failed to delete announcement:', error);
+
+      // Restore all previous data
+      if (context?.previousData) {
+        context.previousData.forEach(({ queryKey, data }) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+    },
+    // After success or error, refetch to sync with server
+    onSettled: () => {
       // Invalidate all announcement queries to refresh the data
       queryClient.invalidateQueries({
         queryKey: announcementKeys.all
       });
-    },
-    onError: (error) => {
-      console.error('Failed to delete announcement:', error);
     }
   });
 }

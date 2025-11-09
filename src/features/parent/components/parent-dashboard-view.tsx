@@ -319,7 +319,7 @@ export function ParentDashboardView() {
   };
 
   return (
-    <div className='flex flex-1 flex-col space-y-4'>
+    <div className='flex flex-1 flex-col space-y-3 px-2 sm:space-y-4 sm:px-0'>
       <div className='flex items-start justify-between'>
         <Heading
           title={`Chào mừng, ${parent?.full_name ?? 'Phụ huynh'}!`}
@@ -328,35 +328,37 @@ export function ParentDashboardView() {
       </div>
       <Separator />
 
-      <div className='space-y-4 md:space-y-6'>
+      <div className='space-y-3 md:space-y-6'>
         {/* Family Overview Header */}
-        <div className='grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4'>
+        <div className='grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4'>
           <Card>
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Tổng số con</CardTitle>
-              <Users className='text-muted-foreground h-4 w-4' />
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 px-3 pt-3 pb-2 sm:px-6 sm:pt-6'>
+              <CardTitle className='text-xs font-medium sm:text-sm'>
+                Tổng số con
+              </CardTitle>
+              <Users className='text-muted-foreground h-3 w-3 sm:h-4 sm:w-4' />
             </CardHeader>
-            <CardContent className='pb-3'>
-              <div className='text-xl font-bold sm:text-2xl'>
+            <CardContent className='px-3 pb-2 sm:px-6 sm:pb-3'>
+              <div className='text-lg font-bold sm:text-2xl'>
                 {apiChildrenFullInfo
                   ? apiChildrenFullInfo.length
                   : children.length}
               </div>
-              <p className='text-muted-foreground text-xs'>
+              <p className='text-muted-foreground text-[10px] sm:text-xs'>
                 Đang theo dõi học tập
               </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 px-3 pt-3 pb-2 sm:px-6 sm:pt-6'>
+              <CardTitle className='text-xs font-medium sm:text-sm'>
                 Điểm TB gia đình
               </CardTitle>
-              <GraduationCap className='text-muted-foreground h-4 w-4' />
+              <GraduationCap className='text-muted-foreground h-3 w-3 sm:h-4 sm:w-4' />
             </CardHeader>
-            <CardContent className='pb-3'>
-              <div className='text-xl font-bold sm:text-2xl'>
+            <CardContent className='px-3 pb-2 sm:px-6 sm:pb-3'>
+              <div className='text-lg font-bold sm:text-2xl'>
                 {(apiChildrenFullInfo?.reduce(
                   (sum, child) => sum + (child.overallAverage ?? 0),
                   0
@@ -369,7 +371,7 @@ export function ParentDashboardView() {
                     0
                   ) || 0) / (apiChildrenFullInfo?.length ?? 0) || 0
                 )}
-                <p className='text-muted-foreground text-xs'>
+                <p className='text-muted-foreground text-[10px] sm:text-xs'>
                   Trung bình các con
                 </p>
               </div>
@@ -377,30 +379,34 @@ export function ParentDashboardView() {
           </Card>
 
           <Card>
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 px-3 pt-3 pb-2 sm:px-6 sm:pt-6'>
+              <CardTitle className='text-xs font-medium sm:text-sm'>
                 Tin nhắn chưa đọc
               </CardTitle>
-              <MessageSquare className='text-muted-foreground h-4 w-4' />
+              <MessageSquare className='text-muted-foreground h-3 w-3 sm:h-4 sm:w-4' />
             </CardHeader>
-            <CardContent className='pb-3'>
-              <div className='text-xl font-bold sm:text-2xl'>
+            <CardContent className='px-3 pb-2 sm:px-6 sm:pb-3'>
+              <div className='text-lg font-bold sm:text-2xl'>
                 {unread_messages_count}
               </div>
-              <p className='text-muted-foreground text-xs'>Từ giáo viên</p>
+              <p className='text-muted-foreground text-[10px] sm:text-xs'>
+                Từ giáo viên
+              </p>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-              <CardTitle className='text-sm font-medium'>Cảnh báo</CardTitle>
-              <AlertTriangle className='text-muted-foreground h-4 w-4' />
+            <CardHeader className='flex flex-row items-center justify-between space-y-0 px-3 pt-3 pb-2 sm:px-6 sm:pt-6'>
+              <CardTitle className='text-xs font-medium sm:text-sm'>
+                Cảnh báo
+              </CardTitle>
+              <AlertTriangle className='text-muted-foreground h-3 w-3 sm:h-4 sm:w-4' />
             </CardHeader>
-            <CardContent className='pb-3'>
-              <div className='text-xl font-bold text-red-600 sm:text-2xl'>
+            <CardContent className='px-3 pb-2 sm:px-6 sm:pb-3'>
+              <div className='text-lg font-bold text-red-600 sm:text-2xl'>
                 {urgentAlerts.length + (studentAnalysis ? 1 : 0)}
               </div>
-              <p className='text-muted-foreground text-xs'>
+              <p className='text-muted-foreground text-[10px] sm:text-xs'>
                 {urgentAlerts.length > 0 && (studentAnalysis ? 1 : 0)
                   ? 'Hành vi + Học tập'
                   : urgentAlerts.length > 0
@@ -414,18 +420,18 @@ export function ParentDashboardView() {
         {/* Urgent Alerts */}
         {urgentAlerts.length > 0 && (
           <Card className='border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-950/20'>
-            <CardHeader className='pb-3'>
-              <CardTitle className='flex items-center gap-2 text-sm text-red-800 sm:text-base dark:text-red-200'>
+            <CardHeader className='px-3 pt-3 pb-2 sm:px-6 sm:pt-6 sm:pb-3'>
+              <CardTitle className='flex items-center gap-2 text-xs text-red-800 sm:text-base dark:text-red-200'>
                 <AlertCircle className='h-4 w-4 sm:h-5 sm:w-5' />
                 Cảnh báo hành vi khẩn cấp
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className='space-y-3'>
+            <CardContent className='px-3 pb-3 sm:px-6 sm:pb-6'>
+              <div className='space-y-2 sm:space-y-3'>
                 {urgentAlerts.map((child) => (
                   <div
                     key={child.studentId}
-                    className='flex flex-col gap-3 rounded-lg border border-red-200 bg-white p-3 sm:flex-row sm:items-center sm:justify-between dark:border-red-800 dark:bg-red-900/10'
+                    className='flex flex-col gap-2 rounded-lg border border-red-200 bg-white p-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:p-3 dark:border-red-800 dark:bg-red-900/10'
                   >
                     <div className='flex items-center gap-3'>
                       <Avatar className='h-8 w-8 flex-shrink-0'>
@@ -479,14 +485,14 @@ export function ParentDashboardView() {
         {/* Academic Alerts */}
         {studentAnalysis && (
           <Card className='border-blue-200 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/20'>
-            <CardHeader className='pb-3'>
-              <CardTitle className='flex items-center gap-2 text-sm text-blue-800 sm:text-base dark:text-blue-200'>
+            <CardHeader className='px-3 pt-3 pb-2 sm:px-6 sm:pt-6 sm:pb-3'>
+              <CardTitle className='flex items-center gap-2 text-xs text-blue-800 sm:text-base dark:text-blue-200'>
                 <TrendingUp className='h-4 w-4 sm:h-5 sm:w-5' />
                 Cảnh báo học tập
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className='space-y-4'>
+            <CardContent className='px-3 pb-3 sm:px-6 sm:pb-6'>
+              <div className='space-y-3 sm:space-y-4'>
                 <div
                   key={studentAnalysis?.studentId}
                   className={`rounded-lg border p-3 sm:p-4 ${getRiskLevelColor(studentAnalysis?.riskLevel ?? '')}`}
@@ -649,9 +655,9 @@ export function ParentDashboardView() {
 
         {/* Children Overview */}
         <Card>
-          <CardHeader className='pb-3'>
-            <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between'>
-              <CardTitle className='flex items-center gap-2 text-sm sm:text-base'>
+          <CardHeader className='px-3 pt-3 pb-2 sm:px-6 sm:pt-6 sm:pb-3'>
+            <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3'>
+              <CardTitle className='flex items-center gap-2 text-xs sm:text-base'>
                 <Users className='h-4 w-4 sm:h-5 sm:w-5' />
                 Tổng quan học tập các con
               </CardTitle>
@@ -659,41 +665,41 @@ export function ParentDashboardView() {
                 <Button
                   variant='outline'
                   size='sm'
-                  className='flex w-full items-center justify-center gap-2 sm:w-auto'
+                  className='flex w-full items-center justify-center gap-2 text-xs sm:w-auto sm:text-sm'
                 >
-                  <MessageSquare className='h-4 w-4' />
+                  <MessageSquare className='h-3 w-3 sm:h-4 sm:w-4' />
                   Liên hệ giáo viên
                 </Button>
               </TeacherCommunicationDialog>
             </div>
           </CardHeader>
-          <CardContent>
-            <div className='grid gap-3 sm:grid-cols-1 sm:gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'>
+          <CardContent className='px-3 pb-3 sm:px-6 sm:pb-6'>
+            <div className='grid gap-2 sm:grid-cols-1 sm:gap-4 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3'>
               {(apiChildrenFullInfo || []).map((child) => (
                 <Card
                   key={child.studentId}
                   className='relative overflow-hidden'
                 >
-                  <CardHeader className='pb-3'>
+                  <CardHeader className='px-3 pt-3 pb-2 sm:px-6 sm:pt-6 sm:pb-3'>
                     <div className='flex items-center justify-between'>
-                      <div className='flex min-w-0 flex-1 items-center gap-3'>
+                      <div className='flex min-w-0 flex-1 items-center gap-2 sm:gap-3'>
                         <Avatar className='h-8 w-8 flex-shrink-0 sm:h-10 sm:w-10'>
                           <AvatarFallback className='bg-blue-100 text-blue-600'>
                             {child.studentName.charAt(0)}
                           </AvatarFallback>
                         </Avatar>
                         <div className='min-w-0 flex-1'>
-                          <div className='truncate font-medium'>
+                          <div className='truncate text-sm font-medium sm:text-base'>
                             {child.studentName}
                           </div>
-                          <div className='text-muted-foreground truncate text-sm'>
+                          <div className='text-muted-foreground truncate text-xs sm:text-sm'>
                             {child.className || 'Lớp - N/A'}
                           </div>
                         </div>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className='space-y-4'>
+                  <CardContent className='space-y-3 px-3 pb-3 sm:space-y-4 sm:px-6 sm:pb-6'>
                     {/* Academic Performance */}
                     <div className='space-y-2'>
                       <div className='flex items-center justify-between'>
@@ -877,19 +883,19 @@ export function ParentDashboardView() {
                     key={child.student.id}
                     className='relative overflow-hidden'
                   >
-                    <CardHeader className='pb-3'>
+                    <CardHeader className='px-3 pt-3 pb-2 sm:px-6 sm:pt-6 sm:pb-3'>
                       <div className='flex items-center justify-between'>
-                        <div className='flex min-w-0 flex-1 items-center gap-3'>
+                        <div className='flex min-w-0 flex-1 items-center gap-2 sm:gap-3'>
                           <Avatar className='h-8 w-8 flex-shrink-0 sm:h-10 sm:w-10'>
                             <AvatarFallback className='bg-blue-100 text-blue-600'>
                               {child.student.full_name.charAt(0)}
                             </AvatarFallback>
                           </Avatar>
                           <div className='min-w-0 flex-1'>
-                            <div className='truncate font-medium'>
+                            <div className='truncate text-sm font-medium sm:text-base'>
                               {child.student.full_name}
                             </div>
-                            <div className='text-muted-foreground truncate text-sm'>
+                            <div className='text-muted-foreground truncate text-xs sm:text-sm'>
                               {child.current_class.name} -{' '}
                               {child.current_class.grade?.level}
                             </div>
@@ -898,14 +904,14 @@ export function ParentDashboardView() {
                         {child.latest_behavior_note?.level === 'Poor' && (
                           <Badge
                             variant='destructive'
-                            className='flex-shrink-0 animate-pulse'
+                            className='flex-shrink-0 animate-pulse text-[10px] sm:text-xs'
                           >
                             Cảnh báo
                           </Badge>
                         )}
                       </div>
                     </CardHeader>
-                    <CardContent className='space-y-4'>
+                    <CardContent className='space-y-3 px-3 pb-3 sm:space-y-4 sm:px-6 sm:pb-6'>
                       {/* Academic Performance */}
                       <div className='space-y-2'>
                         <div className='flex items-center justify-between'>
@@ -1128,19 +1134,19 @@ export function ParentDashboardView() {
 
         {/* Recent Announcements */}
         <Card>
-          <CardHeader className='pb-3'>
-            <CardTitle className='flex items-center gap-2 text-sm sm:text-base'>
+          <CardHeader className='px-3 pt-3 pb-2 sm:px-6 sm:pt-6 sm:pb-3'>
+            <CardTitle className='flex items-center gap-2 text-xs sm:text-base'>
               <Bell className='h-4 w-4 sm:h-5 sm:w-5' />
               Thông báo gần đây
               {apiLoading && (
-                <Badge variant='secondary' className='text-xs'>
+                <Badge variant='secondary' className='text-[10px] sm:text-xs'>
                   Đang tải...
                 </Badge>
               )}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className='space-y-3 sm:space-y-4'>
+          <CardContent className='px-3 pb-3 sm:px-6 sm:pb-6'>
+            <div className='space-y-2 sm:space-y-4'>
               {apiLoading ? (
                 <div className='text-muted-foreground py-6 text-center sm:py-8'>
                   <div className='mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600 sm:h-12 sm:w-12'></div>
@@ -1150,35 +1156,35 @@ export function ParentDashboardView() {
                 recent_announcements.slice(0, 5).map((announcement) => (
                   <div
                     key={announcement.id}
-                    className='hover:bg-muted/50 flex items-start gap-3 rounded-lg border p-3 transition-colors sm:gap-4 sm:p-4'
+                    className='hover:bg-muted/50 flex items-start gap-2 rounded-lg border p-2 transition-colors sm:gap-4 sm:p-4'
                   >
                     <div
-                      className={`flex-shrink-0 rounded-full p-2 ${
+                      className={`flex-shrink-0 rounded-full p-1.5 sm:p-2 ${
                         announcement.is_urgent
                           ? 'bg-red-100 text-red-600'
                           : 'bg-blue-100 text-blue-600'
                       }`}
                     >
-                      <Bell className='h-4 w-4' />
+                      <Bell className='h-3 w-3 sm:h-4 sm:w-4' />
                     </div>
                     <div className='min-w-0 flex-1'>
                       <div className='mb-1 flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2'>
-                        <h4 className='truncate text-sm font-medium sm:text-base'>
+                        <h4 className='truncate text-xs font-medium sm:text-base'>
                           {announcement.title}
                         </h4>
                         {announcement.is_urgent && (
                           <Badge
                             variant='destructive'
-                            className='w-fit text-xs'
+                            className='w-fit text-[10px] sm:text-xs'
                           >
                             Khẩn cấp
                           </Badge>
                         )}
                       </div>
-                      <p className='text-muted-foreground mb-2 line-clamp-2 text-sm'>
+                      <p className='text-muted-foreground mb-1.5 line-clamp-2 text-xs sm:mb-2 sm:text-sm'>
                         {announcement.content}
                       </p>
-                      <div className='text-muted-foreground flex flex-col gap-2 text-xs sm:flex-row sm:items-center sm:gap-4'>
+                      <div className='text-muted-foreground flex flex-col gap-1 text-[10px] sm:flex-row sm:items-center sm:gap-4 sm:text-xs'>
                         <div className='flex items-center gap-1'>
                           <User className='h-3 w-3 flex-shrink-0' />
                           <span className='truncate'>

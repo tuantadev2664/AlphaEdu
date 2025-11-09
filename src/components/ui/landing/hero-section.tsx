@@ -133,27 +133,29 @@ export function HeroSection() {
 
           {/* Right Visual - Floating Cards */}
           <div className='relative mx-auto w-full max-w-lg lg:max-w-none'>
-            <div className='relative aspect-square'>
+            <div className='relative aspect-square min-h-[400px] sm:min-h-[500px]'>
               {/* Main Dashboard Card */}
-              <div className='animate-float absolute top-5/8 left-3/4 z-20 w-4/5 -translate-x-1/2 -translate-y-1/2 transform'>
-                <div className='bg-card rounded-2xl border p-6 shadow-2xl backdrop-blur-sm'>
-                  <div className='mb-4 flex items-center justify-between'>
+              <div className='animate-float absolute top-4/5 left-3/4 z-20 w-full max-w-[300px] -translate-x-1/2 -translate-y-3/4 transform px-4 sm:left-4/5 sm:w-4/5 sm:max-w-[500px] sm:px-0'>
+                <div className='bg-card rounded-2xl border p-4 shadow-2xl backdrop-blur-sm sm:p-6'>
+                  <div className='mb-3 flex items-center justify-between sm:mb-4'>
                     <div className='flex items-center gap-2'>
-                      <div className='h-10 w-10 rounded-full bg-gradient-to-br from-blue-600 to-purple-600' />
+                      <div className='h-8 w-8 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 sm:h-10 sm:w-10' />
                       <div>
-                        <div className='font-semibold'>Nguyễn Minh An</div>
+                        <div className='text-sm font-semibold sm:text-base'>
+                          Nguyễn Minh An
+                        </div>
                         <div className='text-muted-foreground text-xs'>
                           Lớp 10A1
                         </div>
                       </div>
                     </div>
-                    <Badge className='bg-green-500/10 text-green-700 hover:bg-green-500/20'>
+                    <Badge className='bg-green-500/10 text-xs text-green-700 hover:bg-green-500/20 sm:text-sm'>
                       Xuất sắc
                     </Badge>
                   </div>
 
-                  <div className='space-y-3'>
-                    <div className='flex justify-between text-sm'>
+                  <div className='space-y-2 sm:space-y-3'>
+                    <div className='flex justify-between text-xs sm:text-sm'>
                       <span className='text-muted-foreground'>Toán học</span>
                       <span className='font-semibold text-blue-600'>9.5</span>
                     </div>
@@ -161,7 +163,7 @@ export function HeroSection() {
                       <div className='h-full w-[95%] rounded-full bg-gradient-to-r from-blue-600 to-purple-600' />
                     </div>
 
-                    <div className='flex justify-between text-sm'>
+                    <div className='flex justify-between text-xs sm:text-sm'>
                       <span className='text-muted-foreground'>Văn học</span>
                       <span className='font-semibold text-purple-600'>9.0</span>
                     </div>
@@ -173,47 +175,53 @@ export function HeroSection() {
               </div>
 
               {/* Floating Card 1 - AI Alert */}
-              <div className='animation-delay-1000 animate-float-slow absolute top-10 left-0 z-10 w-2/5'>
-                <div className='bg-card/80 rounded-xl border p-4 shadow-xl backdrop-blur-sm'>
-                  <div className='mb-2 flex items-center gap-2'>
-                    <TrendingUp className='h-5 w-5 text-green-600' />
-                    <span className='text-xs font-semibold'>Cải thiện</span>
+              <div className='animation-delay-1000 animate-float-slow absolute top-4 left-0 z-10 w-[45%] sm:top-10 sm:w-2/5'>
+                <div className='bg-card/80 rounded-lg border p-3 shadow-xl backdrop-blur-sm sm:rounded-xl sm:p-4'>
+                  <div className='mb-1 flex items-center gap-1.5 sm:mb-2 sm:gap-2'>
+                    <TrendingUp className='h-4 w-4 text-green-600 sm:h-5 sm:w-5' />
+                    <span className='text-[10px] font-semibold sm:text-xs'>
+                      Cải thiện
+                    </span>
                   </div>
-                  <p className='text-muted-foreground text-xs'>
-                    Điểm Anh văn tăng 12% tuần này
+                  <p className='text-muted-foreground text-[10px] leading-tight sm:text-xs'>
+                    Điểm Anh văn tăng 12%
                   </p>
                 </div>
               </div>
 
               {/* Floating Card 2 - Attendance */}
-              <div className='animation-delay-2000 animate-float-slow absolute top-20 right-0 z-10 w-2/5'>
-                <div className='bg-card/80 rounded-xl border p-4 shadow-xl backdrop-blur-sm'>
-                  <div className='mb-2 flex items-center gap-2'>
-                    <Users className='h-5 w-5 text-blue-600' />
-                    <span className='text-xs font-semibold'>Điểm danh</span>
+              <div className='animation-delay-2000 animate-float-slow absolute top-12 right-0 z-10 w-[45%] sm:top-20 sm:w-2/5'>
+                <div className='bg-card/80 rounded-lg border p-3 shadow-xl backdrop-blur-sm sm:rounded-xl sm:p-4'>
+                  <div className='mb-1 flex items-center gap-1.5 sm:mb-2 sm:gap-2'>
+                    <Users className='h-4 w-4 text-blue-600 sm:h-5 sm:w-5' />
+                    <span className='text-[10px] font-semibold sm:text-xs'>
+                      Điểm danh
+                    </span>
                   </div>
-                  <p className='text-muted-foreground text-xs'>
-                    100% trong tháng này
+                  <p className='text-muted-foreground text-[10px] leading-tight sm:text-xs'>
+                    100% tháng này
                   </p>
                 </div>
               </div>
 
               {/* Floating Card 3 - Achievement */}
-              <div className='animation-delay-3000 animate-float-slow absolute right-4 bottom-10 z-10 w-2/5'>
-                <div className='bg-card/80 rounded-xl border p-4 shadow-xl backdrop-blur-sm'>
-                  <div className='mb-2 flex items-center gap-2'>
-                    <Award className='h-5 w-5 text-yellow-600' />
-                    <span className='text-xs font-semibold'>Thành tích</span>
+              <div className='animation-delay-3000 animate-float-slow absolute right-0 bottom-4 z-10 w-[45%] sm:right-4 sm:bottom-10 sm:w-2/5'>
+                <div className='bg-card/80 rounded-lg border p-3 shadow-xl backdrop-blur-sm sm:rounded-xl sm:p-4'>
+                  <div className='mb-1 flex items-center gap-1.5 sm:mb-2 sm:gap-2'>
+                    <Award className='h-4 w-4 text-yellow-600 sm:h-5 sm:w-5' />
+                    <span className='text-[10px] font-semibold sm:text-xs'>
+                      Thành tích
+                    </span>
                   </div>
-                  <p className='text-muted-foreground text-xs'>
+                  <p className='text-muted-foreground text-[10px] leading-tight sm:text-xs'>
                     Học sinh xuất sắc Q1
                   </p>
                 </div>
               </div>
 
               {/* Decorative elements */}
-              <div className='absolute -top-4 -left-4 h-24 w-24 rounded-full bg-blue-500 opacity-20 blur-2xl' />
-              <div className='absolute -right-4 -bottom-4 h-24 w-24 rounded-full bg-purple-500 opacity-20 blur-2xl' />
+              <div className='absolute -top-4 -left-4 h-16 w-16 rounded-full bg-blue-500 opacity-20 blur-2xl sm:h-24 sm:w-24' />
+              <div className='absolute -right-4 -bottom-4 h-16 w-16 rounded-full bg-purple-500 opacity-20 blur-2xl sm:h-24 sm:w-24' />
             </div>
           </div>
         </div>

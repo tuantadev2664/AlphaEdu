@@ -59,10 +59,7 @@ export const teacherCompany = {
   plan: 'Giáo Dục'
 };
 
-const tenants = [
-  { id: '1', name: 'Trường Của Tôi' },
-  { id: '2', name: 'Văn Phòng Quận' }
-];
+const tenants = [{ id: '1', name: 'Trường Của Tôi' }];
 
 export default function TeacherSidebar() {
   const pathname = usePathname();

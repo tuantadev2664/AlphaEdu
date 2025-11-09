@@ -252,7 +252,7 @@ export function SubjectScoreDetailsDialog({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className='max-w-70 overflow-x-auto'>
+              <div className='max-w-[350px] overflow-x-auto sm:max-w-full'>
                 <div className='max-h-80 overflow-y-auto sm:max-h-96'>
                   <table className='w-full border-collapse text-xs sm:text-sm'>
                     <thead className='bg-background sticky top-0'>
@@ -454,7 +454,7 @@ export function SubjectScoreDetailsDialog({
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className='max-w-70 overflow-x-auto'>
+                  <div className='max-w-[350px] overflow-x-auto sm:max-w-full'>
                     <div className='max-h-80 overflow-y-auto'>
                       <table className='w-full border-collapse text-xs sm:text-sm'>
                         <thead className='bg-background sticky top-0'>
