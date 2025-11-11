@@ -61,14 +61,14 @@ export function HeroSection() {
               className='inline-flex items-center gap-2 px-4 py-2 text-sm'
             >
               <Sparkles className='h-4 w-4 text-purple-600' />
-              <span>Công nghệ AI mới nhất 2024</span>
+              <span>Công nghệ AI mới nhất 2025</span>
             </Badge>
 
             {/* Heading */}
             <h1 className='text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl'>
               <span className='block'>Sổ liên lạc điện tử</span>
               <span className='bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent'>
-                thông minh với AI
+                thông minh
               </span>
             </h1>
 
